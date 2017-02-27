@@ -1,6 +1,6 @@
 #include "map.h"
 
-static inline void dealloc_node(struct list_node* node, dealloc_t dealloc)
+static inline void dealloc_node(struct list_node* node, dealloc_fn dealloc)
 {
         if (node)
         {
@@ -10,7 +10,7 @@ static inline void dealloc_node(struct list_node* node, dealloc_t dealloc)
         }
 }
 
-extern void map_destroy(struct map* map, dealloc_t dealloc)
+extern void map_destroy(struct map* map, dealloc_fn dealloc)
 {
         dealloc(map->root);
 }
@@ -79,24 +79,4 @@ static inline struct list_node* balance(struct list_node* node)
                         node = rrot(node);
         }
         return node;
-}
-//static inline struct map_node* insert(struct map_node*)
-
-//extern void map_insert(struct map* map, struct list_node* node)
-//{
-//        if (!map->root)
-//        {
-//                map->root = node;
-//                return map->root;
-//        }
-//}
-
-extern int map_exists(struct map* map, cmp_t cmp, void* key)
-{
-
-}
-
-extern struct list_node* map_find(struct map* map, cmp_t cmp, void* key)
-{
-
 }

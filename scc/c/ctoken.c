@@ -7,7 +7,7 @@ struct pool token_pool = pool_init(sizeof(struct c_token), 256);
 
 extern struct c_token* c_token_create(enum c_token_type type, uint64_t data)
 {
-        struct c_token* t = malloc(sizeof(*t));//pool_get(&token_pool);
+        struct c_token* t = malloc(sizeof(*t));
         if (!t)
                 return NULL;
         t->node.next = NULL;
@@ -25,7 +25,6 @@ extern struct c_token* c_token_copy(struct c_token* token)
 extern void c_token_delete(struct c_token* token)
 {
         free(token);
-        //pool_return(&token_pool, token);
 }
 
 extern void c_token_delete_list(struct c_token* head)
