@@ -2,7 +2,6 @@
 #include "ccommon.h"
 #include "ctype.h"
 #include "ctree.h"
-#include "tree_walk.h"
 
 static inline int expect_exp(tree node)
 {
@@ -151,11 +150,23 @@ static inline enum expr_operator_kind binary_operator_kind(enum c_token_type tok
         }
 }
 
-static inline int prev_is(tree prev_it, enum operator_kind kind)
+static inline void set_right_to_null(tree exp, unsigned nesting)
 {
-        if (!tree_list_iterator_valid(prev_it))
+        if (!tree_exp_right(exp))
+                tree_exp_right(exp) = c_tree_exp_create(ok_null, nesting);
+}
+
+static inline void set_left_to_null(tree exp, unsigned nesting)
+{
+        if (!tree_exp_left(exp))
+                tree_exp_left(exp) = c_tree_exp_create(ok_null, nesting);
+}
+
+static inline int c_node_is(tree it, enum operator_kind kind)
+{
+        if (!tree_list_iterator_valid(it))
                 return 0;
-        tree exp = tree_list_node_base(prev_it);
+        tree exp = tree_list_node_base(it);
         return tree_exp_kind(exp) == kind;
 }
 
@@ -168,8 +179,7 @@ static inline int is_prev_operand(tree prev_it, unsigned nesting)
         // type(*)... case
         if (tree_exp_kind(exp) == ok_dereference && tree_exp_nesting(exp) > nesting)
         {
-                if (!tree_exp_next(exp))
-                        tree_exp_next(exp) = tree_exp_create(ok_null, nesting, c_opinfo);
+                set_right_to_null(exp, nesting);
                 return 1;
         }
 
@@ -197,14 +207,13 @@ static int parse_operand(struct c_parser* parser, struct c_symtab* symtab, tree 
                         return 0;
                 type = 1;
         }
-        tree node = tree_exp_create(ok_operand, nesting, c_opinfo);
+
+        tree node = c_tree_exp_create(ok_operand, nesting);
         tree_exp_next(node) = op;
         if (type)
         {
-                tree etype = tree_exp_create(ok_type, nesting, c_opinfo);
+                tree etype = c_tree_exp_create(ok_type, nesting);
                 tree_exp_left(etype) = node;
-                //if (size == 1)
-                //        tree_exp_right(etype) = tree_exp_create(ok_null, nesting, c_opinfo);
                 node = etype;
         }
         else
@@ -219,11 +228,22 @@ static inline int parse_unary_operator(struct c_parser* parser, struct c_symtab*
         if (!kind)
                 return 0;
         unsigned nesting = c_parser_nesting(parser);
-        tree unary = tree_exp_create(kind, nesting, c_opinfo);
+        tree unary = c_tree_exp_create(kind, nesting);
+
         if (c_node_is_prefix_operator(unary))
-                tree_exp_left(unary) = tree_exp_create(ok_null, nesting, c_opinfo);
+                set_left_to_null(unary, nesting);
+        else if (c_node_is_postfix_unary_operator(unary))
+                set_right_to_null(unary, nesting);
+
         tree_list_push_back(list, tree_list_node_create(unary));
         return 1;
+}
+
+static inline void set_right_if_prev_is_type_or_dereference(tree list, unsigned nesting)
+{
+        tree tail = tree_list_tail(list);
+        if (c_node_is(tail, ok_type) || c_node_is(tail, ok_dereference))
+                set_right_to_null(tree_list_node_base(tail), nesting);
 }
 
 static tree parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, size_t size);
@@ -234,16 +254,18 @@ static inline int parse_binary_operator(struct c_parser* parser, struct c_symtab
         if (!kind)
                 return 0;
         unsigned nesting = c_parser_nesting(parser);
-        tree binary = tree_exp_create(kind, nesting, c_opinfo);
+        tree binary = c_tree_exp_create(kind, nesting);
+
         if (kind == ok_call || kind == ok_cast || kind == ok_subscript)
         {
                 c_parser_save_state(parser);
                 c_parser_advance(parser);
                 size_t size = c_parser_distance_till_closing_bracket(parser);
-                
-                tree subexpr = kind == ok_cast 
-                        ? c_parse_base_type(parser, symtab) 
+
+                tree subexpr = kind == ok_cast
+                        ? c_parse_base_type(parser, symtab)
                         : parse_expr_raw(parser, symtab, size);
+
                 if (!subexpr && kind == ok_cast)
                 {
                         c_parser_load_state(parser);
@@ -252,19 +274,15 @@ static inline int parse_binary_operator(struct c_parser* parser, struct c_symtab
 
                 c_parser_pop_state(parser);
                 if (!subexpr)
-                        subexpr = tree_exp_create(ok_null, nesting, c_opinfo);
+                        subexpr = c_tree_exp_create(ok_null, nesting);
                 if (kind == ok_call || kind == ok_subscript)
                         tree_exp_right(binary) = subexpr;
                 else
                         tree_exp_left(binary) = subexpr;
         }
-        else if (kind == ok_coma 
-                && (prev_is(tree_list_tail(list), ok_type) || prev_is(tree_list_tail(list), ok_dereference)))
-        {
-                tree prev = tree_list_node_base(tree_list_tail(list));
-                if (!tree_exp_right(prev))
-                        tree_exp_right(prev) = tree_exp_create(ok_null, nesting, c_opinfo);
-        }
+        else if (kind == ok_coma)
+                set_right_if_prev_is_type_or_dereference(list, nesting);
+
         tree_list_push_back(list, tree_list_node_create(binary));
         return 1;
 }
@@ -283,19 +301,10 @@ static void preprocess_expr(struct c_parser* parser, struct c_symtab* symtab, si
 {
         size_t pos = c_parser_counter(parser);
         while (c_parser_counter(parser) < pos + size)
-        {
                 if (!parse_operand(parser, symtab, res))
                         if (!parse_operator(parser, symtab, res))
                                 c_parser_advance(parser);
-        }
-        tree last = tree_list_tail(res);
-        if (!tree_list_iterator_valid(last))
-                return;
-        last = tree_list_node_base(last);
-        if (tree_exp_kind(last) == ok_type || tree_exp_kind(last) == ok_dereference)
-                if (!tree_exp_right(last))
-                        tree_exp_right(last) = tree_exp_create(ok_null, c_parser_nesting(parser), c_opinfo);
-
+        set_right_if_prev_is_type_or_dereference(res, 0);
 }
 
 static tree pop_expr(tree output)
@@ -311,12 +320,7 @@ static tree pop_expr(tree output)
 static void build_expr(tree enode, tree output)
 {
         tree exp = tree_list_node_base(enode);
-        if (c_node_is_postfix_unary_operator(exp))
-        {
-                if (!tree_exp_next(exp))
-                        tree_exp_next(exp) = pop_expr(output);
-        }
-        else if (!c_node_is_operand(exp))
+        if (!c_node_is_operand(exp))
         {
                 if (!tree_exp_right(exp))
                         tree_exp_right(exp) = pop_expr(output);
@@ -335,13 +339,6 @@ static tree parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, siz
         preprocess_expr(parser, symtab, size, &list);
         if (tree_list_empty(&list))
                 return NULL;
-
-        tree tit = tree_list_head(&list);
-        while (tit != tree_list_end(&list))
-        {
-                tree base = tree_list_node_base(tit);
-                tit = tree_list_node_next(tit);
-        }
 
         struct tree_node output = tree_list_init(&output);
         struct tree_node opstack = tree_list_init(&opstack);
@@ -363,7 +360,7 @@ static tree parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, siz
                                 unsigned ecp = tree_exp_computed_precedence(exp);
                                 unsigned tcp = tree_exp_computed_precedence(tree_list_node_base(tail));
                                 if (tree_exp_assoc(exp) == oak_left_to_right && ecp <= tcp
-                                 || tree_exp_assoc(exp) == oak_right_to_left && ecp < tcp)
+                                 || tree_exp_assoc(exp) == oak_right_to_left && ecp <  tcp)
                                 {
                                         tree_list_pop_back(&opstack);
                                         build_expr(tail, &output);
