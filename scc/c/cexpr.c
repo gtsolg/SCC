@@ -73,7 +73,7 @@ extern int c_node_is_postfix_unary_operator(tree node)
                 && (tree_exp_kind(node) == ok_post_dec || tree_exp_kind(node) == ok_post_inc);
 }
 
-static inline enum expr_operator_kind unary_operator_kind(enum c_token_type token, int prev_operand)
+static inline enum operator_kind unary_operator_kind(enum c_token_type token, int prev_operand)
 {
         if (token == ctt_inc)
                 return prev_operand ? ok_post_inc : ok_pre_inc;
@@ -96,7 +96,7 @@ static inline enum expr_operator_kind unary_operator_kind(enum c_token_type toke
         }
 }
 
-static inline enum expr_operator_kind binary_operator_kind(enum c_token_type token, int prev_operand)
+static inline enum operator_kind binary_operator_kind(enum c_token_type token, int prev_operand)
 {
         if (token == ctt_lbracket && prev_operand)
                 return ok_call;
