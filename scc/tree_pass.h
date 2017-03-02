@@ -3,9 +3,9 @@
 
 #include "tree.h"
 
-typedef void(*tree_walk_fn)(tree node, void*);
+typedef void(*tree_pass_fn)(tree node, void*);
 typedef int(*tree_match_fn)(tree node, void*);
 
-extern void tree_walk_list(tree list, tree_walk_fn walk, void* info);
+extern void tree_pass_list(tree list, tree_pass_fn pass, void* info);
 
 #endif // !TREE_WALK_H
