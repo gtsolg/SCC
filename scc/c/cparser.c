@@ -1,20 +1,21 @@
 #include "cparser.h"
 #include "ccommon.h"
 
-struct c_parser_state
-{
-        struct list_node node;
-        struct c_token* token;
-        size_t nesting;
-        size_t counter;
-};
+//struct c_parser_state
+//{
+//        struct list_node node;
+//        struct c_token* token;
+//        size_t nesting;
+//        size_t counter;
+//};
 
 extern void c_parser_init(struct c_parser* parser, const char* str)
 {
         struct c_lexer lexer = c_lexer_init(str);
-        list_init(&parser->states);
+        //list_init(&parser->states);
         list_init(&parser->token_list);
         c_parser_lexer(parser) = lexer;
+        parser->state_idx = 0;
         c_parser_counter(parser) = 0;
         c_parser_nesting(parser) = 0;
         c_parser_lex_token(parser);
@@ -32,35 +33,26 @@ extern void c_parser_lex_token(struct c_parser* parser)
 
 extern void c_parser_save_state(struct c_parser* parser)
 {
-        struct c_parser_state* state = malloc(sizeof(*state));
-        if (!state)
+        if (parser->state_idx >= C_PARSER_MAX_STATES)
+        {
+                // expression is too complex
+                assert(0);
                 return;
-        state->node = list_null_node;
-        state->token = c_parser_token(parser);
-        state->nesting = c_parser_nesting(parser);
-        state->counter = c_parser_counter(parser);
-        list_push_back(&parser->states, &state->node);
+        }
+        parser->states[parser->state_idx++] = c_parser_cur_state(parser);
 }
 
 extern void c_parser_pop_state(struct c_parser* parser)
 {
-        free(list_pop_back(&parser->states));
+        parser->state_idx--;
+        assert(parser->state_idx != -1);
 }
 
 extern void c_parser_load_state(struct c_parser* parser)
 {
-        struct c_parser_state* state = list_pop_back(&parser->states);
-        c_parser_nesting(parser) = state->nesting;
-        c_parser_token(parser) = state->token;
-        c_parser_counter(parser) = state->counter;
-        free(state);
-}
-
-extern void c_parser_switch(struct c_parser* parser, struct c_token* token)
-{
-        c_parser_save_state(parser);
-        c_parser_token(parser) = token;
-        c_parser_nesting(parser) = 0;
+        --parser->state_idx;
+        assert(parser->state_idx != -1);
+        c_parser_cur_state(parser) = parser->states[parser->state_idx];
 }
 
 extern void c_parser_enable_nesting_tracking(struct c_parser* parser)
@@ -234,7 +226,4 @@ extern int c_parser_advance_if_token_is(struct c_parser* parser, enum c_token_ty
 
 extern struct c_symtab* c_parse(struct c_parser* parser)
 {
-        struct c_symtab* symtab = c_symtab_create();
-
-        c_parse_expr(parser, symtab, 4);
 }
