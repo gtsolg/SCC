@@ -27,6 +27,7 @@ struct fstream_base
 struct stream_base
 {
         enum stream_kind kind;
+        const char* context;
         union
         {
                 struct sstream_base s;
@@ -43,5 +44,6 @@ extern void stream_close(stream* stream);
 extern int  stream_eof(stream* stream);
 extern int  stream_get(stream* stream);
 extern void stream_read(stream* stream, void* buf, size_t count);
+extern const char* stream_context(stream* stream);
 
 #endif // !STREAM_H
