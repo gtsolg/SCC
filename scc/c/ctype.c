@@ -1,5 +1,6 @@
 #include "ctype.h"
 #include "ccommon.h"
+#include "cexpr.h"
 
 extern int c_parser_token_is_default_type(struct c_parser* parser)
 {
@@ -75,7 +76,7 @@ extern tree c_parse_alias(struct c_parser* parser, struct c_symtab* symtab)
         if (!c_parser_token_is(parser, ctt_identifier))
                 return NULL; // unknown token
 
-        tree alias = c_symtab_get_symb(symtab, hash64_str(parser->token->str));
+        tree alias = c_symtab_get_symb(symtab, c_parser_token_ref(parser));
         if (!alias || tree_kind(alias) != tnk_type)
                 return NULL; // unknown type or another symb instead of alias
         if (composite
@@ -98,7 +99,7 @@ extern tree c_parse_base_type(struct c_parser* parser, struct c_symtab* symtab)
         if (!type)
                 goto backup;
         if (tree_type_qual(type) != qual)
-                type = tree_type_create(tree_type_kind(type), qual, type);
+                type = tree_type_create(&c_parser_tree_alloc(parser), tree_type_kind(type), qual, type);
         c_parser_pop_state(parser);
         return type;
 
@@ -109,6 +110,10 @@ backup:
 
 extern tree c_parse_type(struct c_parser* parser, struct c_symtab* symtab, size_t size)
 {
-        // todo
+        tree raw = c_parse_expr_raw(parser, symtab, size);
+        if (!raw)
+                return NULL;
+
+
         return NULL;
 }
