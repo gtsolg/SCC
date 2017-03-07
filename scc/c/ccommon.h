@@ -3,8 +3,17 @@
 
 #include "htab.h"
 #include "hash.h"
+#include "token.h"
 #include "tree.h"
-#include "ctoken.h"
+
+enum c_family_lang_flags
+{
+        lf_c     = 1 << 0,
+        lf_cxx   = 1 << 1,
+        lf_obj_c = 1 << 2,
+};
+
+typedef struct token ctoken;
 
 static const struct tree_exp_info c_opinfo[] = 
 {
@@ -63,6 +72,11 @@ static const struct tree_exp_info c_opinfo[] =
         tree_exp_info_init(ok_coma,        oak_right_to_left,  2),
 };
 
+enum c_token_type
+{
+#include "ctoken_type.inc"
+};
+
 static const char* c_reswords[] = 
 {
         "", // This is used to enumerate token_type from 1
@@ -76,6 +90,6 @@ extern uint64_t c_reswords_hash[C_RESWORDS_SIZE];
 extern struct htab c_reswords_map;
 extern struct htab c_const_tree;
 
-extern void c_setup();
+extern scc_err_t c_setup();
 
 #endif // !C_COMMON_H
