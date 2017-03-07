@@ -26,7 +26,7 @@ static int test_expr_argument(int idx, int argc, char** argv)
                 printf("incorrect amount of arguments.\n");
                 return 0;
         }
-        c_test_parse_expr_raw_f(argv[idx], argv[idx + 1]);
+        c_test_parse_expr_raw(argv[idx], argv[idx + 1]);
         return 2;
 }
 
