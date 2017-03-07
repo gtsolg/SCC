@@ -1,13 +1,10 @@
-#include "c/ccommon.h"
-#include "c/cparser.h"
-#include "c/ctest.h"
 #include "args.h"
-#include "file.h"
+#include "ctest.h"
 
 int main(int argc, char** argv)
 {
-        c_setup();
-        if (!parse_args(argc, argv))
-                return 0;
+        if (c_setup())
+                return SCC_ERR;
+        parse_args(argc, argv);
         return 0;
 }
