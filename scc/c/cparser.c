@@ -1,44 +1,90 @@
 #include "cparser.h"
 #include "ccommon.h"
 
-//struct c_parser_state
-//{
-//        struct list_node node;
-//        struct c_token* token;
-//        size_t nesting;
-//        size_t counter;
-//};
-
-extern void c_parser_init(struct c_parser* parser, const char* str)
+struct obj_info
 {
-        struct c_lexer lexer = c_lexer_init(str);
-        //list_init(&parser->states);
-        list_init(&parser->token_list);
-        c_parser_lexer(parser) = lexer;
-        parser->state_idx = 0;
-        c_parser_counter(parser) = 0;
-        c_parser_nesting(parser) = 0;
-        c_parser_lex_token(parser);
-        c_parser_token(parser) = list_head(&parser->token_list);
-        c_parser_disable_nesting_tracking(parser);
+        struct list_node node;
+        void* obj;
+        struct allocator* alloc;
+};
+
+static inline void* parser_get_obj(struct c_parser* parser, struct pool* pool)
+{
+        void* obj = pool_get(pool);
+        if (!obj)
+                c_parser_handle_err(parser, SCC_ERR);
+        return obj;
 }
 
-extern void c_parser_lex_token(struct c_parser* parser)
+static tree parser_alloc_tree(struct c_parser* parser, size_t size)
 {
-        struct c_token* token = c_lex_token(&parser->lexer);
-        if (!token)
-                return;
-        list_push_back(&parser->token_list, token);
+        return parser_get_obj(parser, parser->tree_pool);
+}
+
+static void parser_ret_tree(struct c_parser* parser, tree node)
+{
+        pool_return(parser->tree_pool, node);
+}
+
+static ctoken* parser_alloc_ctoken(struct c_parser* parser, size_t size)
+{
+        return parser_get_obj(parser, &parser->c_token_pool);
+}
+
+static void parser_ret_ctoken(struct c_parser* parser, ctoken* token)
+{
+        pool_return(&parser->c_token_pool, token);
+}
+
+static struct obj_info* parser_alloc_objinfo(struct c_parser* parser, size_t size)
+{
+        return parser_get_obj(parser, &parser->obj_pool);
+}
+
+static void parser_ret_objinfo(struct c_parser* parser, struct obj_info* info)
+{
+        pool_return(&parser->obj_pool, info);
+}
+
+extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, struct pool* tree_pool)
+{
+        parser->state_idx = 0;
+        parser->reader_eof = 0;
+        c_parser_err(parser) = SCC_SUCCESS;
+        c_parser_reader(parser) = reader;
+        c_parser_counter(parser) = 0;
+        c_parser_nesting(parser) = 0;
+        c_parser_token(parser) = NULL;
+        c_parser_disable_nesting_tracking(parser);
+
+        list_initf(&parser->token_list);
+        list_initf(&parser->obstack);
+
+        parser->tree_pool = tree_pool;
+        pool_initf(&parser->c_token_pool, sizeof(ctoken), 10, STD_ALLOC);
+        pool_initf(&parser->obj_pool, sizeof(struct obj_info), 10, STD_ALLOC);
+
+        alloc_initf(&parser->tree_alloc,    parser, parser_alloc_tree,   parser_ret_tree);
+        alloc_initf(&parser->c_token_alloc, parser, parser_alloc_ctoken, parser_ret_ctoken);
+        alloc_initf(&parser->obj_alloc,     parser, parser_get_obj,      parser_ret_objinfo);
+}
+
+extern void c_parser_shutdown(struct c_parser* parser)
+{
+        while (!list_empty(&parser->obstack))
+        {
+                struct obj_info* info = list_pop_back(&parser->obstack);
+                deallocate(info->alloc, info->obj);
+                deallocate(&parser->obj_alloc, info);
+        }
+        pool_delete(&parser->obj_pool);
+        pool_delete(&parser->c_token_pool);
 }
 
 extern void c_parser_save_state(struct c_parser* parser)
 {
         if (parser->state_idx >= C_PARSER_MAX_STATES)
-        {
-                // expression is too complex
-                assert(0);
-                return;
-        }
+                c_parser_handle_err(parser, SCC_ERR); // expression is too complex
         parser->states[parser->state_idx++] = c_parser_cur_state(parser);
 }
 
@@ -65,6 +111,19 @@ extern void c_parser_disable_nesting_tracking(struct c_parser* parser)
         parser->enable_nesting_tracking = 0;
 }
 
+extern void c_parser_register_obj(struct c_parser* parser, void* obj, struct allocator* alloc)
+{
+        struct obj_info* info = allocate(&parser->obj_alloc, sizeof(*info));
+        info->obj = obj;
+        info->alloc = alloc;
+        list_push_back(&parser->obstack, &info->node);
+}
+
+extern void c_parser_restore_obj(struct c_parser* parser)
+{
+        deallocate(&parser->obj_alloc, list_pop_back(&parser->obstack));
+}
+
 extern int c_parser_advance(struct c_parser* parser)
 {
         if (parser->enable_nesting_tracking)
@@ -76,7 +135,6 @@ extern int c_parser_advance(struct c_parser* parser)
                         c_parser_nesting(parser)--;
         }
         c_parser_counter(parser)++;
-        //if (!c_parser_next_token(parser))
         if (c_parser_next_token(parser) == list_end(&parser->token_list))
                 c_parser_lex_token(parser);
         c_parser_token(parser) = c_parser_next_token(parser);
@@ -120,7 +178,7 @@ extern size_t c_parser_tokens_remains(struct c_parser* parser)
 {
         size_t count = 1;
         c_parser_save_state(parser);
-        while(c_parser_advance(parser))
+        while (c_parser_advance(parser))
                 count++;
         c_parser_load_state(parser);
         return count;
@@ -183,13 +241,13 @@ extern int c_parser_next_token_is(struct c_parser* parser, enum c_token_type typ
 {
         if (!c_parser_has_tokens(parser, 1))
                 return 0;
-        struct c_token* token = c_parser_next_token(parser);
+        struct token* token = c_parser_next_token(parser);
         return token->type == type;
 }
 
 extern int c_parser_prev_token_is(struct c_parser* parser, enum c_token_type type)
 {
-        struct c_token* token = c_parser_prev_token(parser);
+        struct token* token = c_parser_prev_token(parser);
         return token && token->type == type;
 }
 
@@ -222,8 +280,28 @@ extern int c_parser_advance_if_token_is(struct c_parser* parser, enum c_token_ty
         return res;
 }
 
-#include "cexpr.h"
-
-extern struct c_symtab* c_parse(struct c_parser* parser)
+static void c_parser_handle_errs(struct c_parser* parser)
 {
+        c_parser_shutdown(parser);
+}
+
+extern void c_parser_init_first_token(struct c_parser* parser)
+{
+        c_parser_lex_token(parser);
+        c_parser_token(parser) = list_head(&parser->token_list);
+}
+
+extern tree c_parse(struct c_parser* parser, struct c_symtab* globl)
+{
+        c_parser_set_on_err(parser)
+        {
+                c_parser_shutdown(parser);
+                return NULL;
+        }
+
+        c_parser_init_first_token(parser);
+        while (!c_parser_eof(parser))
+                c_parser_advance(parser);
+
+        return NULL;
 }
