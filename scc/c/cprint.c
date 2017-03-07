@@ -1,4 +1,4 @@
-#include "ctree_print.h"
+#include "cprint.h"
 #include "cexpr.h"
 #include "str.h"
 #include "climits.h"
@@ -107,7 +107,9 @@ static char* node_to_str(tree node, tree prev)
         switch (tree_kind(node))
         {
                 case tnk_stmt:         return NULL;
-                case tnk_id:           return format("%S", tree_id_name(node));
+                case tnk_id: return format("%S"
+                        , string_pool_get_string_by_ref(STD_STR_POOL, tree_id_ref(node)));
+
                 case tnk_type_decl:    return NULL;
                 case tnk_var_decl:     return NULL;
                 case tnk_func_decl:    return NULL;
@@ -148,7 +150,8 @@ extern char* c_const_to_str(tree cst)
                         break;
 
                 case tnk_const_string:
-                        return format("\"%S\"", tree_const_string(cst));
+                        return format("\"%S\""
+                                , string_pool_get_string_by_ref(STD_STR_POOL, tree_const_strref(cst)));
         }
         return strcopy(buf);
 }
