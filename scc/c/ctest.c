@@ -1,46 +1,56 @@
 #include "ctest.h"
-#include "file.h"
 #include "err.h"
 #include "str.h"
 #include "cexpr.h"
-#include "ctree_print.h"
+#include "cprint.h"
 
-extern void c_test_parse_expr_raw_f(const char* fin, const char* fres)
+extern void c_test_parse_expr_raw(const char* input, const char* result)
 {
-        char* in = read_file(fin);
-        if (!in)
+        printf("\ntesting %s... ", filename(input));
+        stream fres;
+        if (fstream_init(&fres, result, "r"))
         {
-                printf("Cannot read %s\n", fin);
+                printf("cannot open: %s", result);
                 return;
         }
-        char* res = fres ? read_file(fres) : in;
-        if (!res)
-        {
-                printf("Cannot read %s\n", fres);
-                return;
-        }
-        c_test_parse_expr_raw(filename(fin), in, res);
-}
+        char res[1000] = { 0 };
+        stream_read(&fres, res, 1000);
 
-extern void c_test_parse_expr_raw(const char* filename, const char* exp, const char* res)
-{
-        if (!res)
-                res = exp;
-        printf("\ntesting %s... ", filename);
         struct c_parser parser;
-        struct c_symtab* symtab = c_symtab_create();
-        c_parser_init(&parser, exp);
-        tree e = c_parse_expr_raw(&parser, symtab, c_parser_tokens_remains(&parser));
-        char* str = c_node_to_str(e);
+        struct c_reader reader;
+        struct pool tree_pool;
+        struct c_symtab symtab;
+        struct htab globl;
+
+        htab_initf(&globl, 0, STD_ALLOC);
+        c_symtab_init(&symtab, &globl);
+        pool_initf(&tree_pool, sizeof(struct tree_node), 10, STD_ALLOC);
+        c_reader_init(&reader, &parser.c_token_alloc, &parser.err, input, NULL, NULL);
+        if (c_parser_err(&parser))
+        {
+                printf("cannot open: %s", input);
+                return;
+        }
+        c_parser_init(&parser, &reader, &tree_pool);
+        c_parser_init_first_token(&parser);
+
+        c_parser_set_on_err(&parser)
+        {
+                printf("unexpected error %d", c_parser_err(&parser));
+                c_parser_shutdown(&parser);
+                return;
+        }
+        tree exp = c_parse_expr_raw(&parser, &symtab, c_parser_tokens_remains(&parser));
+        char* str = c_node_to_str(exp);
 
         if (!str)
         {
-                printf("FAIL at: %s\nsyntax error:\n%s", filename, exp);
+                printf("FAIL at: %s\nsyntax error:\n%s", input, str);
                 return;
         }
         if (!streq(str, res, " \n\t\r"))
         {
-                printf("FAIL at: %s\ngot:\n%s\nexpected:\n%s", filename, str, res);
+                printf("FAIL at: %s\ngot:\n%s\nexpected:\n%s", input, str, res);
                 return;
         }
         printf("DONE");
