@@ -40,7 +40,7 @@ static inline uint64_t hash64_str(const char* str)
         return hash64_str_len(str, strlen(str));
 }
 
-static inline uint64_t hash64_ptr(void* ptr)
+static inline uint64_t hash64_ptr(const void* ptr)
 {
         uint64_t h = 0xac88ab93c832a;
         h *= (uint64_t)ptr;
