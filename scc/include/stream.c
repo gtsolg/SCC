@@ -8,22 +8,21 @@
 #define sstream_string(pstream)  sstream(pstream).string
 #define sstream_eof(pstream)     sstream(pstream).eof
 
-extern int fstream_init(stream* stream, const char* filename, const char* mode)
+extern scc_err_t fstream_init(stream* stream, const char* filename, const char* mode)
 {
         stream->kind = sk_file;
         stream->context = filename;
         fstream_file(stream) = fopen(filename, mode);
-        return fstream_file(stream) != 0 ? 1 : 0;
+        return fstream_file(stream) ? SCC_SUCCESS : SCC_ERR;
 }
 
-extern int sstream_init(stream* stream, const char* string)
+extern void sstream_init(stream* stream, const char* string)
 {
         stream->kind = sk_string;
         stream->context = NULL;
         sstream_string(stream) = string;
         sstream_pos(stream) = string;
         sstream_eof(stream) = !*string;
-        return 1;
 }
 
 extern void stream_close(stream* stream)

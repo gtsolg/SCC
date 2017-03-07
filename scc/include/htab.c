@@ -7,9 +7,17 @@ struct entry
         void*    val;
 };
 
-static inline struct entry* create_entry(alloc_fn alloc, uint64_t key, void* val)
+extern void htab_initf(struct htab* htab, size_t size, struct allocator* alloc)
 {
-        struct entry* entry = alloc(sizeof(*entry));
+        htab->buckets = NULL;
+        htab->size = size;
+        htab->alloc = alloc;
+        htab->elems = 0;
+}
+
+static inline struct entry* create_entry(struct allocator* alloc, uint64_t key, void* val)
+{
+        struct entry* entry = allocate(alloc, sizeof(*entry));
         if (!entry)
                 return NULL;
         entry->node = list_null_node;
@@ -26,25 +34,29 @@ extern void htab_delete(struct htab* htab)
                         struct entry* entry = list_pop_back(htab->buckets + i);
                         if (!entry)
                                 break;
-                        htab->alloc.deallocate(entry);
+                        deallocate(htab->alloc, entry);
                 }
-        htab->alloc.deallocate(htab->buckets);
+        deallocate(htab->alloc, htab->buckets);
         htab->buckets = NULL;
         htab->size = 0;
 }
 
-static inline struct list_node* create_buckets(alloc_fn alloc, size_t size)
+static inline struct list_node* create_buckets(struct allocator* alloc, size_t size)
 {
-        struct list_node* buckets = alloc(sizeof(struct list_node) * size);
+        struct list_node* buckets = allocate(alloc, sizeof(*buckets) * size);
+        if (!buckets)
+                return NULL;
         for (size_t i = 0; i < size; i++)
-                list_init(buckets + i);
+                list_initf(buckets + i);
         return buckets;
 }
 
-static inline void htab_grow(struct htab* htab)
+static inline scc_err_t htab_grow(struct htab* htab)
 {
         size_t new_size = 1 + htab->size * 2;
-        struct list_node* new_buckets = create_buckets(htab->alloc.allocate, new_size);
+        struct list_node* new_buckets = create_buckets(htab->alloc, new_size);
+        if (!new_buckets)
+                return SCC_ERR;
 
         for (size_t i = 0; i < htab->size; i++)
                 while (1)
@@ -59,20 +71,25 @@ static inline void htab_grow(struct htab* htab)
         htab->size = new_size;
 }
 
-extern int htab_insert(struct htab* htab, uint64_t key, void* val)
+extern scc_err_t htab_insert(struct htab* htab, uint64_t key, void* val)
 {
         if (!htab->buckets)
-                htab->buckets = create_buckets(htab->alloc.allocate, htab->size);
+        {
+                htab->buckets = create_buckets(htab->alloc, htab->size);
+                if (!htab->buckets)
+                        return SCC_ERR;
+        }
 
         if (htab->size == htab->elems)
-                htab_grow(htab);
+                if (htab_grow(htab))
+                        return SCC_ERR;
 
-        struct entry* entry = create_entry(htab->alloc.allocate, key, val);
+        struct entry* entry = create_entry(htab->alloc, key, val);
         if (!entry)
-                return 0;
+                return SCC_ERR;
         list_push_back(&htab->buckets[key % htab->size], entry);
         htab->elems++;
-        return 1;
+        return SCC_SUCCESS;
 }
 
 extern int htab_exists(struct htab* htab, uint64_t key)

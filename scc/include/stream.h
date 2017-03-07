@@ -1,8 +1,7 @@
 #ifndef STREAM_H
 #define STREAM_H
 
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
+#include "scc.h"
 
 #define SEOF -1
 
@@ -37,8 +36,8 @@ struct stream_base
 
 typedef struct stream_base stream;
 
-extern int  fstream_init(stream* stream, const char* filename, const char* mode);
-extern int  sstream_init(stream* stream, const char* string);
+extern scc_err_t fstream_init(stream* stream, const char* filename, const char* mode);
+extern void sstream_init(stream* stream, const char* string);
 extern void stream_close(stream* stream);
 
 extern int  stream_eof(stream* stream);
