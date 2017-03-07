@@ -2,6 +2,7 @@
 #define _TREE_H
 
 #include "list.h"
+#include "str_pool.h"
 
 typedef struct tree_node* tree;
 
@@ -22,7 +23,7 @@ struct tree_const_real
 
 struct tree_const_string
 {
-        const char* string;
+        strref_t ref;
 };
 
 struct tree_vector_type
@@ -71,7 +72,7 @@ struct tree_type
 
 struct tree_identifier
 {
-        const char* name;
+        strref_t ref;
 };
 
 enum decl_scope
@@ -305,17 +306,23 @@ struct tree_node
         };
 };
 
-extern tree tree_create(enum tree_node_kind kind);
-extern void tree_delete(tree node);
+//static struct tree_node __null_node;
+//#define TREE_NULL_NODE &__null_node
 
-extern tree tree_type_create(enum type_kind kind, enum type_qualifier qual, tree type);
-extern tree tree_ident_create(const char* name);
-extern tree tree_list_node_create(tree base);
-extern tree tree_exp_create(enum operator_kind kind, unsigned nesting, const struct tree_exp_info* opinfo);
-extern tree tree_const_int_create(uint64_t val);
-extern tree tree_const_real_create(long double val);
-extern tree tree_const_float_create(float val);
-extern tree tree_const_string_create(const char* string);
+static struct tree_node __null_exp = { tnk_exp, ok_null };
+#define TREE_NULL_EXP_NODE &__null_exp;
+
+extern tree tree_create(struct allocator* alloc, enum tree_node_kind kind);
+extern void tree_delete(struct allocator* alloc, tree node);
+
+extern tree tree_type_create(struct allocator* alloc, enum type_kind kind, enum type_qualifier qual, tree type);
+extern tree tree_ident_create(struct allocator* alloc, strref_t ref);
+extern tree tree_list_node_create(struct allocator* alloc, tree base);
+extern tree tree_exp_create(struct allocator* alloc, enum operator_kind kind, unsigned nesting, const struct tree_exp_info* opinfo);
+extern tree tree_const_int_create(struct allocator* alloc, uint64_t val);
+extern tree tree_const_real_create(struct allocator* alloc, long double val);
+extern tree tree_const_float_create(struct allocator* alloc, float val);
+extern tree tree_const_string_create(struct allocator* alloc, strref_t ref);
 
 #define tree_kind(ptree)           (ptree)->kind
 #define tree_type(ptree)           (ptree)->type.type
@@ -334,8 +341,8 @@ extern tree tree_const_string_create(const char* string);
 #define tree_exp_precedence(ptree) tree_exp_info(ptree).precedence
 #define tree_exp_nesting(ptree)    tree_exp_info(ptree).nesting
 #define tree_exp_computed_precedence(ptree) (tree_exp_precedence(ptree) + tree_exp_nesting(ptree) * 100)
-#define tree_id_name(ptree)        (ptree)->id.name
-#define tree_const_string(ptree)   (ptree)->const_string.string
+#define tree_id_ref(ptree)         (ptree)->id.ref
+#define tree_const_strref(ptree)   (ptree)->const_string.ref
 #define tree_const_float(ptree)    (ptree)->const_float.val
 #define tree_const_real(ptree)     (ptree)->const_real.val
 #define tree_const_int(ptree)      (ptree)->const_int.val
@@ -364,7 +371,7 @@ extern tree tree_const_string_create(const char* string);
 static inline struct tree_node tree_list_init(tree list)
 {
         tree_kind(list) = tnk_list;
-        list_init(&tree_list(list));
+        list_initf(&tree_list(list));
         return *list;
 }
 
