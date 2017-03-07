@@ -18,7 +18,7 @@ struct list_node
 #define list_tail(listptr)  list_node_prev(listptr)
 #define list_empty(listptr) (list_head(listptr) == listptr)
 
-static inline void list_init(struct list_node* list)
+static inline void list_initf(struct list_node* list)
 {
         list->next = list;
         list->prev = list;
@@ -77,7 +77,7 @@ static inline void list_push_front_list(struct list_node* to, struct list_node* 
                 list_head(from)->prev = to;
                 to->next = list_head(from);
         }
-        list_init(from);
+        list_initf(from);
 }
 
 static inline void list_push_back_list(struct list_node* to, struct list_node* from)
@@ -91,7 +91,7 @@ static inline void list_push_back_list(struct list_node* to, struct list_node* f
                 list_tail(from)->next = to;
                 to->prev = list_tail(from);
         }
-        list_init(from);
+        list_initf(from);
 }
 
 static inline struct list_node* list_remove(struct list_node* node)
