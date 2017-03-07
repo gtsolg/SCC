@@ -16,13 +16,14 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <assert.h>
+#include <setjmp.h>
+#include "err.h"
 
 #if _WIN32
 #include <malloc.h>
 #elif __APPLE__
 #include <mm_malloc.h>
 #endif
-
 
 #define DEBUG _DEBUG
 
