@@ -164,6 +164,8 @@ static inline int ident(int c)
 
 static inline int symbol(int c)
 {
+        if (c == '\"' || c == '\'')
+                return 0;
         return c >= 33 && c <= 47
                 || c >= 58 && c <= 64
                 || c >= 91 && c <= 94

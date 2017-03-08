@@ -13,8 +13,7 @@ extern tree c_tree_create_const(struct allocator* alloc, const ctoken* cst)
                         return tree_const_float_create(alloc, cst->flt);
 
                 case ctt_const_string:
-                        return tree_const_string_create(alloc,
-                                string_pool_get_string_by_ref(STD_STR_POOL, cst->ref));
+                        return tree_const_string_create(alloc, cst->ref);
 
                 default:
                         return NULL;

@@ -65,6 +65,9 @@ static void c_parser_lex_cst_num_token(struct c_parser* parser, struct token* to
 static void c_parser_lex_cst_str_token(struct c_parser* parser, struct token* token
         , const char* string, int len)
 {
+        token->type = ctt_const_string;
+        token->ref = string_pool(STD_STR_POOL, string, len);
+        add_token(parser, token, lf_c);
 }
 
 static int escape_to_char(int c)
@@ -125,9 +128,6 @@ extern void c_parser_lex_token(struct c_parser* parser)
                         int len = 0;
                         c_reader_loc_expose(c_parser_reader(parser), token->integer, &string, &len);
                         lex_dispatch_table[token->type](parser, token, string, len);
-
-                        ctoken* tok = list_tail(&parser->token_list);
-
                         return;
                 }
         }
