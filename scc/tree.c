@@ -50,6 +50,7 @@ extern tree tree_exp_create(struct allocator* alloc, enum operator_kind kind, un
         tree exp = tree_create(alloc, tnk_exp);
         if (!exp)
                 return NULL;
+        tree_exp_prev(exp) = NULL;
         tree_exp_left(exp) = NULL;
         tree_exp_right(exp) = NULL;
         tree_exp_info(exp) = opinfo[kind];

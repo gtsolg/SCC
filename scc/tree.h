@@ -166,6 +166,8 @@ struct tree_exp_info
 struct tree_exp
 {
         struct tree_exp_info info;
+        tree prev;
+
         union
         {
                 tree right;
@@ -332,6 +334,7 @@ extern tree tree_const_string_create(struct allocator* alloc, strref_t ref);
 #define tree_exp_kind(ptree)       tree_exp_info(ptree).kind
 #define tree_exp_left(ptree)       (ptree)->exp.left
 #define tree_exp_right(ptree)      (ptree)->exp.right
+#define tree_exp_prev(ptree)       (ptree)->exp.prev
 #define tree_exp_next(ptree)       tree_exp_right(ptree)
 #define tree_exp_node(ptree)       tree_exp_left(ptree)
 #define tree_exp_assoc(ptree)      tree_exp_info(ptree).assoc

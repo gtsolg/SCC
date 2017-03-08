@@ -305,14 +305,21 @@ static void preprocess_expr(struct c_parser* parser, struct c_symtab* symtab, si
         set_right_if_prev_is_type_or_dereference(res, 0);
 }
 
-static tree pop_expr(struct allocator* tree_alloc, tree output)
+static inline void set_sibling(struct allocator* tree_alloc, tree parent, int right, tree output)
 {
+        tree* sibling = right ? &tree_exp_right(parent) : &tree_exp_left(parent);
+        if (*sibling)
+                return;
         if (tree_list_empty(output))
-                return NULL;
-        tree node = tree_list_pop_back(output);
-        tree exp = tree_list_node_base(node);
-        tree_delete(tree_alloc, node);
-        return exp;
+                *sibling = NULL;
+        else
+        {
+                tree back = tree_list_pop_back(output);
+                tree exp = tree_list_node_base(back);
+                tree_delete(tree_alloc, back);
+                tree_exp_prev(exp) = parent;
+                *sibling = exp;
+        }
 }
 
 static void build_expr(struct allocator* tree_alloc, tree enode, tree output)
@@ -320,10 +327,8 @@ static void build_expr(struct allocator* tree_alloc, tree enode, tree output)
         tree exp = tree_list_node_base(enode);
         if (!c_node_is_operand(exp))
         {
-                if (!tree_exp_right(exp))
-                        tree_exp_right(exp) = pop_expr(tree_alloc, output);
-                if (!tree_exp_left(exp))
-                        tree_exp_left(exp) = pop_expr(tree_alloc, output);
+                set_sibling(tree_alloc, exp, 1, output);
+                set_sibling(tree_alloc, exp, 0, output);
         }
         tree_list_push_back(output, enode);
 }
