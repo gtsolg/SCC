@@ -4,7 +4,7 @@
 
 extern int c_parser_token_is_default_type(struct c_parser* parser)
 {
-        if (!c_parser_token(parser))
+        if (c_parser_eof(parser))
                 return 0;
         switch (c_parser_token_type(parser))
         {
@@ -97,15 +97,14 @@ extern tree c_parse_base_type(struct c_parser* parser, struct c_symtab* symtab)
                 ? c_parse_default_type(parser)
                 : c_parse_alias(parser, symtab);
         if (!type)
-                goto backup;
+        {
+                c_parser_load_state(parser);
+                return NULL;
+        }
         if (tree_type_qual(type) != qual)
                 type = tree_type_create(&c_parser_tree_alloc(parser), tree_type_kind(type), qual, type);
         c_parser_pop_state(parser);
         return type;
-
-backup:
-        c_parser_load_state(parser);
-        return NULL;
 }
 
 extern tree c_parse_type(struct c_parser* parser, struct c_symtab* symtab, size_t size)

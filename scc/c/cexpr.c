@@ -153,13 +153,13 @@ static inline enum operator_kind binary_operator_kind(enum c_token_type token, i
 static inline void set_right_to_null(tree exp, unsigned nesting)
 {
         if (!tree_exp_right(exp))
-                tree_exp_right(exp) = TREE_NULL_EXP_NODE;//c_tree_exp_create(ok_null, nesting);
+                tree_exp_right(exp) = TREE_NULL_EXP_NODE;
 }
 
 static inline void set_left_to_null(tree exp, unsigned nesting)
 {
         if (!tree_exp_left(exp))
-                tree_exp_left(exp) = TREE_NULL_EXP_NODE;//c_tree_exp_create(ok_null, nesting);
+                tree_exp_left(exp) = TREE_NULL_EXP_NODE;
 }
 
 static inline int c_node_is(tree it, enum operator_kind kind)
