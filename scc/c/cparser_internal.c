@@ -1,12 +1,4 @@
 #include "cparser.h"
-#include "ccommon.h"
-
-struct obj_info
-{
-        struct list_node node;
-        void* obj;
-        struct allocator* alloc;
-};
 
 static inline void* parser_get_obj(struct c_parser* parser, struct pool* pool)
 {
@@ -58,11 +50,9 @@ extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, stru
         c_parser_disable_nesting_tracking(parser);
 
         list_initf(&parser->token_list);
-        list_initf(&parser->obstack);
 
         parser->tree_pool = tree_pool;
         pool_initf(&parser->c_token_pool, sizeof(ctoken), 10, STD_ALLOC);
-        pool_initf(&parser->obj_pool, sizeof(struct obj_info), 10, STD_ALLOC);
 
         alloc_initf(&parser->tree_alloc,    parser, parser_alloc_tree,   parser_ret_tree);
         alloc_initf(&parser->c_token_alloc, parser, parser_alloc_ctoken, parser_ret_ctoken);
@@ -71,12 +61,6 @@ extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, stru
 
 extern void c_parser_shutdown(struct c_parser* parser)
 {
-        while (!list_empty(&parser->obstack))
-        {
-                struct obj_info* info = list_pop_back(&parser->obstack);
-                deallocate(info->alloc, info->obj);
-                deallocate(&parser->obj_alloc, info);
-        }
         pool_delete(&parser->obj_pool);
         pool_delete(&parser->c_token_pool);
 }
@@ -109,19 +93,6 @@ extern void c_parser_enable_nesting_tracking(struct c_parser* parser)
 extern void c_parser_disable_nesting_tracking(struct c_parser* parser)
 {
         parser->enable_nesting_tracking = 0;
-}
-
-extern void c_parser_register_obj(struct c_parser* parser, void* obj, struct allocator* alloc)
-{
-        struct obj_info* info = allocate(&parser->obj_alloc, sizeof(*info));
-        info->obj = obj;
-        info->alloc = alloc;
-        list_push_back(&parser->obstack, &info->node);
-}
-
-extern void c_parser_restore_obj(struct c_parser* parser)
-{
-        deallocate(&parser->obj_alloc, list_pop_back(&parser->obstack));
 }
 
 extern int c_parser_advance(struct c_parser* parser)
@@ -289,19 +260,4 @@ extern void c_parser_init_first_token(struct c_parser* parser)
 {
         c_parser_lex_token(parser);
         c_parser_token(parser) = list_head(&parser->token_list);
-}
-
-extern tree c_parse(struct c_parser* parser, struct c_symtab* globl)
-{
-        c_parser_set_on_err(parser)
-        {
-                c_parser_shutdown(parser);
-                return NULL;
-        }
-
-        c_parser_init_first_token(parser);
-        while (!c_parser_eof(parser))
-                c_parser_advance(parser);
-
-        return NULL;
 }

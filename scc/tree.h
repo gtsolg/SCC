@@ -306,9 +306,6 @@ struct tree_node
         };
 };
 
-//static struct tree_node __null_node;
-//#define TREE_NULL_NODE &__null_node
-
 static struct tree_node __null_exp = { tnk_exp, ok_null };
 #define TREE_NULL_EXP_NODE &__null_exp;
 

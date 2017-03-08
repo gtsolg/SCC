@@ -1,8 +1,6 @@
-#include "ctype.h"
-#include "ccommon.h"
-#include "cexpr.h"
+#include "cparser.h"
 
-extern int c_parser_token_is_default_type(struct c_parser* parser)
+static int c_parser_token_is_default_type(struct c_parser* parser)
 {
         if (c_parser_eof(parser))
                 return 0;
@@ -24,34 +22,29 @@ extern int c_parser_token_is_default_type(struct c_parser* parser)
         }
 }
 
-extern int c_parser_token_is_composite_type(struct c_parser* parser)
+static int c_parser_token_is_composite_type(struct c_parser* parser)
 {
-        enum c_token_type t = c_parser_token_type(parser);
-        return t == ctt_struct || t == ctt_union;
+        enum c_token_type type = c_parser_token_type(parser);
+        return type == ctt_struct || type == ctt_union;
 }
 
-extern int c_parser_token_is_type_qualifier(struct c_parser* parser)
-{
-        enum c_token_type t = c_parser_token_type(parser);
-        return t == ctt_const || t == ctt_volatile;
-}
-
-extern enum type_qualifier c_parse_type_qualifier(struct c_parser* parser)
+static enum type_qualifier c_parse_type_qualifier(struct c_parser* parser)
 {
         enum type_qualifier qual = tq_unqualified;
-        while (c_parser_token_is_type_qualifier(parser))
+        while (1)
         {
-                enum c_token_type token = c_parser_token_type(parser);
-                if (token == ctt_const)
+                enum c_token_type type = c_parser_token_type(parser);
+                if (type == ctt_const)
                         qual |= tq_const;
-                else if (token == ctt_volatile)
+                else if (type == ctt_volatile)
                         qual |= tq_volatile;
+                else
+                        return qual;
                 c_parser_advance(parser);
         }
-        return qual;
 }
 
-extern tree c_parse_default_type(struct c_parser* parser)
+static tree c_parse_default_type(struct c_parser* parser)
 {
         uint64_t key = 0;
         while (c_parser_token_is_default_type(parser))
@@ -65,7 +58,7 @@ extern tree c_parse_default_type(struct c_parser* parser)
         return node;
 }
 
-extern tree c_parse_alias(struct c_parser* parser, struct c_symtab* symtab)
+static tree c_parse_alias(struct c_parser* parser, struct c_symtab* symtab)
 {
         enum c_token_type composite = 0;
         if (c_parser_token_is_composite_type(parser))

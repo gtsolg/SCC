@@ -1,7 +1,5 @@
 #include "ctest.h"
-#include "err.h"
-#include "str.h"
-#include "cexpr.h"
+#include "cparser.h"
 #include "cprint.h"
 
 extern void c_test_parse_expr_raw(const char* input, const char* result)

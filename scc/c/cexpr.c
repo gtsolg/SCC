@@ -1,6 +1,4 @@
-#include "cexpr.h"
-#include "ccommon.h"
-#include "ctype.h"
+#include "cparser.h"
 #include "ctree.h"
 
 static inline int expect_exp(tree node)
@@ -13,7 +11,7 @@ extern int c_node_is_operand(tree node)
         return expect_exp(node) 
                 && (tree_exp_kind(node) == ok_null || tree_exp_kind(node) == ok_operand);
 }
-extern int c_node_is_prefix_operator(tree node)
+static int c_node_is_prefix_operator(tree node)
 {
         if (!expect_exp(node))
                 return 0;
@@ -34,7 +32,7 @@ extern int c_node_is_prefix_operator(tree node)
         }
 }
 
-extern int c_node_is_postfix_operator(tree node)
+static int c_node_is_postfix_operator(tree node)
 {
         if (!expect_exp(node))
                 return 0;
@@ -52,7 +50,7 @@ extern int c_node_is_postfix_operator(tree node)
         }
 }
 
-extern int c_parser_token_is_const(struct c_parser* parser)
+static int c_parser_token_is_const(struct c_parser* parser)
 {
         switch (c_parser_token_type(parser))
         {
@@ -67,7 +65,7 @@ extern int c_parser_token_is_const(struct c_parser* parser)
         }
 }
 
-extern int c_node_is_postfix_unary_operator(tree node)
+static int c_node_is_postfix_unary_operator(tree node)
 {
         return expect_exp(node)
                 && (tree_exp_kind(node) == ok_post_dec || tree_exp_kind(node) == ok_post_inc);
