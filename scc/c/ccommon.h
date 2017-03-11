@@ -3,8 +3,10 @@
 
 #include "htab.h"
 #include "hash.h"
-#include "token.h"
 #include "tree.h"
+
+#include "ctoken.h"
+#include "climits.h"
 
 enum c_family_lang_flags
 {
@@ -13,12 +15,11 @@ enum c_family_lang_flags
         lf_obj_c = 1 << 2,
 };
 
-typedef struct token ctoken;
-
 static const struct tree_exp_info c_opinfo[] = 
 {
         tree_exp_info_init(ok_null,        oak_left_to_right,  0),
         tree_exp_info_init(ok_operand,     oak_left_to_right,  0),
+        tree_exp_info_init(ok_attrib,   oak_left_to_right,  0),
 
         tree_exp_info_init(ok_post_inc,    oak_left_to_right, 15),
         tree_exp_info_init(ok_post_dec,    oak_left_to_right, 15),
@@ -31,15 +32,12 @@ static const struct tree_exp_info c_opinfo[] =
         tree_exp_info_init(ok_not,         oak_right_to_left, 14),
         tree_exp_info_init(ok_dereference, oak_right_to_left, 14),
         tree_exp_info_init(ok_address,     oak_right_to_left, 14),
-
         tree_exp_info_init(ok_call,        oak_left_to_right, 15),
         tree_exp_info_init(ok_subscript,   oak_left_to_right, 15),
         tree_exp_info_init(ok_member,      oak_left_to_right, 15),
         tree_exp_info_init(ok_member_ptr,  oak_left_to_right, 15),
         tree_exp_info_init(ok_cast,        oak_right_to_left, 14),
-
         tree_exp_info_init(ok_type,        oak_right_to_left, 14),
-
         tree_exp_info_init(ok_mul,         oak_left_to_right, 13),
         tree_exp_info_init(ok_div,         oak_left_to_right, 13),
         tree_exp_info_init(ok_mod,         oak_left_to_right, 13),
@@ -70,11 +68,6 @@ static const struct tree_exp_info c_opinfo[] =
         tree_exp_info_init(ok_xor_assing,  oak_right_to_left,  3),
         tree_exp_info_init(ok_or_assing,   oak_right_to_left,  3),
         tree_exp_info_init(ok_coma,        oak_right_to_left,  2),
-};
-
-enum c_token_type
-{
-#include "ctoken_type.inc"
 };
 
 static const char* c_reswords[] = 
