@@ -17,7 +17,7 @@ struct c_parser_state
 
 struct c_parser
 {
-        struct c_parser_state current;
+        //struct c_parser_state current;
         struct c_parser_state states[C_PARSER_MAX_STATES];
         size_t state_idx;
 
@@ -40,7 +40,7 @@ struct c_parser
 #define c_parser_tree_alloc(parser)    (parser)->tree_alloc
 #define c_parser_c_token_alloc(parser) (parser)->c_token_alloc
 #define c_parser_reader(parser)        (parser)->reader
-#define c_parser_cur_state(parser)     (parser)->current
+#define c_parser_cur_state(parser)     (parser)->states[(parser)->state_idx]
 #define c_parser_err(parser)           (parser)->err
 #define c_parser_reader_eof(parser)    (parser)->reader_eof
 #define c_parser_token(parser)         c_parser_cur_state(parser).token
