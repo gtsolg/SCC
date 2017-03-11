@@ -10,7 +10,7 @@
 
 struct c_parser_state
 {
-        ctoken* token;
+        c_token* token;
         size_t nesting; // depth of parentheses nestings
         size_t counter; // token counter
 };

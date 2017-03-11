@@ -18,12 +18,12 @@ static void parser_ret_tree(struct c_parser* parser, tree node)
         pool_return(parser->tree_pool, node);
 }
 
-static ctoken* parser_alloc_ctoken(struct c_parser* parser, size_t size)
+static c_token* parser_alloc_ctoken(struct c_parser* parser, size_t size)
 {
         return parser_get_obj(parser, &parser->c_token_pool);
 }
 
-static void parser_ret_ctoken(struct c_parser* parser, ctoken* token)
+static void parser_ret_ctoken(struct c_parser* parser, c_token* token)
 {
         pool_return(&parser->c_token_pool, token);
 }
@@ -52,7 +52,7 @@ extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, stru
         list_initf(&parser->token_list);
 
         parser->tree_pool = tree_pool;
-        pool_initf(&parser->c_token_pool, sizeof(ctoken), 10, STD_ALLOC);
+        pool_initf(&parser->c_token_pool, sizeof(c_token), 10, STD_ALLOC);
 
         alloc_initf(&parser->tree_alloc,    parser, parser_alloc_tree,   parser_ret_tree);
         alloc_initf(&parser->c_token_alloc, parser, parser_alloc_ctoken, parser_ret_ctoken);
