@@ -35,7 +35,6 @@ extern int c_token_is_const_val(const c_token* token)
 {
         switch (token->type)
         {
-                case ctt_const_char:
                 case ctt_const_int:
                 case ctt_const_float:
                 case ctt_const_string:

@@ -1,5 +1,5 @@
 
-		ctt_char = 1,
+	ctt_char = 1,
         ctt_short,
         ctt_int,
         ctt_long,
@@ -86,7 +86,6 @@
         ctt_rbrace,
 
         ctt_identifier,
-        ctt_const_char,
         ctt_const_int,
         ctt_const_float,
         ctt_const_string,

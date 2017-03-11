@@ -74,7 +74,6 @@ extern tree c_token_to_cst_tree(struct allocator* alloc, const c_token* token)
 {
         switch (token->type)
         {
-                case ctt_const_char:
                 case ctt_const_int:    return tree_const_int_create(alloc, token->integer);
                 case ctt_const_float:  return tree_const_float_create(alloc, token->flt);
                 case ctt_const_string: return tree_const_string_create(alloc, token->ref);
