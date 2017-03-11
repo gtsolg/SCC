@@ -65,6 +65,8 @@ static inline void* pool_get(struct pool* pool)
 
 static inline void pool_return(struct pool* pool, void* obj)
 {
+        if (!obj)
+                return;
         (char*)obj -= sizeof(void*);
         *(void**)obj = pool->obstack;
         pool->obstack = obj;
