@@ -1,0 +1,1 @@
+static inline const const int* const* foo(const char const, int const*)
