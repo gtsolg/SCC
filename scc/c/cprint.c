@@ -4,7 +4,8 @@
 static char* c_exp_format[] = 
 {
         "",     // ok_null
-        "%s",   // ok_operand
+        "%s %s",   // ok_operand
+        "%S %s", // ok_attrib
         "%s++", // ok_post_inc
         "%s--", // ok_post_dec
         "{%s}", // ok_list
@@ -59,8 +60,8 @@ static int needs_brackets(tree exp, tree prev)
 {
         if (!prev)
                 return 0;
-        enum operator_kind p = tree_exp_kind(prev);
-        enum operator_kind e = tree_exp_kind(exp);
+        enum expr_node_kind p = tree_exp_kind(prev);
+        enum expr_node_kind e = tree_exp_kind(exp);
         if (e == ok_operand || p == ok_cast)
                 return 0;
 
@@ -85,7 +86,6 @@ static char* exp_to_str(tree exp, tree prev)
         char* right = node_to_str(tree_exp_right(exp), exp);
         if (!*left)
                 left = right;
-
         char* res = format(c_format, left, right);
         if (needs_brackets(exp, prev))
                 res = format("(%s)", res);
@@ -123,7 +123,7 @@ static char* node_to_str(tree node, tree prev)
                 case tnk_vector_type:  return NULL;
                 case tnk_sign_type:    return NULL;
                 case tnk_type:         return c_type_to_str(node);
-
+                case tnk_attrib:       return c_reswords[tree_attrib(node)];
                 default:
                         return NULL;
         }
@@ -178,7 +178,6 @@ extern char* c_type_to_str(tree type)
                 case tk_union:
                 case tk_vector:
                 case tk_pointer:
-                case tk_function_pointer:
                 default:
                         return NULL;
         }
