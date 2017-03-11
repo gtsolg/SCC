@@ -43,12 +43,12 @@ extern void c_test_parse_expr_raw(const char* input, const char* result)
 
         if (!str)
         {
-                printf("FAIL at: %s\nsyntax error:\n%s", input, str);
+                printf("FAIL at: %s\nsyntax error:\n%s\n", input, str);
                 return;
         }
         if (!streq(str, res, " \n\t\r"))
         {
-                printf("FAIL at: %s\ngot:\n%s\nexpected:\n%s", input, str, res);
+                printf("FAIL at: %s\ngot:\n%s\nexpected:\n%s\n", input, str, res);
                 return;
         }
         printf("DONE");
