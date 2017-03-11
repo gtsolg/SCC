@@ -3,7 +3,15 @@
 
 #include "ccommon.h"
 
-extern tree c_tree_create_const(struct allocator* alloc, const ctoken* cst_token);
-extern tree c_tree_exp_create(struct allocator* alloc, enum operator_kind op, unsigned nesting);
+extern enum type_qualifier c_token_to_qualifier(const c_token* token);
+extern enum decl_storage_class c_token_to_storage_class(const c_token* token);
+
+extern int c_node_is_exp(tree node);
+extern int c_node_is_operand(tree node);
+extern int c_node_is_postfix_operator(tree node);
+extern int c_list_iterator_is_exp(tree it, enum expr_node_kind op);
+
+extern tree c_token_to_cst_tree(struct allocator* alloc, const c_token* token);
+extern tree c_tree_exp_create(struct allocator* alloc, enum expr_node_kind op, unsigned nesting);
 
 #endif // !C_TREE_H
