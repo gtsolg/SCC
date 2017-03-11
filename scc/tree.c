@@ -93,3 +93,10 @@ extern tree tree_const_string_create(struct allocator* alloc, strref_t ref)
         tree_const_strref(cst) = ref;
         return cst;
 }
+
+extern tree tree_attrib_create(struct allocator* alloc, uint64_t att)
+{
+        tree node = tree_create(alloc, tnk_attrib);
+        tree_attrib(node) = att;
+        return node;
+}
