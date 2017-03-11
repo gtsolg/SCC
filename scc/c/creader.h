@@ -54,6 +54,7 @@ struct c_reader
         int buf_idx;
         int line_idx;
         int src_idx;
+        int eof;
 
         unsigned linec;
         scc_err_t* err;

@@ -25,7 +25,6 @@ struct c_parser
 
         struct c_reader* reader;
         unsigned         enable_nesting_tracking;
-        unsigned         reader_eof;
         scc_err_t        err;
 
         jmp_buf on_err_buf;
@@ -47,11 +46,11 @@ struct c_parser
 #define c_parser_token(parser)         c_parser_cur_state(parser).token
 #define c_parser_counter(parser)       c_parser_cur_state(parser).counter
 #define c_parser_nesting(parser)       c_parser_cur_state(parser).nesting
-#define c_parser_eof(parser)           (c_parser_reader_eof(parser) && c_parser_token(parser) == list_end(&(parser)->token_list))
 #define c_parser_next_token(parser)    ((struct c_token*)c_parser_token(parser)->node.next)
 #define c_parser_prev_token(parser)    ((struct c_token*)c_parser_token(parser)->node.prev)
 #define c_parser_token_ref(parser)     c_parser_token(parser)->ref
 #define c_parser_token_type(parser)    c_parser_token(parser)->type
+#define c_parser_eof(parser)           (c_parser_token_type(parser) == ctt_eof)
 
 #define c_parser_error_fence(parser) \
         if (c_parser_err(parser))    \

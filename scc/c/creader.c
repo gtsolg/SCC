@@ -96,6 +96,7 @@ static void reader_init(struct c_reader* reader, struct allocator* token_alloc, 
         reader->src_idx = 0;
         reader->line_idx = 1;
         reader->linec = 0;
+        reader->eof = 0;
         list_initf(&reader->token_buf);
         reader_reset_buf(reader);
 }
@@ -277,7 +278,10 @@ extern struct token* c_read_token(struct c_reader* reader)
 
         int c = *c_reader_cur_lpos(reader);
         if (!c)
-                return NULL; // eof
+        {
+                reader->eof = 1;
+                return NULL;
+        }
 
         if (c == '#')
                 read_directive(reader);

@@ -41,7 +41,6 @@ static void parser_ret_objinfo(struct c_parser* parser, struct obj_info* info)
 extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, struct pool* tree_pool)
 {
         parser->state_idx = 0;
-        parser->reader_eof = 0;
         c_parser_err(parser) = SCC_SUCCESS;
         c_parser_reader(parser) = reader;
         c_parser_counter(parser) = 0;

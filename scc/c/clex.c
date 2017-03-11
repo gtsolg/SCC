@@ -1,5 +1,7 @@
 #include "cparser.h"
 
+#define C_MAX_OPTOKEN_LEN 3
+
 static inline enum c_token_type token_type(const char* token, int len)
 {
         return (enum c_token_type)htab_get(&c_reswords_map, hash64_str_len(token, len));
@@ -90,7 +92,7 @@ static void c_parser_lex_cst_char_token(struct c_parser* parser, struct token* t
                 c_parser_handle_err(parser, SCC_ERR); // incorrect character
 
         token->integer = len == 1 ? *string : escape_to_char(*++string);
-        token->type = ctt_const_char;
+        token->type = ctt_const_int;
         add_token(parser, token, lf_c);
 }
 
@@ -108,13 +110,13 @@ const static void(*lex_dispatch_table[crtt_size])(struct c_parser*, struct token
 
 extern void c_parser_lex_token(struct c_parser* parser)
 {
-        while (!parser->reader_eof)
+        while (!c_parser_reader(parser)->eof)
         {
                 struct token* token = c_read_token(c_parser_reader(parser));
                 c_parser_error_fence(parser);
                 if (!token)
                 {
-                        parser->reader_eof = 1;
+                        add_token(parser, token_create(&c_parser_c_token_alloc(parser), ctt_eof), lf_c);
                         return;
                 }
 
