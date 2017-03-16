@@ -29,7 +29,7 @@ extern char* strconcat(char* dst, char* src)
 
 extern size_t streq(const char* a, const char* b, const char* ignore)
 {
-        char* s[2] = { a, b };
+        const char* s[2] = { a, b };
         size_t size = strlen(ignore);
 
         while (1)

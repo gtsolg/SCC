@@ -1,13 +1,15 @@
 #ifndef SCC_H
 #define SCC_H
 
+#if _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable:4133)
+#else
 #pragma GCC diagnostic ignored "-Wincompatible-pointer-types"
 #pragma GCC diagnostic ignored "-Wlogical-op-parentheses"
 #pragma GCC diagnostic ignored "-Wint-conversion"
 #pragma GCC diagnostic ignored "-Wint-to-void-pointer-cast"
-
-#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 #include <stddef.h>
 #include "sccobj.h"

@@ -7,7 +7,7 @@ static void* def_alloc(void* ptr, size_t size)
 
 static void def_dealloc(void* ptr, void* block)
 {
-        return free(block);
+        free(block);
 }
 
 struct allocator __std_alloc = allocator_init(NULL, def_alloc, def_dealloc);

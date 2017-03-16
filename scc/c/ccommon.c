@@ -22,7 +22,7 @@ static scc_err_t add_deftype(enum type_kind kind, int tokenc, ...)
         va_start(list, tokenc);
 
         uint64_t h = 0;
-        for (size_t i = 0; i < tokenc; i++)
+        for (int i = 0; i < tokenc; i++)
                 h += c_reswords_hash[va_arg(list, int)];
 
         tree node = tree_type_create(STD_ALLOC, kind, tq_unqualified, NULL);

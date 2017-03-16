@@ -69,6 +69,7 @@ static inline scc_err_t htab_grow(struct htab* htab)
         htab_delete(htab);
         htab->buckets = new_buckets;
         htab->size = new_size;
+        return SCC_SUCCESS;
 }
 
 extern scc_err_t htab_insert(struct htab* htab, uint64_t key, void* val)

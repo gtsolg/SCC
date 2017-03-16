@@ -45,7 +45,7 @@ extern tree tree_list_node_create(struct allocator* alloc, tree base)
         return node;
 }
 
-extern tree tree_exp_create(struct allocator* alloc, enum operator_kind kind, unsigned nesting, struct tree_exp_info* opinfo)
+extern tree tree_exp_create(struct allocator* alloc, enum operator_kind kind, unsigned nesting, const struct tree_exp_info* opinfo)
 {
         tree exp = tree_create(alloc, tnk_exp);
         if (!exp)

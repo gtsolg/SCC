@@ -1,4 +1,5 @@
 #include "scc.h"
+#include "c/ccommon.h"
 #include "args.h"
 
 int main(int argc, char** argv)

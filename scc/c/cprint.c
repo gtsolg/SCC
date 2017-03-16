@@ -1,5 +1,6 @@
 #include "cprint.h"
 #include "cparser.h"
+#include "str.h"
 
 static char* c_exp_format[] = 
 {
@@ -123,7 +124,7 @@ static char* node_to_str(tree node, tree prev)
                 case tnk_vector_type:  return NULL;
                 case tnk_sign_type:    return NULL;
                 case tnk_type:         return c_type_to_str(node);
-                case tnk_attrib:       return c_reswords[tree_attrib(node)];
+                case tnk_attrib:       return format(c_reswords[tree_attrib(node)]);
                 default:
                         return NULL;
         }
@@ -135,7 +136,7 @@ extern char* c_const_to_str(tree cst)
         switch (tree_kind(cst))
         {
                 case tnk_const_int:
-                        sprintf(buf, "%d", tree_const_int(cst));
+                        sprintf(buf, "%llu", tree_const_int(cst));
                         break;
 
                 case tnk_const_float:
