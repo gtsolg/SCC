@@ -1,6 +1,6 @@
-import os
+import os, subprocess
 
-scc = './scc' if os.name == 'posix' else 'scc.exe'
+scc = os.path.join(os.getcwd(), '..', 'bin', 'scc.exe')
 
 
 def run_tests(dir):
@@ -12,7 +12,8 @@ def run_tests(dir):
         a = t.replace('t.', 'a.')
         if not os.path.isfile(a):
             a = t
-        os.system(scc + ' -c_test_expr ' + '\"' + t + '\" \"' + a + '\"')
+        subprocess.call([scc, '-c_test_expr', t, a])
+
 
 if __name__ == '__main__':
-    run_tests('exp')
+	run_tests('exp')

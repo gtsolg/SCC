@@ -17,7 +17,6 @@ struct c_parser_state
 
 struct c_parser
 {
-        //struct c_parser_state current;
         struct c_parser_state states[C_PARSER_MAX_STATES];
         size_t state_idx;
 

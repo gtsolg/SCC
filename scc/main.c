@@ -1,5 +1,5 @@
+#include "scc.h"
 #include "args.h"
-#include "ctest.h"
 
 int main(int argc, char** argv)
 {

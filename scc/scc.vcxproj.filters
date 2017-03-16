@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="scc">
+      <UniqueIdentifier>{630843ea-1150-4175-9813-3881096c9adf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\c">
+      <UniqueIdentifier>{cde76f00-7fb6-46f5-8bf9-0e1a2228400d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\include">
+      <UniqueIdentifier>{68738f73-a315-4d2e-9bcc-2a297f5610b4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="args.h">
+      <Filter>scc</Filter>
+    </ClInclude>
+    <ClInclude Include="err.h">
+      <Filter>scc</Filter>
+    </ClInclude>
+    <ClInclude Include="scc.h">
+      <Filter>scc</Filter>
+    </ClInclude>
+    <ClInclude Include="tree.h">
+      <Filter>scc</Filter>
+    </ClInclude>
+    <ClInclude Include="tree_pass.h">
+      <Filter>scc</Filter>
+    </ClInclude>
+    <ClInclude Include="sccobj.h">
+      <Filter>scc</Filter>
+    </ClInclude>
+    <ClInclude Include="token.h">
+      <Filter>scc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\include\alloc.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\include\hash.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\include\htab.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\include\list.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\include\pool.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\include\str.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\include\str_pool.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\include\stream.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\ccommon.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\cenv.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\climits.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\cparser.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\cparser_internal.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\cprint.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\creader.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\csymtab.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\ctest.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\ctoken.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scc_\scc\scc\c\ctree.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="err.c">
+      <Filter>scc</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>scc</Filter>
+    </ClCompile>
+    <ClCompile Include="args.c">
+      <Filter>scc</Filter>
+    </ClCompile>
+    <ClCompile Include="tree.c">
+      <Filter>scc</Filter>
+    </ClCompile>
+    <ClCompile Include="tree_pass.c">
+      <Filter>scc</Filter>
+    </ClCompile>
+    <ClCompile Include="token.c">
+      <Filter>scc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\include\alloc.c">
+      <Filter>scc\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\include\htab.c">
+      <Filter>scc\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\include\str.c">
+      <Filter>scc\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\include\str_pool.c">
+      <Filter>scc\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\include\stream.c">
+      <Filter>scc\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\cdecl.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\cenv.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\cexpr.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\clex.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\cparser_internal.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\cprint.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\creader.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\cstmt.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\csymtab.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\ctest.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\ctoken.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\ctree.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\ctype.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scc_\scc\scc\c\ccommon.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\scc_\scc\scc\c\creswords.inc">
+      <Filter>scc\c</Filter>
+    </None>
+    <None Include="..\..\scc_\scc\scc\c\ctoken_type.inc">
+      <Filter>scc\c</Filter>
+    </None>
+  </ItemGroup>
+</Project>
