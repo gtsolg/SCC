@@ -33,61 +33,61 @@
     <ClInclude Include="token.h">
       <Filter>scc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\include\alloc.h">
+    <ClInclude Include="include\hash.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\include\hash.h">
+    <ClInclude Include="include\htab.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\include\htab.h">
+    <ClInclude Include="include\list.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\include\list.h">
+    <ClInclude Include="include\pool.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\include\pool.h">
+    <ClInclude Include="include\str.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\include\str.h">
+    <ClInclude Include="include\str_pool.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\include\str_pool.h">
+    <ClInclude Include="include\stream.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\include\stream.h">
+    <ClInclude Include="include\alloc.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\ccommon.h">
+    <ClInclude Include="c\ccommon.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\cenv.h">
+    <ClInclude Include="c\cenv.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\climits.h">
+    <ClInclude Include="c\climits.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\cparser.h">
+    <ClInclude Include="c\cparser.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\cparser_internal.h">
+    <ClInclude Include="c\cparser_internal.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\cprint.h">
+    <ClInclude Include="c\cprint.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\creader.h">
+    <ClInclude Include="c\creader.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\csymtab.h">
+    <ClInclude Include="c\csymtab.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\ctest.h">
+    <ClInclude Include="c\ctest.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\ctoken.h">
+    <ClInclude Include="c\ctoken.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scc_\scc\scc\c\ctree.h">
+    <ClInclude Include="c\ctree.h">
       <Filter>scc\c</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,69 +110,69 @@
     <ClCompile Include="token.c">
       <Filter>scc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\include\alloc.c">
+    <ClCompile Include="include\htab.c">
       <Filter>scc\include</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\include\htab.c">
+    <ClCompile Include="include\str.c">
       <Filter>scc\include</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\include\str.c">
+    <ClCompile Include="include\str_pool.c">
       <Filter>scc\include</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\include\str_pool.c">
+    <ClCompile Include="include\stream.c">
       <Filter>scc\include</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\include\stream.c">
+    <ClCompile Include="include\alloc.c">
       <Filter>scc\include</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\cdecl.c">
+    <ClCompile Include="c\cdecl.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\cenv.c">
+    <ClCompile Include="c\cenv.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\cexpr.c">
+    <ClCompile Include="c\cexpr.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\clex.c">
+    <ClCompile Include="c\clex.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\cparser_internal.c">
+    <ClCompile Include="c\cparser_internal.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\cprint.c">
+    <ClCompile Include="c\cprint.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\creader.c">
+    <ClCompile Include="c\creader.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\cstmt.c">
+    <ClCompile Include="c\cstmt.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\csymtab.c">
+    <ClCompile Include="c\csymtab.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\ctest.c">
+    <ClCompile Include="c\ctest.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\ctoken.c">
+    <ClCompile Include="c\ctoken.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\ctree.c">
+    <ClCompile Include="c\ctree.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\ctype.c">
+    <ClCompile Include="c\ctype.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scc_\scc\scc\c\ccommon.c">
+    <ClCompile Include="c\ccommon.c">
       <Filter>scc\c</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\scc_\scc\scc\c\creswords.inc">
+    <None Include="c\creswords.inc">
       <Filter>scc\c</Filter>
     </None>
-    <None Include="..\..\scc_\scc\scc\c\ctoken_type.inc">
+    <None Include="c\ctoken_type.inc">
       <Filter>scc\c</Filter>
     </None>
   </ItemGroup>

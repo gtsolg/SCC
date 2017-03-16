@@ -1,5 +1,7 @@
 #include "cparser.h"
 
+#define C_MAX_OPTOKEN_LEN 3
+
 static inline enum c_token_type token_type(const char* token, int len)
 {
         return (enum c_token_type)htab_get(&c_reswords_map, hash64_str_len(token, len));
@@ -11,11 +13,6 @@ static inline void add_token(struct c_parser* parser, struct token* token, unsig
         list_push_back(&parser->token_list, &token->node);
 }
 
-#define C_MAX_OPTOKEN_LEN 3
-#define C_OPTOKENS_SIZE 1024
-
-static int c_optokens[C_OPTOKENS_SIZE];
-
 static void c_parser_lex_optoken(struct c_parser* parser, struct token* token
         , const char* string, int len)
 {
@@ -24,28 +21,22 @@ static void c_parser_lex_optoken(struct c_parser* parser, struct token* token
                 struct location loc = token->loc;
                 loc.off += i;
 
-                int type = 0;
-                int tok = *(int*)(string + i);
-                tok %= C_OPTOKENS_SIZE;
-
-                for (int j = C_MAX_OPTOKEN_LEN; j > 0; j--)
+                enum c_token_type type;
+                if (i + 1 < len)
                 {
-                        if (i + j > len)
-                                continue;
-
-                        tok &= 0xffffffff << j;
-                        type = c_optokens[tok];
+                        type = token_type(string + i, 2);
                         if (type)
                         {
-                                i += j - 1;
-                                break;
+                                add_token(parser, token_create_loc(&c_parser_c_token_alloc(parser), type, loc), lf_c);
+                                i++;
+                                continue;
                         }
-
                 }
-                if (type)
-                        add_token(parser, token_create_loc(&c_parser_c_token_alloc(parser), c_optokens[tok], loc), lf_c);
-                else
-                        c_parser_handle_err(parser, SCC_ERR); // unknown token
+
+                type = token_type(string + i, 1);
+                if (!type)
+                        c_parser_handle_err(parser, SCC_ERR); // unknown token1
+                add_token(parser, token_create_loc(&c_parser_c_token_alloc(parser), type, loc), lf_c);
         }
         token_delete(&c_parser_c_token_alloc(parser), token);
 }
@@ -85,12 +76,12 @@ static int escape_to_char(int c)
 {
         switch (c)
         {
-                case 'n': return '\n';
-                case 't': return '\t';
-                case '0': return '\0';
+        case 'n': return '\n';
+        case 't': return '\t';
+        case '0': return '\0';
 
-                default:
-                        return c;
+        default:
+                return c;
         }
 }
 

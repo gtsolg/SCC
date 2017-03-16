@@ -19,27 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scc_\scc\scc\c\ccommon.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\cenv.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\climits.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\cparser.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\cparser_internal.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\cprint.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\creader.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\csymtab.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\ctest.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\ctoken.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\c\ctree.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\include\alloc.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\include\hash.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\include\htab.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\include\list.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\include\pool.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\include\str.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\include\stream.h" />
-    <ClInclude Include="..\..\scc_\scc\scc\include\str_pool.h" />
     <ClInclude Include="args.h" />
+    <ClInclude Include="c\ccommon.h" />
+    <ClInclude Include="c\cenv.h" />
+    <ClInclude Include="c\climits.h" />
+    <ClInclude Include="c\cparser.h" />
+    <ClInclude Include="c\cparser_internal.h" />
+    <ClInclude Include="c\cprint.h" />
+    <ClInclude Include="c\creader.h" />
+    <ClInclude Include="c\csymtab.h" />
+    <ClInclude Include="c\ctest.h" />
+    <ClInclude Include="c\ctoken.h" />
+    <ClInclude Include="c\ctree.h" />
     <ClInclude Include="err.h" />
+    <ClInclude Include="include\alloc.h" />
+    <ClInclude Include="include\hash.h" />
+    <ClInclude Include="include\htab.h" />
+    <ClInclude Include="include\list.h" />
+    <ClInclude Include="include\pool.h" />
+    <ClInclude Include="include\str.h" />
+    <ClInclude Include="include\stream.h" />
+    <ClInclude Include="include\str_pool.h" />
     <ClInclude Include="scc.h" />
     <ClInclude Include="sccobj.h" />
     <ClInclude Include="token.h" />
@@ -47,35 +47,35 @@
     <ClInclude Include="tree_pass.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scc_\scc\scc\c\ccommon.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\cdecl.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\cenv.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\cexpr.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\clex.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\cparser_internal.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\cprint.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\creader.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\cstmt.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\csymtab.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\ctest.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\ctoken.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\ctree.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\c\ctype.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\include\alloc.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\include\htab.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\include\str.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\include\stream.c" />
-    <ClCompile Include="..\..\scc_\scc\scc\include\str_pool.c" />
     <ClCompile Include="args.c" />
+    <ClCompile Include="c\ccommon.c" />
+    <ClCompile Include="c\cdecl.c" />
+    <ClCompile Include="c\cenv.c" />
+    <ClCompile Include="c\cexpr.c" />
+    <ClCompile Include="c\clex.c" />
+    <ClCompile Include="c\cparser_internal.c" />
+    <ClCompile Include="c\cprint.c" />
+    <ClCompile Include="c\creader.c" />
+    <ClCompile Include="c\cstmt.c" />
+    <ClCompile Include="c\csymtab.c" />
+    <ClCompile Include="c\ctest.c" />
+    <ClCompile Include="c\ctoken.c" />
+    <ClCompile Include="c\ctree.c" />
+    <ClCompile Include="c\ctype.c" />
     <ClCompile Include="err.c" />
+    <ClCompile Include="include\alloc.c" />
+    <ClCompile Include="include\htab.c" />
+    <ClCompile Include="include\str.c" />
+    <ClCompile Include="include\stream.c" />
+    <ClCompile Include="include\str_pool.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="token.c" />
     <ClCompile Include="tree.c" />
     <ClCompile Include="tree_pass.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\scc_\scc\scc\c\creswords.inc" />
-    <None Include="..\..\scc_\scc\scc\c\ctoken_type.inc" />
+    <None Include="c\creswords.inc" />
+    <None Include="c\ctoken_type.inc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
