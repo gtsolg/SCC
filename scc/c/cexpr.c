@@ -237,8 +237,6 @@ static inline void set_right_if_prev_is_type_or_dereference(tree list)
                 set_right_to_null(tree_list_node_base(tail));
 }
 
-static tree parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, size_t size);
-
 static inline int parse_binary_operator(struct c_parser* parser, struct c_symtab* symtab, int prev_operand, tree list)
 {
         enum expr_node_kind kind = binary_operator_kind(c_parser_token_type(parser), prev_operand);
@@ -255,7 +253,7 @@ static inline int parse_binary_operator(struct c_parser* parser, struct c_symtab
 
                 tree subexpr = kind == ok_cast
                         ? c_parse_base_type(parser, symtab)
-                        : parse_expr_raw(parser, symtab, size);
+                        : c_parse_expr_raw(parser, symtab, size);
 
                 if (!subexpr && kind == ok_cast)
                 {
@@ -339,7 +337,7 @@ static void build_expr(struct allocator* alloc, tree enode, tree output)
         tree_list_push_back(output, enode);
 }
 
-static tree parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, size_t size)
+extern tree c_parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, size_t size)
 {
         if (!size)
                 return NULL;
@@ -386,14 +384,6 @@ static tree parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, siz
         tree node = tree_list_pop_back(&output);
         tree exp = tree_list_node_base(node);
         tree_delete(&c_parser_tree_alloc(parser), node);
-        return exp;
-}
-
-extern tree c_parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, size_t size)
-{
-        c_parser_enable_nesting_tracking(parser);
-        tree exp = parse_expr_raw(parser, symtab, size);
-        c_parser_disable_nesting_tracking(parser);
         return exp;
 }
 

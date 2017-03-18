@@ -21,19 +21,15 @@ struct c_parser
         size_t state_idx;
 
         struct list_node token_list;
-
         struct c_reader* reader;
-        unsigned         enable_nesting_tracking;
-        scc_err_t        err;
+        scc_err_t err;
 
         jmp_buf on_err_buf;
 
         struct pool* tree_pool;
         struct pool c_token_pool;
-        struct pool obj_pool;
         struct allocator tree_alloc;
         struct allocator c_token_alloc;
-        struct allocator obj_alloc;
 };
 
 #define c_parser_tree_alloc(parser)    (parser)->tree_alloc
@@ -70,8 +66,6 @@ extern void c_parser_shutdown(struct c_parser* parser);
 extern void c_parser_save_state(struct c_parser* parser);
 extern void c_parser_pop_state(struct c_parser* parser);
 extern void c_parser_load_state(struct c_parser* parser);
-extern void c_parser_enable_nesting_tracking(struct c_parser* parser);
-extern void c_parser_disable_nesting_tracking(struct c_parser* parser);
 
 extern void c_parser_lex_token(struct c_parser* parser);
 extern int  c_parser_advance(struct c_parser* parser);

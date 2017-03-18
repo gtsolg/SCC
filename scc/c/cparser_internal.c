@@ -28,16 +28,6 @@ static void parser_ret_ctoken(struct c_parser* parser, c_token* token)
         pool_return(&parser->c_token_pool, token);
 }
 
-static struct obj_info* parser_alloc_objinfo(struct c_parser* parser, size_t size)
-{
-        return parser_get_obj(parser, &parser->obj_pool);
-}
-
-static void parser_ret_objinfo(struct c_parser* parser, struct obj_info* info)
-{
-        pool_return(&parser->obj_pool, info);
-}
-
 extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, struct pool* tree_pool)
 {
         parser->state_idx = 0;
@@ -46,7 +36,6 @@ extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, stru
         c_parser_counter(parser) = 0;
         c_parser_nesting(parser) = 0;
         c_parser_token(parser) = NULL;
-        c_parser_disable_nesting_tracking(parser);
 
         list_initf(&parser->token_list);
 
@@ -55,12 +44,10 @@ extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, stru
 
         alloc_initf(&parser->tree_alloc,    parser, parser_alloc_tree,   parser_ret_tree);
         alloc_initf(&parser->c_token_alloc, parser, parser_alloc_ctoken, parser_ret_ctoken);
-        alloc_initf(&parser->obj_alloc,     parser, parser_get_obj,      parser_ret_objinfo);
 }
 
 extern void c_parser_shutdown(struct c_parser* parser)
 {
-        pool_delete(&parser->obj_pool);
         pool_delete(&parser->c_token_pool);
 }
 
@@ -85,26 +72,14 @@ extern void c_parser_load_state(struct c_parser* parser)
         assert(parser->state_idx != -1);
 }
 
-extern void c_parser_enable_nesting_tracking(struct c_parser* parser)
-{
-        parser->enable_nesting_tracking = 1;
-}
-
-extern void c_parser_disable_nesting_tracking(struct c_parser* parser)
-{
-        parser->enable_nesting_tracking = 0;
-}
-
 extern int c_parser_advance(struct c_parser* parser)
 {
-        if (parser->enable_nesting_tracking)
-        {
-                enum c_token_type type = c_parser_token_type(parser);
-                if (type == ctt_lbracket || type == ctt_lsbracket)
-                        c_parser_nesting(parser)++;
-                if (type == ctt_rbracket || type == ctt_rsbracket)
-                        c_parser_nesting(parser)--;
-        }
+        enum c_token_type type = c_parser_token_type(parser);
+        if (type == ctt_lbracket || type == ctt_lsbracket)
+                c_parser_nesting(parser)++;
+        if (type == ctt_rbracket || type == ctt_rsbracket)
+                c_parser_nesting(parser)--;
+
         c_parser_counter(parser)++;
         if (c_parser_next_token(parser) == list_end(&parser->token_list))
                 c_parser_lex_token(parser);
@@ -114,14 +89,13 @@ extern int c_parser_advance(struct c_parser* parser)
 
 extern int c_parser_rewind(struct c_parser* parser)
 {
-        if (parser->enable_nesting_tracking)
-        {
-                enum c_token_type type = c_parser_token_type(parser);
-                if (type == ctt_lbracket || type == ctt_lsbracket)
-                        c_parser_nesting(parser)--;
-                if (type == ctt_rbracket || type == ctt_rsbracket)
-                        c_parser_nesting(parser)++;
-        }
+        enum c_token_type type = c_parser_token_type(parser);
+        if (type == ctt_lbracket || type == ctt_lsbracket)
+                c_parser_nesting(parser)--;
+        if (type == ctt_rbracket || type == ctt_rsbracket)
+                c_parser_nesting(parser)++;
+
+
         c_parser_counter(parser)--;
         c_parser_token(parser) = c_parser_prev_token(parser);
         return !c_parser_eof(parser);
