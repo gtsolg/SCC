@@ -4,20 +4,20 @@
 
 static char* c_exp_format[] = 
 {
-        "",     // ok_null
-        "%s %s",   // ok_operand
+        "",      // ok_null
+        "%s %s", // ok_operand
         "%S %s", // ok_attrib
-        "%s++", // ok_post_inc
-        "%s--", // ok_post_dec
-        "{%s}", // ok_list
-        "++%s", // ok_pre_inc
-        "--%s", // ok_pre_dec
-        "+%s",  // ok_plus
-        "-%s",  // ok_minus
-        "~%s",  // ok_bit_not
-        "!%s",  // ok_not
-        "*%s",  // ok_dereference
-        "&%s",  // ok_address
+        "%s++",  // ok_post_inc
+        "%s--",  // ok_post_dec
+        "{%s}",  // ok_list
+        "++%s",  // ok_pre_inc
+        "--%s",  // ok_pre_dec
+        "+%s",   // ok_plus
+        "-%s",   // ok_minus
+        "~%s",   // ok_bit_not
+        "!%s",   // ok_not
+        "*%s",   // ok_dereference
+        "&%s",   // ok_address
 
         "%s(%s)",    // ok_call
         "%s[%s]",    // ok_subscript
