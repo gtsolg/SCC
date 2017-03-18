@@ -30,6 +30,17 @@ static int test_expr_argument(int idx, int argc, char** argv)
         return 2;
 }
 
+static int test_type_argument(int idx, int argc, char** argv)
+{
+        if (argc - idx < 2)
+        {
+                printf("incorrect amount of arguments.\n");
+                return 0;
+        }
+        c_test_parse_type(argv[idx], argv[idx + 1]);
+        return 2;
+}
+
 static struct htab arg_map = htab_init(30);
 
 static void setup_arg_map()
@@ -37,6 +48,7 @@ static void setup_arg_map()
 #define add_arg(arg, foo) htab_insert(&arg_map, hash64_str(arg), foo)
 
         add_arg("-c_test_expr", test_expr_argument);
+        add_arg("-c_test_type", test_type_argument);
 }
 
 extern int parse_args(int argc, char** argv)
