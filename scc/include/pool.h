@@ -10,11 +10,12 @@ struct pool
         size_t obsize;
         size_t size;
         struct allocator* alloc;
-        //void* blocks[64];
+        int block_idx;
+        void* blocks[64];
 };
 
-#define pool_init_alloc(obj_size, size, alloc) { NULL, obj_size, size, alloc }
-#define pool_init(obj_size, size) pool_init_alloc(obj_size, size, STD_ALLOC())
+#define pool_init_alloc(obj_size, size, alloc) { NULL, obj_size, size, alloc, 0 }
+#define pool_init(obj_size, size) pool_init_alloc(obj_size, size, STD_ALLOC)
 
 static inline void pool_initf(struct pool* pool, size_t obsize, size_t size, struct allocator* alloc)
 {
@@ -22,6 +23,7 @@ static inline void pool_initf(struct pool* pool, size_t obsize, size_t size, str
         pool->obsize = obsize;
         pool->size = size;
         pool->alloc = alloc;
+        pool->block_idx = 0;
 }
 
 static inline scc_err_t __pool_grow(struct pool* pool)
@@ -33,6 +35,8 @@ static inline scc_err_t __pool_grow(struct pool* pool)
         void* objects = allocate(pool->alloc, real_size * obj_to_add);
         if (!objects)
                 return SCC_ERR;
+
+        pool->blocks[pool->block_idx++] = objects;
 
         size_t i = 0;
         for (; i < obj_to_add - 1; i++)
@@ -47,9 +51,13 @@ static inline scc_err_t __pool_grow(struct pool* pool)
         return SCC_SUCCESS;
 }
 
-static inline pool_delete(struct pool* pool)
+static inline void pool_delete(struct pool* pool)
 {
-        // todo
+        for (int i = pool->block_idx - 1; i > -1; i--)
+                deallocate(pool->alloc, pool->blocks[i]);
+        pool->block_idx = 0;
+        pool->size = 0;
+        pool->obstack = NULL;
 }
 
 static inline void* pool_get(struct pool* pool)
