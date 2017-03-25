@@ -5,7 +5,6 @@ static void tree_print_pretty(tree, char*, int);
 
 static char* exp_kind_string[] =
 {
-        "null",     // ok_null
         "operand",  // ok_operand
         "attrib",   // ok_attrib
         "post inc", // ok_post_inc
@@ -90,7 +89,7 @@ static char* type_kind_string[] =
         "va_arg",  // tk_va_arg
 };
 
-static void tree_print_type_pretty(tree type, char* indent, int last)
+static void tree_print_type(tree type)
 {
         enum type_qualifier qual = tree_type_qual(type);
         if (qual & tq_const)
@@ -99,9 +98,18 @@ static void tree_print_type_pretty(tree type, char* indent, int last)
                 printf("volatile ");
         if (qual & tq_restrict)
                 printf("restrict ");
-        if (qual & tq_const_const)
-                printf("const_const ");
-        printf("%s\n", type_kind_string[tree_type_kind(type)]);
+
+        enum type_kind kind = tree_type_kind(type);
+        printf("%s", type_kind_string[kind]);
+
+        if (kind == tk_vector)
+                printf("[%llu]", tree_vector_size(tree_type(type)));
+}
+
+static void tree_print_type_pretty(tree type, char* indent, int last)
+{
+        tree_print_type(type);
+        printf("\n");
         tree_print_pretty(tree_type(type), indent, 1);
 }
 
@@ -123,6 +131,7 @@ static void tree_print_pretty(tree node, char* indent, int last)
 
         switch (tree_kind(node))
         {
+                case tnk_null:         printf("TREE_NULL\n"); break;
                 case tnk_stmt:         break;
                 case tnk_id: print_string(tree_id_ref(node)); break;
 
@@ -138,9 +147,10 @@ static void tree_print_pretty(tree node, char* indent, int last)
                 case tnk_const_real:   printf("%.10lf\n", tree_const_real(node)); break;
                 case tnk_const_string: print_string(tree_const_strref(node)); break;
 
-                case tnk_vector_type:  break;
-                case tnk_sign_type:    break;
+                case tnk_vector_type:  tree_print_type_pretty(tree_vector_type(node), indent, 1); break;
+                case tnk_sign_type:
                 case tnk_type:         tree_print_type_pretty(node, indent, last); break;
+
                 case tnk_attrib:       printf("%llu\n", tree_attrib(node)); break;
 
                 default:
