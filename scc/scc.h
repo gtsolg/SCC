@@ -29,4 +29,6 @@
 
 #define DEBUG _DEBUG
 
+#define scc_assert(e) if (DEBUG) assert(e)
+
 #endif // !SCC_H
