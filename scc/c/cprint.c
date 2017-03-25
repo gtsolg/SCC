@@ -4,7 +4,6 @@
 
 static char* c_exp_format[] = 
 {
-        "",      // ok_null
         "%s %s", // ok_operand
         "%S %s", // ok_attrib
         "%s++",  // ok_post_inc
@@ -104,6 +103,7 @@ static char* node_to_str(tree node, tree prev)
                 return format("");
         switch (tree_kind(node))
         {
+                case tnk_null:         return format("");
                 case tnk_stmt:         return NULL;
                 case tnk_id: return format("%S"
                         , string_pool_get_string_by_ref(STD_STR_POOL, tree_id_ref(node)));
@@ -121,7 +121,7 @@ static char* node_to_str(tree node, tree prev)
                 case tnk_const_string:
                         return c_const_to_str(node);
 
-                case tnk_vector_type:  return NULL;
+                case tnk_vector_type:  return format("%s[]", c_type_to_str(tree_vector_type(node)));
                 case tnk_sign_type:    return NULL;
                 case tnk_type:         return c_type_to_str(node);
                 case tnk_attrib:       return format(c_reswords[tree_attrib(node)]);
@@ -159,27 +159,41 @@ extern char* c_node_to_str(tree node)
         return node_to_str(node, NULL);
 }
 
+static char* type_qual_to_str(enum type_qualifier qual)
+{
+        char* str = format("");
+        if (qual & tq_volatile)
+                str = format("%s volatile", str);
+        if (qual & tq_restrict)
+                str = format("%s restrict", str);
+        if (qual & tq_const)
+                str = format("%s const", str);
+        return str;
+}
+
 extern char* c_type_to_str(tree type)
 {
+        char* quals = type_qual_to_str(tree_type_qual(type));
+
         switch (tree_type_kind(type))
         {
-                case tk_void:   return strcopy("void");
-                case tk_int8:   return strcopy("char");
-                case tk_uint8:  return strcopy("unsigned char");
-                case tk_int16:  return strcopy("short");
-                case tk_uint16: return strcopy("unsigned short");
-                case tk_int32:  return strcopy("int");
-                case tk_uint32: return strcopy("unsigned");
-                case tk_int64:  return strcopy("long long");
-                case tk_uint64: return strcopy("unsigned long long");
-                case tk_float:  return strcopy("float");
-                case tk_double: return strcopy("double");
+                case tk_void:   return format("%s void", quals);
+                case tk_int8:   return format("%s char", quals);
+                case tk_uint8:  return format("%s unsigned char", quals);
+                case tk_int16:  return format("%s short", quals);
+                case tk_uint16: return format("%s unsigned short", quals);
+                case tk_int32:  return format("%s int", quals);
+                case tk_uint32: return format("%s unsigned", quals);
+                case tk_int64:  return format("%s long long", quals);
+                case tk_uint64: return format("%s unsigned long long", quals);
+                case tk_float:  return format("%s float", quals);
+                case tk_double: return format("%s double", quals);
 
-                case tk_record:
-                case tk_union:
-                case tk_vector:
-                case tk_pointer:
-                default:
-                        return NULL;
+                case tk_record:  return NULL;
+                case tk_union:   return NULL;
+                case tk_vector:  return node_to_str(tree_type(type), type);
+                case tk_pointer: return format("%s * %s", node_to_str(tree_type(type), type), quals);
+
+                default: return NULL;
         }
 }
