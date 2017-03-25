@@ -15,6 +15,15 @@ extern void tree_delete(struct allocator* alloc, tree node)
         deallocate(alloc, node);
 }
 
+extern tree tree_copy(struct allocator* alloc, tree node)
+{
+        tree t = allocate(alloc, sizeof(*node));
+        if (!t)
+                return NULL;
+        *t = *node;
+        return t;
+}
+
 extern tree tree_type_create(struct allocator* alloc, enum type_kind kind, enum type_qualifier qual, tree type)
 {
         tree t = tree_create(alloc, tnk_type);
@@ -97,6 +106,18 @@ extern tree tree_const_string_create(struct allocator* alloc, strref_t ref)
 extern tree tree_attrib_create(struct allocator* alloc, uint64_t att)
 {
         tree node = tree_create(alloc, tnk_attrib);
+        if (!node)
+                return NULL;
         tree_attrib(node) = att;
         return node;
+}
+
+extern tree tree_vector_type_create(struct allocator* alloc, tree type, uint64_t size)
+{
+        tree vec = tree_create(alloc, tnk_vector_type);
+        if (!vec)
+                return NULL;
+        tree_vector_type(vec) = type;
+        tree_vector_size(vec) = size;
+        return vec;
 }
