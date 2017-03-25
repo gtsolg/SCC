@@ -7,7 +7,7 @@ static inline enum expr_node_kind unary_operator_kind(enum c_token_type token, i
         if (token == ctt_dec)
                 return prev_operand ? ok_post_dec : ok_pre_dec;
         if (prev_operand)
-                return ok_null;
+                return -1;
 
         switch (token)
         {
@@ -19,7 +19,7 @@ static inline enum expr_node_kind unary_operator_kind(enum c_token_type token, i
                 case ctt_bit_and: return ok_address;
 
                 default:
-                        return ok_null;
+                        return -1;
         }
 }
 
@@ -63,7 +63,7 @@ static inline enum expr_node_kind binary_operator_kind(enum c_token_type token, 
         }
 
         if (!prev_operand)
-                return token == ctt_lbracket ? ok_cast : ok_null;
+                return token == ctt_lbracket ? ok_cast : -1;
 
         switch (token)
         {
@@ -73,36 +73,35 @@ static inline enum expr_node_kind binary_operator_kind(enum c_token_type token, 
                 case ctt_bit_and: return ok_bit_and;
 
                 default:
-                        return ok_null;
+                        return -1;
         }
 }
 
 static inline void set_right_to_null(tree exp)
 {
         if (!tree_exp_right(exp))
-                tree_exp_right(exp) = TREE_NULL_EXP_NODE;
+                tree_exp_right(exp) = TREE_NULL;
 }
 
 static inline void set_left_to_null(tree exp)
 {
         if (!tree_exp_left(exp))
-                tree_exp_left(exp) = TREE_NULL_EXP_NODE;
+                tree_exp_left(exp) = TREE_NULL;
 }
 
-static inline int is_prev_operand(tree prev_it, unsigned nesting)
+static inline int prev_list_node_is_operand(tree prev, unsigned nesting)
 {
-        if (!tree_list_iterator_valid(prev_it))
+        if (tree_kind(prev) != tnk_list_node)
                 return 0;
-        tree exp = tree_list_node_base(prev_it);
+        tree exp = tree_list_node_base(prev);
 
         // type(*)... case
-        if (tree_exp_kind(exp) == ok_dereference && tree_exp_nesting(exp) > nesting)
+        if (tree_exp_is(exp, ok_dereference) && tree_exp_nesting(exp) > nesting)
         {
                 set_right_to_null(exp);
                 return 1;
         }
-
-        return tree_exp_kind(exp) == ok_operand || c_node_is_postfix_operator(exp);
+        return tree_exp_is(exp, ok_operand) || c_node_is_postfix_operator(exp);
 }
 
 static void parse_attribs_list(struct c_parser* parser, tree* head, tree* tail)
@@ -201,6 +200,7 @@ static int parse_operand(struct c_parser* parser, struct c_symtab* symtab, tree 
         {
                 tree etype = c_tree_exp_create(alloc, ok_type, nesting);
                 tree_exp_left(etype) = node;
+                tree_exp_prev(node) = etype;
                 node = etype;
         }
         else
@@ -212,7 +212,7 @@ static int parse_operand(struct c_parser* parser, struct c_symtab* symtab, tree 
 static inline int parse_unary_operator(struct c_parser* parser, struct c_symtab* symtab, int prev_operand, tree list)
 {
         enum expr_node_kind kind = unary_operator_kind(c_parser_token_type(parser), prev_operand);
-        if (!kind)
+        if (kind == -1)
                 return 0;
 
         unsigned nesting = c_parser_nesting(parser);
@@ -233,14 +233,14 @@ static inline int parse_unary_operator(struct c_parser* parser, struct c_symtab*
 static inline void set_right_if_prev_is_type_or_dereference(tree list)
 {
         tree tail = tree_list_tail(list);
-        if (c_list_iterator_is_exp(tail, ok_type) || c_list_iterator_is_exp(tail, ok_dereference))
+        if (c_list_node_is_exp(tail, ok_type) || c_list_node_is_exp(tail, ok_dereference))
                 set_right_to_null(tree_list_node_base(tail));
 }
 
 static inline int parse_binary_operator(struct c_parser* parser, struct c_symtab* symtab, int prev_operand, tree list)
 {
         enum expr_node_kind kind = binary_operator_kind(c_parser_token_type(parser), prev_operand);
-        if (!kind)
+        if (kind == -1)
                 return 0;
         unsigned nesting = c_parser_nesting(parser);
         tree binary = c_tree_exp_create(&c_parser_tree_alloc(parser), kind, nesting);
@@ -263,7 +263,7 @@ static inline int parse_binary_operator(struct c_parser* parser, struct c_symtab
 
                 c_parser_pop_state(parser);
                 if (!subexpr)
-                        subexpr = TREE_NULL_EXP_NODE;
+                        subexpr = TREE_NULL;
                 if (kind == ok_call || kind == ok_subscript)
                         tree_exp_right(binary) = subexpr;
                 else
@@ -279,7 +279,7 @@ static inline int parse_binary_operator(struct c_parser* parser, struct c_symtab
 
 static int parse_operator(struct c_parser* parser, struct c_symtab* symtab, tree list)
 {
-        int prev_operand = is_prev_operand(tree_list_tail(list), c_parser_nesting(parser));
+        int prev_operand = prev_list_node_is_operand(tree_list_tail(list), c_parser_nesting(parser));
         if (!parse_unary_operator(parser, symtab, prev_operand, list))
                 if (!parse_binary_operator(parser, symtab, prev_operand, list))
                         return 0;
@@ -296,33 +296,35 @@ static void preprocess_expr(struct c_parser* parser, struct c_symtab* symtab, si
         set_right_if_prev_is_type_or_dereference(res);
 }
 
-static inline tree* skip_attribs(tree* subexp)
+static inline tree* skip_attribs(tree* subexp, tree* parent)
 {
         tree* it = subexp;
-        while (*it && tree_exp_kind(*it) == ok_attrib)
+        while (c_node_is_exp(*it) && tree_exp_is(*it, ok_attrib))
                 it = &tree_exp_next(*it);
         return it;
 }
 
 static inline void set_sibling(struct allocator* alloc, tree parent, int right, tree output)
 {
-        tree* sub = right ? &tree_exp_right(parent) : &tree_exp_left(parent);
+        tree* member_ptr = right ? &tree_exp_right(parent) : &tree_exp_left(parent);
+        ptrdiff_t member_off = member_ptr - parent;
 
         // since we can have attribs after dereference (e.g: int * const * ...)
-        // we need to skip them in order to set the sibling
-        tree* sibling = skip_attribs(sub);
+        // we need to skip them in order to set the member
+        tree* member = skip_attribs(member_ptr, &parent);
+        parent = member - member_off;
 
-        if (*sibling)
+        if (*member)
                 return;
         if (tree_list_empty(output))
-                *sibling = NULL;
+                *member = TREE_NULL;
         else
         {
                 tree back = tree_list_pop_back(output);
                 tree exp = tree_list_node_base(back);
                 tree_delete(alloc, back);
                 tree_exp_prev(exp) = parent;
-                *sibling = exp;
+                *member = exp;
         }
 }
 
@@ -335,6 +337,19 @@ static void build_expr(struct allocator* alloc, tree enode, tree output)
                 set_sibling(alloc, exp, 0, output);
         }
         tree_list_push_back(output, enode);
+}
+
+static void replace_null_pointers(tree root)
+{
+        // delete this ?
+        if (tree_kind(root) != tnk_exp)
+                return;
+        if (!tree_exp_left(root))
+                tree_exp_left(root) = TREE_NULL;
+        if (!tree_exp_right(root))
+                tree_exp_right(root) = TREE_NULL;
+        replace_null_pointers(tree_exp_left(root));
+        replace_null_pointers(tree_exp_right(root));
 }
 
 extern tree c_parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, size_t size)
@@ -350,12 +365,12 @@ extern tree c_parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, s
         struct tree_node output = tree_list_initf(&output);
         struct tree_node opstack = tree_list_initf(&opstack);
 
-        tree it = tree_list_iterator_init(&list);
-        while (tree_list_iterator_valid(it))
+        struct tree_iterator it = tree_list_iterator_init(&list);
+        while (tree_list_iterator_valid(&it))
         {
-                tree enode = it;
-                tree exp = tree_list_node_base(it);
-                tree_list_iterator_advance(it);
+                tree enode = tree_iterator_pos(&it);
+                tree exp = tree_list_iterator_node(&it);
+                tree_list_iterator_advance(&it);
 
                 if (c_node_is_operand(exp))    
                         build_expr(&c_parser_tree_alloc(parser), enode, &output);
@@ -384,6 +399,7 @@ extern tree c_parse_expr_raw(struct c_parser* parser, struct c_symtab* symtab, s
         tree node = tree_list_pop_back(&output);
         tree exp = tree_list_node_base(node);
         tree_delete(&c_parser_tree_alloc(parser), node);
+        replace_null_pointers(exp);
         return exp;
 }
 
