@@ -1,8 +1,8 @@
 #include "ctree.h"
 
-extern enum type_qualifier c_token_to_qualifier(const c_token* token)
+extern enum type_qualifier ctt_to_qualifier(enum c_token_type type)
 {
-        switch (token->type)
+        switch (type)
         {
                 case ctt_const:    return tq_const;
                 case ctt_volatile: return tq_volatile;
@@ -11,17 +11,32 @@ extern enum type_qualifier c_token_to_qualifier(const c_token* token)
         }
 }
 
-extern enum decl_storage_class c_token_to_storage_class(const c_token* token)
+extern enum func_call_type ctt_to_call_type(enum c_token_type type)
 {
-        switch (token->type)
+
+}
+
+extern enum decl_storage_class ctt_to_storage_class(enum c_token_type type)
+{
+        switch (type)
         {
                 case ctt_auto:     return dsc_auto;
                 case ctt_register: return dsc_register;
                 case ctt_extern:   return dsc_register;
                 case ctt_static:   return dsc_static;
-                      
+
                 default: return dsc_auto;
         }
+}
+
+extern enum type_qualifier c_token_to_qualifier(const c_token* token)
+{
+        return ctt_to_qualifier(c_token_type(token));
+}
+
+extern enum decl_storage_class c_token_to_storage_class(const c_token* token)
+{
+        return ctt_to_storage_class(c_token_type(token));
 }
 
 extern int c_node_is_exp(tree node)
@@ -32,10 +47,9 @@ extern int c_node_is_exp(tree node)
 extern int c_node_is_operand(tree node)
 {
         if (!c_node_is_exp(node))
-                return 0;
+                return tree_kind(node) == tnk_null;
         switch (tree_exp_kind(node))
         {
-                case ok_null:
                 case ok_operand:
                 case ok_attrib:
                         return 1;
@@ -62,17 +76,17 @@ extern int c_node_is_postfix_operator(tree node)
         }
 }
 
-extern int c_list_iterator_is_exp(tree it, enum expr_node_kind op)
+extern int c_list_node_is_exp(tree node, enum expr_node_kind op)
 {
-        if (!tree_list_iterator_valid(it))
+        if (tree_kind(node) != tnk_list_node)
                 return 0;
-        tree exp = tree_list_node_base(it);
+        tree exp = tree_list_node_base(node);
         return c_node_is_exp(exp) && tree_exp_kind(exp) == op;
 }
 
 extern tree c_token_to_cst_tree(struct allocator* alloc, const c_token* token)
 {
-        switch (token->type)
+        switch (c_token_type(token))
         {
                 case ctt_const_int:    return tree_const_int_create(alloc, token->integer);
                 case ctt_const_float:  return tree_const_float_create(alloc, token->flt);
