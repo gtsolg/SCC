@@ -4,7 +4,9 @@
 #include "htab.h"
 #include "hash.h"
 #include "tree.h"
+#include "tree_print.h"
 
+#include "cprint.h"
 #include "ctoken.h"
 #include "climits.h"
 
@@ -17,10 +19,8 @@ enum c_family_lang_flags
 
 static const struct tree_exp_info c_opinfo[] = 
 {
-        tree_exp_info_init(ok_null,        oak_left_to_right,  0),
         tree_exp_info_init(ok_operand,     oak_left_to_right,  0),
-        tree_exp_info_init(ok_attrib,   oak_left_to_right,  0),
-
+        tree_exp_info_init(ok_attrib,      oak_left_to_right,  0),
         tree_exp_info_init(ok_post_inc,    oak_left_to_right, 15),
         tree_exp_info_init(ok_post_dec,    oak_left_to_right, 15),
         tree_exp_info_init(ok_list,        oak_left_to_right, 15),

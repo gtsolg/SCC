@@ -25,7 +25,7 @@ static scc_err_t add_deftype(enum type_kind kind, int tokenc, ...)
         for (int i = 0; i < tokenc; i++)
                 h += c_reswords_hash[va_arg(list, int)];
 
-        tree node = tree_type_create(STD_ALLOC, kind, tq_unqualified, NULL);
+        tree node = tree_type_create(STD_ALLOC, kind, tq_unqualified, TREE_NULL);
         return node ? htab_insert(&c_const_tree, h, node) : SCC_ERR;
 }
 
