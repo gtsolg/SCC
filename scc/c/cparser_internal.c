@@ -62,14 +62,14 @@ extern void c_parser_save_state(struct c_parser* parser)
 extern void c_parser_pop_state(struct c_parser* parser)
 {
         parser->state_idx--;
-        assert(parser->state_idx != -1);
+        scc_assert(parser->state_idx != -1);
         c_parser_cur_state(parser) = parser->states[parser->state_idx + 1];
 }
 
 extern void c_parser_load_state(struct c_parser* parser)
 {
         parser->state_idx--;
-        assert(parser->state_idx != -1);
+        scc_assert(parser->state_idx != -1);
 }
 
 extern int c_parser_advance(struct c_parser* parser)
