@@ -90,6 +90,7 @@ static char* type_kind_string[] =
         "record",  // tk_record
         "union",   // tk_union
         "vector",  // tk_vector
+        "sign",    // tk_sign
         "pointer", // tk_pointer
         "va_arg",  // tk_va_arg
 };
@@ -111,11 +112,47 @@ static void tree_print_type(tree type)
                 printf("[%llu]", tree_vector_size(tree_type(type)));
 }
 
+static void tree_print_sign_type(tree sign, char* indent);
+
 static void tree_print_type_pretty(tree type, char* indent, int last)
 {
         tree_print_type(type);
         printf("\n");
-        tree_print_pretty(tree_type(type), indent, 1);
+
+        if (tree_type_kind(type) == tk_sign)
+        {
+                char sign[TREE_PRINT_INDENT_BUF_SIZE] = { 0 };
+                strcpy(sign, indent);
+                tree_print_sign_type(tree_type(type), sign);
+        }
+        else
+                tree_print_pretty(tree_type(type), indent, 1);
+}
+
+static void tree_print_list(tree list, char* indent)
+{
+        printf("list:\n");
+        struct tree_iterator it = tree_list_iterator_init(list);
+
+        char tmp[TREE_PRINT_INDENT_BUF_SIZE] = { 0 };
+        while (tree_list_iterator_valid(&it))
+        {
+                strcpy(tmp, indent);
+                tree node = tree_list_iterator_node(&it);
+                tree_list_iterator_advance(&it);
+                tree_print_pretty(node, tmp, tree_list_iterator_valid(&it) ? 0 : 1);
+        }
+}
+
+static void tree_print_sign_type(tree sign, char* indent)
+{
+        char arg[TREE_PRINT_INDENT_BUF_SIZE] = { 0 };
+        char res[TREE_PRINT_INDENT_BUF_SIZE] = { 0 };
+        strcpy(arg, indent);
+        strcpy(res, indent);
+
+        tree_print_pretty(tree_sign_restype(sign), res, 0);
+        tree_print_pretty(tree_sign_args(sign), arg, 1);
 }
 
 static void tree_print_pretty(tree node, char* indent, int last)
@@ -138,13 +175,13 @@ static void tree_print_pretty(tree node, char* indent, int last)
         {
                 case tnk_null:         printf("TREE_NULL\n"); break;
                 case tnk_stmt:         break;
-                case tnk_id: print_string(tree_id_ref(node)); break;
+                case tnk_id:           print_string(tree_id_ref(node)); break;
 
                 case tnk_type_decl:    break;
                 case tnk_var_decl:     break;
                 case tnk_func_decl:    break;
                 case tnk_exp:          tree_exp_print_pretty(node, indent, last); break;
-                case tnk_list:         break;
+                case tnk_list:         tree_print_list(node, indent); break;
                 case tnk_list_node:    break;
 
                 case tnk_const_int:    printf("%llu\n", tree_const_int(node)); break;
@@ -153,7 +190,7 @@ static void tree_print_pretty(tree node, char* indent, int last)
                 case tnk_const_string: print_string(tree_const_strref(node)); break;
 
                 case tnk_vector_type:  tree_print_type_pretty(tree_vector_type(node), indent, 1); break;
-                case tnk_sign_type:
+                case tnk_sign_type:    tree_print_sign_type(node, indent); break;
                 case tnk_type:         tree_print_type_pretty(node, indent, last); break;
 
                 case tnk_attrib:       printf("%llu\n", tree_attrib(node)); break;
