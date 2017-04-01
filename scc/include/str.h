@@ -10,6 +10,5 @@ extern int strcatn(char* dst, size_t n, ...);
 extern int strprecatn(char* dst, size_t n, ...);
 extern int strwrap(char* pre, char* dst, char* post);
 extern char* strend(char* str);
-//extern char* format(const char* format, ...);
 
 #endif // !STR_H
