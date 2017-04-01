@@ -59,9 +59,14 @@ static char* exp_kind_string[] =
 
 static void tree_exp_print_pretty(tree exp, char* indent, int last)
 {
+        char left[TREE_PRINT_INDENT_BUF_SIZE] = { 0 };
+        char right[TREE_PRINT_INDENT_BUF_SIZE] = { 0 };
+        strcpy(left, indent);
+        strcpy(right, indent);
+
         printf("exp: %s\n", exp_kind_string[tree_exp_kind(exp)]);
-        tree_print_pretty(tree_exp_right(exp), format("%S", indent), 0);
-        tree_print_pretty(tree_exp_left(exp), format("%S", indent), 1);
+        tree_print_pretty(tree_exp_right(exp), right, 0);
+        tree_print_pretty(tree_exp_left(exp), left, 1);
 }
 
 static void print_string(strref_t ref)
@@ -121,12 +126,12 @@ static void tree_print_pretty(tree node, char* indent, int last)
         if (last)
         {
                 printf("\\-");
-                indent = format("%s  ", indent);
+                strcat(indent, " ");
         }
         else
         {
                 printf("|-");
-                indent = format("%s| ", indent);
+                strcat(indent, "| ");
         }
 
         switch (tree_kind(node))
@@ -162,5 +167,6 @@ static void tree_print_pretty(tree node, char* indent, int last)
 extern void tree_print(tree node)
 {
         printf("\n");
-        tree_print_pretty(node, format(""), 1);
+        char indent[TREE_PRINT_INDENT_BUF_SIZE] = { 0 };
+        tree_print_pretty(node, indent, 1);
 }

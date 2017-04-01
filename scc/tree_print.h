@@ -3,6 +3,8 @@
 
 #include "tree.h"
 
+#define TREE_PRINT_INDENT_BUF_SIZE 1024
+
 extern void tree_print(tree node);
 
 #endif // !TREE_PRINT_H

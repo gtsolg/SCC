@@ -2,10 +2,10 @@
 #include "cparser.h"
 #include "str.h"
 
-static char* c_exp_format[] = 
+static char* c_exp_format[] =
 {
         "%s %s", // ok_operand
-        "%S %s", // ok_attrib
+        "%s %s", // ok_attrib
         "%s++",  // ok_post_inc
         "%s--",  // ok_post_dec
         "{%s}",  // ok_list
@@ -22,7 +22,7 @@ static char* c_exp_format[] =
         "%s[%s]",    // ok_subscript
         "%s.%s",     // ok_member
         "%s->%s",    // ok_member_ptr
-        "(%S)%s",    // ok_cast
+        "(%s)%s",    // ok_cast
         "%s %s",     // ok_type
         "%s * %s",   // ok_mul
         "%s / %s",   // ok_div
@@ -77,123 +77,107 @@ static int needs_brackets(tree exp, tree prev)
         return ecp > pcp && tree_exp_precedence(exp) <= tree_exp_precedence(prev);
 }
 
-static char* node_to_str(tree, tree);
-
-static char* exp_to_str(tree exp, tree prev)
+static void type_qual_to_str(char* buf, enum type_qualifier qual)
 {
-        const char* c_format = c_exp_format[tree_exp_kind(exp)];
-        char* left = node_to_str(tree_exp_left(exp), exp);
-        char* right = node_to_str(tree_exp_right(exp), exp);
-        if (!*left)
-                left = right;
-        char* res = format(c_format, left, right);
-        if (needs_brackets(exp, prev))
-                res = format("(%s)", res);
-        return res;
+        if (qual & tq_volatile)
+                strcat(buf, "volatile ");
+        if (qual & tq_restrict)
+                strcat(buf, "restrict ");
+        if (qual & tq_const)
+                strcat(buf, "const ");
 }
 
-extern char* c_exp_to_str(tree exp)
+extern void c_tree_to_str(char* buf, tree node, tree prev)
 {
-        return exp_to_str(exp, NULL);
-}
-
-static char* node_to_str(tree node, tree prev)
-{
-        if (!node)
-                return format("");
         switch (tree_kind(node))
         {
-                case tnk_null:         return format("");
-                case tnk_stmt:         return NULL;
-                case tnk_id: return format("%S"
-                        , string_pool_get_string_by_ref(STD_STR_POOL, tree_id_ref(node)));
+                case tnk_null: return;
+                case tnk_stmt: return;
+                case tnk_id: strcat(buf,
+                        string_pool_get_string_by_ref(STD_STR_POOL, tree_id_ref(node)));
+                        return;
 
-                case tnk_type_decl:    return NULL;
-                case tnk_var_decl:     return NULL;
-                case tnk_func_decl:    return NULL;
-                case tnk_exp:          return exp_to_str(node, prev);
-                case tnk_list:         return NULL;
-                case tnk_list_node:    return NULL;
+                case tnk_type_decl:    return;
+                case tnk_var_decl:     return;
+                case tnk_func_decl:    return;
+                case tnk_exp:          c_exp_to_str(buf, node, prev); return;
+                case tnk_list:         return;
+                case tnk_list_node:    return;
 
-                case tnk_const_int:   
-                case tnk_const_float: 
-                case tnk_const_real:  
-                case tnk_const_string:
-                        return c_const_to_str(node);
+                case tnk_const_int:
+                case tnk_const_float:
+                case tnk_const_real:
+                case tnk_const_string: c_cst_to_str(buf, node); return;
 
-                case tnk_vector_type:  return format("%s[]", c_type_to_str(tree_vector_type(node)));
-                case tnk_sign_type:    return NULL;
-                case tnk_type:         return c_type_to_str(node);
-                case tnk_attrib:       return format(c_reswords[tree_attrib(node)]);
-                default:
-                        return NULL;
+                case tnk_type: c_type_to_str(buf, node); return;
+                case tnk_attrib: strcat(buf, c_reswords[tree_attrib(node)]); return;
+                default: return;
         }
 }
 
-extern char* c_const_to_str(tree cst)
+extern void c_cst_to_str(char* buf, tree cst)
 {
-        char buf[C_MAX_CNUM_LENGTH] = { 0 };
+        char tmp[C_MAX_LINE_LENGTH] = { 0 };
         switch (tree_kind(cst))
         {
-                case tnk_const_int:
-                        sprintf(buf, "%llu", tree_const_int(cst));
-                        break;
-
-                case tnk_const_float:
-                        sprintf(buf, "%f", tree_const_float(cst));
-                        break;
-
-                case tnk_const_real:
-                        sprintf(buf, "%lf", tree_const_real(cst));
-                        break;
-
-                case tnk_const_string:
-                        return format("\"%S\""
-                                , string_pool_get_string_by_ref(STD_STR_POOL, tree_const_strref(cst)));
+                case tnk_const_int:    sprintf(tmp, "%d", tree_const_int(cst)); break;
+                case tnk_const_float:  sprintf(tmp, "%f", tree_const_float(cst)); break;
+                case tnk_const_real:   sprintf(tmp, "%lf", tree_const_real(cst)); break;
+                case tnk_const_string: sprintf(tmp, "\"%s\""
+                        , string_pool_get_string_by_ref(STD_STR_POOL, tree_const_strref(cst))); break;
+                default: break;
         }
-        return strcopy(buf);
+        strcat(buf, tmp);
 }
 
-extern char* c_node_to_str(tree node)
+extern void c_exp_to_str(char* buf, tree exp, tree prev)
 {
-        return node_to_str(node, NULL);
-}
+        char lbuf[C_PRINT_EXP_BUF_SIZE] = { 0 };
+        char rbuf[C_PRINT_EXP_BUF_SIZE] = { 0 };
+        const char* c_format = c_exp_format[tree_exp_kind(exp)];
 
-static char* type_qual_to_str(enum type_qualifier qual)
-{
-        char* str = format("");
-        if (qual & tq_volatile)
-                str = format("%s volatile", str);
-        if (qual & tq_restrict)
-                str = format("%s restrict", str);
-        if (qual & tq_const)
-                str = format("%s const", str);
-        return str;
+        c_tree_to_str(lbuf, tree_exp_left(exp), exp);
+        c_tree_to_str(rbuf, tree_exp_right(exp), exp);
+        sprintf(buf, c_format, *lbuf ? lbuf : rbuf, rbuf);
+        if (needs_brackets(exp, prev))
+                strwrap("(", buf, ")");
 }
-
-extern char* c_type_to_str(tree type)
+typedef int(*(*(*a)))[3];
+extern void c_type_to_str(char* buf, tree type)
 {
-        char* quals = type_qual_to_str(tree_type_qual(type));
+        if (tree_is(type, tnk_null))
+                return;
+
+        char tmp[40] = { 0 };
+        type_qual_to_str(tmp, tree_type_qual(type));
 
         switch (tree_type_kind(type))
         {
-                case tk_void:   return format("%s void", quals);
-                case tk_int8:   return format("%s char", quals);
-                case tk_uint8:  return format("%s unsigned char", quals);
-                case tk_int16:  return format("%s short", quals);
-                case tk_uint16: return format("%s unsigned short", quals);
-                case tk_int32:  return format("%s int", quals);
-                case tk_uint32: return format("%s unsigned", quals);
-                case tk_int64:  return format("%s long long", quals);
-                case tk_uint64: return format("%s unsigned long long", quals);
-                case tk_float:  return format("%s float", quals);
-                case tk_double: return format("%s double", quals);
+                case tk_void:   strprecatn(buf, 2, "void", tmp); return;
+                case tk_int8:   strprecatn(buf, 2, "char", tmp); return;
+                case tk_uint8:  strprecatn(buf, 2, "unsigned char", tmp); return;
+                case tk_int16:  strprecatn(buf, 2, "short", tmp); return;
+                case tk_uint16: strprecatn(buf, 2, "unsigned short", tmp); return;
+                case tk_int32:  strprecatn(buf, 2, "int", tmp); return;
+                case tk_uint32: strprecatn(buf, 2, "unsigned", tmp); return;
+                case tk_int64:  strprecatn(buf, 2, "long long", tmp); return;
+                case tk_uint64: strprecatn(buf, 2, "unsigned long long", tmp); return;
+                case tk_float:  strprecatn(buf, 2, "float", tmp); return;
+                case tk_double: strprecatn(buf, 2, "double", tmp); return;
 
-                case tk_record:  return NULL;
-                case tk_union:   return NULL;
-                case tk_vector:  return node_to_str(tree_type(type), type);
-                case tk_pointer: return format("%s * %s", node_to_str(tree_type(type), type), quals);
+                case tk_vector:
+                        type = tree_type(type);
+                        sprintf(buf, "%s[%llu]", buf, tree_vector_size(type));
+                        c_type_to_str(buf, tree_vector_type(type));
+                        return;
 
-                default: return NULL;
+                case tk_pointer:
+                        strprecatn(buf, 2, tmp, "*");
+                        if (tree_type_kind(tree_type(type)) == tk_vector)
+                                strwrap("(", buf, ")");
+                        c_type_to_str(buf, tree_type(type));
+                        return;
+
+                default: return;
         }
 }
