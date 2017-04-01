@@ -15,7 +15,7 @@ struct c_test_env
         char answer[C_MAX_ANSWER_LEN];
 };
 
-typedef char*(*c_test_fn)(struct c_test_env*);
+typedef void(*c_test_fn)(struct c_test_env*, char*);
 
 static scc_err_t c_test_envieronment_initf(struct c_test_env* env, const char* fin, const char* fans)
 {
@@ -85,18 +85,19 @@ static void c_test(const char* fin, const char* fans, c_test_fn test)
                 return;
         }
 
-        char* res = test(&env);
+        char res[1024] = { 0 };
+        test(&env, res);
+
         if (c_test_passed(fin, res, env.answer))
                 printf("DONE");
 
         c_test_envieronment_dispose(&env);
-        free(res);
 }
 
-static char* c_test_parse_expr_raw_fn(struct c_test_env* env)
+static void c_test_parse_expr_raw_fn(struct c_test_env* env, char* buf)
 {
         tree exp = c_parse_expr_raw(&env->parser, &env->symtab, c_parser_tokens_remains(&env->parser));
-        return c_node_to_str(exp);
+        c_exp_to_str(buf, exp, TREE_NULL);
 }
 
 extern void c_test_parse_expr_raw(const char* fin, const char* fans)
@@ -104,10 +105,10 @@ extern void c_test_parse_expr_raw(const char* fin, const char* fans)
         c_test(fin, fans, c_test_parse_expr_raw_fn);
 }
 
-static char* c_test_parse_type_fn(struct c_test_env* env)
+static void c_test_parse_type_fn(struct c_test_env* env, char* buf)
 {
         tree type = c_parse_type(&env->parser, &env->symtab, c_parser_tokens_remains(&env->parser));
-        return c_node_to_str(type);
+        c_type_to_str(buf, type);
 }
 
 extern void c_test_parse_type(const char* fin, const char* fans)
