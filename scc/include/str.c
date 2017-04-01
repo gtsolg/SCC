@@ -73,28 +73,41 @@ struct rep
         const char* format;
         char* (*before)(void*);
         size_t(*len)(void*);
-        void(*after)(void*);
+        void(*after)(void*, char*);
 };
 
-static char* def_before(void* ptr)
+static char* def_before(void* arg)
 {
-        return ptr;
+        return arg;
 }
 
-static void def_after(void* ptr)
+static char* int_to_str(void* arg)
+{
+        char buf[20];
+        _itoa((int)arg, buf, 10);
+        return strcopy(buf);
+}
+
+static size_t max_int_len(void* arg)
+{
+        return 20;
+}
+
+static void def_after(void* arg, char* str)
 {
         return;
 }
 
-static void free_after(void* ptr)
+static void free_after(void* arg, char* str)
 {
-        free(ptr);
+        free(str);
 }
 
 static struct rep def_rtable[] =
 {
         { "%s",  def_before, strlen, free_after },
         { "%S",  def_before, strlen, def_after  },
+        { "%d",  int_to_str, max_int_len, free_after },
 };
 
 static int contains(const char* a, const char* b)
@@ -143,7 +156,7 @@ static char* vformat(const char* format, struct rep* rtable, size_t rsize, va_li
                                 char* str = rtable[i].before(arg);
                                 size_t len = strlen(str);
                                 memcpy(rit, str, len);
-                                rtable[i].after(arg);
+                                rtable[i].after(arg, str);
                                 rit += len - 1;
                                 it++;
                                 break;
@@ -156,9 +169,47 @@ static char* vformat(const char* format, struct rep* rtable, size_t rsize, va_li
 
 }
 
-extern char* format(const char* format, ...)
+extern int strprecat(char* dst, char* src)
 {
-        va_list list;
-        va_start(list, format);
-        return vformat(format, def_rtable, 2, list);
+        size_t size = strlen(src);
+        memmove(dst + size, dst, strlen(dst) + 1);
+        memcpy(dst, src, size);
+        return 0;
 }
+
+extern int strcatn(char* dst, size_t n, ...)
+{
+        va_list strings;
+        va_start(strings, n);
+        for (size_t i = 0; i < n; i++)
+                strcat(dst, va_arg(strings, char*));
+        return 0;
+}
+
+extern int strprecatn(char* dst, size_t n, ...)
+{
+        va_list strings;
+        va_start(strings, n);
+        for (size_t i = 0; i < n; i++)
+                strprecat(dst, va_arg(strings, char*));
+        return 0;
+}
+
+extern int strwrap(char* pre, char* dst, char* post)
+{
+        strcat(dst, post);
+        strprecat(dst, pre);
+        return 0;
+}
+
+extern char* strend(char* str)
+{
+        return str + strlen(str);
+}
+//
+//extern char* format(const char* format, ...)
+//{
+//        va_list list;
+//        va_start(list, format);
+//        return vformat(format, def_rtable, sizeof(def_rtable) / sizeof(struct rep), list);
+//}
