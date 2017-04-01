@@ -44,8 +44,8 @@
     <ClInclude Include="sccobj.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="tree.h" />
-    <ClInclude Include="tree_dump.h" />
     <ClInclude Include="tree_pass.h" />
+    <ClInclude Include="tree_print.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="args.c" />
@@ -72,8 +72,8 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="token.c" />
     <ClCompile Include="tree.c" />
-    <ClCompile Include="tree_dumb.c" />
     <ClCompile Include="tree_pass.c" />
+    <ClCompile Include="tree_print.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="c\creswords.inc" />

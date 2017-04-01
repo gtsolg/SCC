@@ -90,7 +90,7 @@
     <ClInclude Include="c\ctree.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="tree_dump.h">
+    <ClInclude Include="tree_print.h">
       <Filter>scc</Filter>
     </ClInclude>
   </ItemGroup>
@@ -170,7 +170,7 @@
     <ClCompile Include="c\ccommon.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="tree_dumb.c">
+    <ClCompile Include="tree_print.c">
       <Filter>scc</Filter>
     </ClCompile>
   </ItemGroup>
