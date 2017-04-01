@@ -1,0 +1,1 @@
+int (* const * volatile * const)[10][2]
