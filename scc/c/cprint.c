@@ -142,41 +142,67 @@ extern void c_exp_to_str(char* buf, tree exp, tree prev)
         if (needs_brackets(exp, prev))
                 strwrap("(", buf, ")");
 }
-typedef int(*(*(*a)))[3];
+
+static void pointer_to_str(char* buf, const char* quals, tree ptr)
+{
+        strprecatn(buf, 2, quals, "*");
+        enum type_kind kind = tree_type_kind(tree_type(ptr));
+        if (kind == tk_vector || kind == tk_sign)
+                strwrap("(", buf, ")");
+        c_type_to_str(buf, tree_type(ptr));
+}
+
+static vector_to_str(char* buf, const char* quals, tree vec)
+{
+        vec = tree_type(vec);
+        sprintf(buf, "%s[%llu]", buf, tree_vector_size(vec));
+        c_type_to_str(buf, tree_vector_type(vec));
+}
+
+static sign_to_str(char* buf, const char* quals, tree sign)
+{
+        sign = tree_type(sign);
+        strcat(buf, "(");
+        if (!tree_is(tree_sign_args(sign), tnk_null))
+        {
+                struct tree_iterator it = tree_list_iterator_init(tree_sign_args(sign));
+                while (tree_list_iterator_valid(&it))
+                {
+                        c_type_to_str(strend(buf), tree_list_iterator_node(&it));
+                        tree_list_iterator_advance(&it);
+                        if (tree_list_iterator_valid(&it))
+                                strcat(buf, ", ");
+                }
+        }
+        strcat(buf, ")");
+        c_type_to_str(buf, tree_sign_restype(sign));
+}
+
 extern void c_type_to_str(char* buf, tree type)
 {
         if (tree_is(type, tnk_null))
                 return;
 
-        char tmp[40] = { 0 };
-        type_qual_to_str(tmp, tree_type_qual(type));
+        char quals[40] = { 0 };
+        type_qual_to_str(quals, tree_type_qual(type));
 
         switch (tree_type_kind(type))
         {
-                case tk_void:   strprecatn(buf, 2, "void", tmp); return;
-                case tk_int8:   strprecatn(buf, 2, "char", tmp); return;
-                case tk_uint8:  strprecatn(buf, 2, "unsigned char", tmp); return;
-                case tk_int16:  strprecatn(buf, 2, "short", tmp); return;
-                case tk_uint16: strprecatn(buf, 2, "unsigned short", tmp); return;
-                case tk_int32:  strprecatn(buf, 2, "int", tmp); return;
-                case tk_uint32: strprecatn(buf, 2, "unsigned", tmp); return;
-                case tk_int64:  strprecatn(buf, 2, "long long", tmp); return;
-                case tk_uint64: strprecatn(buf, 2, "unsigned long long", tmp); return;
-                case tk_float:  strprecatn(buf, 2, "float", tmp); return;
-                case tk_double: strprecatn(buf, 2, "double", tmp); return;
+                case tk_void:   strprecatn(buf, 2, "void", quals); return;
+                case tk_int8:   strprecatn(buf, 2, "char", quals); return;
+                case tk_uint8:  strprecatn(buf, 2, "unsigned char", quals); return;
+                case tk_int16:  strprecatn(buf, 2, "short", quals); return;
+                case tk_uint16: strprecatn(buf, 2, "unsigned short", quals); return;
+                case tk_int32:  strprecatn(buf, 2, "int", quals); return;
+                case tk_uint32: strprecatn(buf, 2, "unsigned", quals); return;
+                case tk_int64:  strprecatn(buf, 2, "long long", quals); return;
+                case tk_uint64: strprecatn(buf, 2, "unsigned long long", quals); return;
+                case tk_float:  strprecatn(buf, 2, "float", quals); return;
+                case tk_double: strprecatn(buf, 2, "double", quals); return;
 
-                case tk_vector:
-                        type = tree_type(type);
-                        sprintf(buf, "%s[%llu]", buf, tree_vector_size(type));
-                        c_type_to_str(buf, tree_vector_type(type));
-                        return;
-
-                case tk_pointer:
-                        strprecatn(buf, 2, tmp, "*");
-                        if (tree_type_kind(tree_type(type)) == tk_vector)
-                                strwrap("(", buf, ")");
-                        c_type_to_str(buf, tree_type(type));
-                        return;
+                case tk_sign:    sign_to_str(buf, quals, type); return;
+                case tk_vector:  vector_to_str(buf, quals, type); return;
+                case tk_pointer: pointer_to_str(buf, quals, type); return;
 
                 default: return;
         }
