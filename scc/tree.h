@@ -56,6 +56,7 @@ enum type_kind
         tk_record,
         tk_union,
         tk_vector,
+        tk_sign,
         tk_pointer,
         tk_va_arg,
 };
@@ -321,12 +322,14 @@ extern tree tree_type_create(struct allocator* alloc, enum type_kind kind, enum 
 extern tree tree_ident_create(struct allocator* alloc, strref_t ref);
 extern tree tree_list_node_create(struct allocator* alloc, tree base);
 extern tree tree_exp_create(struct allocator* alloc, enum operator_kind kind, unsigned nesting, const struct tree_exp_info* opinfo);
+extern tree tree_list_create(struct allocator* alloc);
 extern tree tree_const_int_create(struct allocator* alloc, uint64_t val);
 extern tree tree_const_real_create(struct allocator* alloc, long double val);
 extern tree tree_const_float_create(struct allocator* alloc, float val);
 extern tree tree_const_string_create(struct allocator* alloc, strref_t ref);
 extern tree tree_attrib_create(struct allocator* alloc, uint64_t att);
 extern tree tree_vector_type_create(struct allocator* alloc, tree type, uint64_t size);
+extern tree tree_sign_type_create(struct allocator* alloc, tree res, tree args);
 
 #define tree_kind(ptree)           (ptree)->kind
 #define tree_is(ptree, kind)       (tree_kind(ptree) == kind)
@@ -357,6 +360,9 @@ extern tree tree_vector_type_create(struct allocator* alloc, tree type, uint64_t
 #define tree_vector(ptree)         (ptree)->vector_type
 #define tree_vector_size(ptree)    tree_vector(ptree).size
 #define tree_vector_type(ptree)    tree_vector(ptree).type
+#define tree_sign(ptree)           (ptree)->sign_type
+#define tree_sign_restype(ptree)   tree_sign(ptree).restype
+#define tree_sign_args(ptree)      tree_sign(ptree).args
 
 #define tree_list_empty(ptree) list_empty(&tree_list(ptree))
 

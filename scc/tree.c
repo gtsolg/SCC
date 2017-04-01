@@ -67,6 +67,15 @@ extern tree tree_exp_create(struct allocator* alloc, enum operator_kind kind, un
         return exp;
 }
 
+extern tree tree_list_create(struct allocator* alloc)
+{
+        tree list = tree_create(alloc, tnk_list);
+        if (!list)
+                return NULL;
+        tree_list_initf(list);
+        return list;
+}
+
 extern tree tree_const_int_create(struct allocator* alloc, uint64_t val)
 {
         tree cst = tree_create(alloc, tnk_const_int);
@@ -120,4 +129,14 @@ extern tree tree_vector_type_create(struct allocator* alloc, tree type, uint64_t
         tree_vector_type(vec) = type;
         tree_vector_size(vec) = size;
         return vec;
+}
+
+extern tree tree_sign_type_create(struct allocator* alloc, tree res, tree args)
+{
+        tree sign = tree_create(alloc, tnk_sign_type);
+        if (!sign)
+                return NULL;
+        tree_sign_args(sign) = args;
+        tree_sign_restype(sign) = res;
+        return sign;
 }
