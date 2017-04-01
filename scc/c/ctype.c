@@ -57,27 +57,6 @@ extern tree c_type_iterator_advance(tree it)
         }
         type_iterator_skip_attribs(it);
         return it;
-
-        //if (!tree_exp_iterator_valid(it))
-        //        return it;
-
-        //tree p = tree_iterator_pos(it);
-
-        //if (!tree_exp_iterator_valid(it))
-        //        return it;
-
-        //if (tree_exp_iterator_is(it, ok_attrib))
-        //        type_iterator_skip_attribs(it);
-        //else
-        //        type_iterator_advance(it);
-        //p = tree_iterator_pos(it);
-        //if (tree_exp_iterator_valid(it) && tree_exp_iterator_is(it, ok_type))
-        //{
-        //        tree_exp_iterator_go_left(it);
-        //        c_type_iterator_info(it)->is_right_subtree = 0;
-        //        type_iterator_skip_attribs(it);
-        //}
-        //return it;
 }
 
 static tree c_parse_default_type(struct c_parser* parser)
@@ -134,8 +113,6 @@ extern tree c_parse_base_type(struct c_parser* parser, struct c_symtab* symtab)
         return tree_copy(&c_parser_tree_alloc(parser), type);
 }
 
-#include "tree_print.h"
-
 static tree build_type(struct allocator* alloc, tree it);
 
 static inline enum type_qualifier type_info_get_qual_and_reset(struct c_type_parse_info* info)
@@ -145,15 +122,47 @@ static inline enum type_qualifier type_info_get_qual_and_reset(struct c_type_par
         return qual;
 }
 
+static tree build_type_from_raw(struct allocator*, tree);
+
 static inline tree build_type_list(struct allocator* alloc, tree exp)
 {
+        if (tree_is(exp, tnk_null))
+                return TREE_NULL;
 
+        tree list = tree_list_create(alloc);
+        while (tree_exp_is(exp, ok_coma))
+        {
+                tree type = build_type_from_raw(alloc, tree_exp_left(exp));
+                if (!type)
+                        goto cleanup;
+
+                tree_list_push_back(list, tree_list_node_create(alloc, type));
+                exp = tree_exp_right(exp);
+        }
+        tree last = build_type_from_raw(alloc, exp);
+        if (!last)
+                goto cleanup;
+        
+        tree_list_push_back(list, tree_list_node_create(alloc, last));
+        return list;
+
+cleanup:
+        // cleanup
+        return NULL;
 }
 
 static inline tree build_function_type(struct allocator* alloc, tree it)
 {
-}
+        tree args = build_type_list(alloc, tree_exp_right(tree_iterator_pos(it)));
+        if (!args)
+                return NULL;
+        tree restype = build_type(alloc, c_type_iterator_advance(it));
+        if (!restype)
+                return NULL;
 
+        tree sign = tree_sign_type_create(alloc, restype, args);
+        return tree_type_create(alloc, tk_sign, tq_unqualified, sign);
+}
 
 static inline tree build_vector_type(struct allocator* alloc, tree it)
 {
@@ -206,22 +215,25 @@ static tree build_type(struct allocator* alloc, tree it)
                 case ok_subscript:   return build_vector_type(alloc, it);
                 case ok_operand:     return build_base_type(alloc, it);
                 default:             return NULL;
-
         }
+}
+
+static tree build_type_from_raw(struct allocator* alloc, tree raw)
+{
+        struct c_type_parse_info info = c_type_parse_info_init();
+        struct tree_iterator it;
+        tree res = NULL;
+        if (c_type_iterator_initf(&it, raw, &info) == SCC_SUCCESS)
+                res = build_type(alloc, &it);
+        return res;
 }
 
 extern tree c_parse_type(struct c_parser* parser, struct c_symtab* symtab, size_t size)
 {
-        struct allocator* alloc = &c_parser_tree_alloc(parser);
         tree raw = c_parse_expr_raw(parser, symtab, size);
         if (!raw)
                 return NULL;
-        tree res = NULL;
-        struct c_type_parse_info info = c_type_parse_info_init();
-
-        struct tree_iterator it;
-        if (c_type_iterator_initf(&it, raw, &info) == SCC_SUCCESS)
-                res = build_type(&c_parser_tree_alloc(parser), &it);
+        tree res = build_type_from_raw(&c_parser_tree_alloc(parser), raw);
         // cleanup
         return res;
 }
