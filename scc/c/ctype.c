@@ -12,7 +12,7 @@ static inline void type_iterator_skip_attribs(tree it)
 {
         while (tree_exp_iterator_is(it, ok_attrib))
         {
-                struct c_type_parse_info* info = c_type_iterator_info(it);
+                struct c_type_build_info* info = c_type_iterator_info(it);
                 uint64_t att = tree_attrib(tree_exp_node(tree_iterator_pos(it)));
                 info->qual |= ctt_to_qualifier(att);
                 info->storage_class |= ctt_to_storage_class(att);
@@ -21,7 +21,7 @@ static inline void type_iterator_skip_attribs(tree it)
 }
 
 
-extern scc_err_t c_type_iterator_initf(tree it, tree exp, struct c_type_parse_info* info)
+extern scc_err_t c_type_iterator_initf(tree it, tree exp, struct c_type_build_info* info)
 {
         tree_iterator_pos(it) = tree_exp_left(exp);
         c_type_iterator_info(it) = info;
@@ -115,7 +115,7 @@ extern tree c_parse_base_type(struct c_parser* parser, struct c_symtab* symtab)
 
 static tree build_type(struct allocator* alloc, tree it);
 
-static inline enum type_qualifier type_info_get_qual_and_reset(struct c_type_parse_info* info)
+static inline enum type_qualifier type_info_get_qual_and_reset(struct c_type_build_info* info)
 {
         enum type_qualifier qual = info->qual;
         info->qual = tq_unqualified;
@@ -188,7 +188,7 @@ static inline tree build_pointer(struct allocator* alloc, tree it)
 
 static inline tree build_base_type(struct allocator* alloc, tree it)
 {
-        struct c_type_parse_info* info = c_type_iterator_info(it);
+        struct c_type_build_info* info = c_type_iterator_info(it);
         tree base = tree_exp_node(tree_iterator_pos(it));
 
         enum type_qualifier qual = type_info_get_qual_and_reset(c_type_iterator_info(it));
@@ -220,7 +220,7 @@ static tree build_type(struct allocator* alloc, tree it)
 
 static tree build_type_from_raw(struct allocator* alloc, tree raw)
 {
-        struct c_type_parse_info info = c_type_parse_info_init();
+        struct c_type_build_info info = c_type_build_info_init();
         struct tree_iterator it;
         tree res = NULL;
         if (c_type_iterator_initf(&it, raw, &info) == SCC_SUCCESS)
