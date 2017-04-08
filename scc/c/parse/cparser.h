@@ -2,7 +2,6 @@
 #define C_PARSER_INTERNAL
 
 #include "../ccommon.h"
-#include "csymtab.h"
 #include "../reader/creader.h"
 #include "pool.h"
 #include "tree/tree_index.h"
@@ -72,7 +71,7 @@ struct c_parser
 #define c_parser_set_on_err(parser) \
         if (c_parser_err(parser) || setjmp((parser)->on_err_buf))
 
-extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, struct pool* tree_pool);
+extern void c_parser_init(struct c_parser* parser, struct tree_index* globl, struct c_reader* reader, struct pool* tree_pool);
 extern void c_parser_init_first_token(struct c_parser* parser);
 extern void c_parser_shutdown(struct c_parser* parser);
 extern void c_parser_save_state(struct c_parser* parser);

@@ -10,8 +10,7 @@ struct c_test_env
         struct c_parser parser;
         struct c_reader reader;
         struct pool tree_pool;
-        struct c_symtab symtab;
-        struct htab globl;
+        struct tree_index globl;
         char answer[C_MAX_ANSWER_LEN];
 };
 
@@ -31,7 +30,7 @@ static scc_err_t c_test_envieronment_initf(struct c_test_env* env, const char* f
         stream_close(&fres);
 
         htab_initf(&env->globl, 0, STD_ALLOC);
-        c_symtab_init(&env->symtab, &env->globl);
+        tree_index_initf(&env->globl);
         pool_initf(&env->tree_pool, sizeof(struct tree_node), 10, STD_ALLOC);
         c_reader_init(&env->reader, &env->parser.c_token_alloc, &env->parser.err, fin, NULL, NULL);
 
@@ -41,7 +40,7 @@ static scc_err_t c_test_envieronment_initf(struct c_test_env* env, const char* f
                 return SCC_ERR;
         }
 
-        c_parser_init(&env->parser, &env->reader, &env->tree_pool);
+        c_parser_init(&env->parser, &env->globl, &env->reader, &env->tree_pool);
         c_parser_init_first_token(&env->parser);
         return SCC_SUCCESS;
 }
@@ -96,7 +95,7 @@ static void c_test(const char* fin, const char* fans, c_test_fn test)
 
 static void c_test_parse_expr_raw_fn(struct c_test_env* env, char* buf)
 {
-        tree exp = c_parse_expr_raw(&env->parser, &env->symtab, c_parser_tokens_remains(&env->parser));
+        tree exp = c_parse_expr_raw(&env->parser, c_parser_tokens_remains(&env->parser));
         c_exp_to_str(buf, exp, TREE_NULL);
 }
 
@@ -107,7 +106,7 @@ extern void c_test_parse_expr_raw(const char* fin, const char* fans)
 
 static void c_test_parse_type_fn(struct c_test_env* env, char* buf)
 {
-        tree type = c_parse_type(&env->parser, &env->symtab, c_parser_tokens_remains(&env->parser));
+        tree type = c_parse_type(&env->parser, c_parser_tokens_remains(&env->parser));
         c_type_to_str(buf, type);
 }
 

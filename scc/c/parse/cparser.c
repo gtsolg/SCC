@@ -28,8 +28,10 @@ static void parser_ret_ctoken(struct c_parser* parser, c_token* token)
         pool_return(&parser->c_token_pool, token);
 }
 
-extern void c_parser_init(struct c_parser* parser, struct c_reader* reader, struct pool* tree_pool)
+extern void c_parser_init(struct c_parser* parser, struct tree_index* globl, struct c_reader* reader, struct pool* tree_pool)
 {
+        parser->globl = globl;
+        parser->scope_idx = C_PARSER_GLOBL_SCOPE_IDX;
         parser->state_idx = 0;
         c_parser_err(parser) = SCC_SUCCESS;
         c_parser_reader(parser) = reader;

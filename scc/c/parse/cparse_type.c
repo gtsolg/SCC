@@ -15,7 +15,7 @@ static tree c_parse_default_type(struct c_parser* parser)
         return node;
 }
 
-static tree c_parse_alias(struct c_parser* parser, struct c_symtab* symtab)
+static tree c_parse_alias(struct c_parser* parser)
 {
         enum c_token_type composite = 0;
         if (c_token_is_composite_type(c_parser_token(parser)))
@@ -26,7 +26,7 @@ static tree c_parse_alias(struct c_parser* parser, struct c_symtab* symtab)
         if (!c_parser_token_is(parser, ctt_identifier))
                 return NULL; // unknown token
 
-        tree alias = c_symtab_get_symb(symtab, c_parser_token_ref(parser));
+        tree alias = c_parser_get_decl(parser, c_parser_token_ref(parser));
         if (!alias || tree_kind(alias) != tnk_type)
                 return NULL; // unknown type or another symb instead of alias
 
@@ -40,12 +40,12 @@ static tree c_parse_alias(struct c_parser* parser, struct c_symtab* symtab)
         return alias;
 }
 
-extern tree c_parse_base_type(struct c_parser* parser, struct c_symtab* symtab)
+extern tree c_parse_base_type(struct c_parser* parser)
 {
         c_parser_save_state(parser);
         tree type = c_token_is_default_type(c_parser_token(parser))
                 ? c_parse_default_type(parser)
-                : c_parse_alias(parser, symtab);
+                : c_parse_alias(parser);
         if (!type)
         {
                 c_parser_load_state(parser);
@@ -55,9 +55,9 @@ extern tree c_parse_base_type(struct c_parser* parser, struct c_symtab* symtab)
         return tree_copy(&c_parser_tree_alloc(parser), type);
 }
 
-extern tree c_parse_type(struct c_parser* parser, struct c_symtab* symtab, size_t size)
+extern tree c_parse_type(struct c_parser* parser, size_t size)
 {
-        tree raw = c_parse_expr_raw(parser, symtab, size);
+        tree raw = c_parse_expr_raw(parser, size);
         if (!raw)
                 return NULL;
         tree res = c_build_type(&c_parser_tree_alloc(parser), raw);

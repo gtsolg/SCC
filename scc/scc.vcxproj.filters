@@ -84,9 +84,6 @@
     <ClInclude Include="include\err.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="c\parse\csymtab.h">
-      <Filter>scc\c\parse</Filter>
-    </ClInclude>
     <ClInclude Include="c\reader\creader.h">
       <Filter>scc\c\reader</Filter>
     </ClInclude>
@@ -107,6 +104,9 @@
     </ClInclude>
     <ClInclude Include="c\tree\ctree_build.h">
       <Filter>scc\c\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="core\tree\tree_index.h">
+      <Filter>scc\core\tree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,9 +158,6 @@
     <ClCompile Include="c\parse\clex.c">
       <Filter>scc\c\parse</Filter>
     </ClCompile>
-    <ClCompile Include="c\parse\csymtab.c">
-      <Filter>scc\c\parse</Filter>
-    </ClCompile>
     <ClCompile Include="c\reader\creader.c">
       <Filter>scc\c\reader</Filter>
     </ClCompile>
@@ -190,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="c\tree\ctree_build.c">
       <Filter>scc\c\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="core\tree\tree_index.c">
+      <Filter>scc\core\tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,7 @@
     <ClInclude Include="args.h" />
     <ClInclude Include="core\token.h" />
     <ClInclude Include="core\tree\tree.h" />
+    <ClInclude Include="core\tree\tree_index.h" />
     <ClInclude Include="core\tree\tree_pass.h" />
     <ClInclude Include="core\tree\tree_print.h" />
     <ClInclude Include="c\ccommon.h" />
@@ -30,7 +31,6 @@
     <ClInclude Include="c\ctest.h" />
     <ClInclude Include="c\parse\cparse.h" />
     <ClInclude Include="c\parse\cparser.h" />
-    <ClInclude Include="c\parse\csymtab.h" />
     <ClInclude Include="c\reader\creader.h" />
     <ClInclude Include="c\reader\ctoken.h" />
     <ClInclude Include="c\tree\ctree_build.h" />
@@ -51,6 +51,7 @@
     <ClCompile Include="args.c" />
     <ClCompile Include="core\token.c" />
     <ClCompile Include="core\tree\tree.c" />
+    <ClCompile Include="core\tree\tree_index.c" />
     <ClCompile Include="core\tree\tree_pass.c" />
     <ClCompile Include="core\tree\tree_print.c" />
     <ClCompile Include="c\ccommon.c" />
@@ -61,7 +62,6 @@
     <ClCompile Include="c\parse\clex.c" />
     <ClCompile Include="c\parse\cparser.c" />
     <ClCompile Include="c\parse\cparse_stmt.c" />
-    <ClCompile Include="c\parse\csymtab.c" />
     <ClCompile Include="c\parse\cparse_type.c" />
     <ClCompile Include="c\reader\creader.c" />
     <ClCompile Include="c\reader\ctoken.c" />
