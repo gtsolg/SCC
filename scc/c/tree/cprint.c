@@ -1,5 +1,6 @@
 #include "cprint.h"
-#include "parse/cparser.h"
+#include "../parse/cparser.h"
+#include "../ccommon.h"
 #include "str.h"
 
 static char* c_exp_format[] =
