@@ -84,12 +84,6 @@
     <ClInclude Include="include\err.h">
       <Filter>scc\include</Filter>
     </ClInclude>
-    <ClInclude Include="c\parse\cparser.h">
-      <Filter>scc\c\parse</Filter>
-    </ClInclude>
-    <ClInclude Include="c\parse\cparser_internal.h">
-      <Filter>scc\c\parse</Filter>
-    </ClInclude>
     <ClInclude Include="c\parse\csymtab.h">
       <Filter>scc\c\parse</Filter>
     </ClInclude>
@@ -103,6 +97,15 @@
       <Filter>scc\c\tree</Filter>
     </ClInclude>
     <ClInclude Include="c\tree\ctree_print.h">
+      <Filter>scc\c\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="c\parse\cparse.h">
+      <Filter>scc\c\parse</Filter>
+    </ClInclude>
+    <ClInclude Include="c\parse\cparser.h">
+      <Filter>scc\c\parse</Filter>
+    </ClInclude>
+    <ClInclude Include="c\tree\ctree_build.h">
       <Filter>scc\c\tree</Filter>
     </ClInclude>
   </ItemGroup>
@@ -152,25 +155,10 @@
     <ClCompile Include="include\err.c">
       <Filter>scc\include</Filter>
     </ClCompile>
-    <ClCompile Include="c\parse\cdecl.c">
-      <Filter>scc\c\parse</Filter>
-    </ClCompile>
-    <ClCompile Include="c\parse\cexpr.c">
-      <Filter>scc\c\parse</Filter>
-    </ClCompile>
     <ClCompile Include="c\parse\clex.c">
       <Filter>scc\c\parse</Filter>
     </ClCompile>
-    <ClCompile Include="c\parse\cparser_internal.c">
-      <Filter>scc\c\parse</Filter>
-    </ClCompile>
     <ClCompile Include="c\parse\csymtab.c">
-      <Filter>scc\c\parse</Filter>
-    </ClCompile>
-    <ClCompile Include="c\parse\ctype.c">
-      <Filter>scc\c\parse</Filter>
-    </ClCompile>
-    <ClCompile Include="c\parse\cstmt.c">
       <Filter>scc\c\parse</Filter>
     </ClCompile>
     <ClCompile Include="c\reader\creader.c">
@@ -183,6 +171,24 @@
       <Filter>scc\c\tree</Filter>
     </ClCompile>
     <ClCompile Include="c\tree\ctree_print.c">
+      <Filter>scc\c\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\cparse_decl.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\cparse_exp.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\cparse_stmt.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\cparse_type.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\cparser.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\tree\ctree_build.c">
       <Filter>scc\c\tree</Filter>
     </ClCompile>
   </ItemGroup>
