@@ -33,7 +33,7 @@
     <ClInclude Include="c\parse\csymtab.h" />
     <ClInclude Include="c\reader\creader.h" />
     <ClInclude Include="c\reader\ctoken.h" />
-    <ClInclude Include="c\tree\cprint.h" />
+    <ClInclude Include="c\tree\ctree_print.h" />
     <ClInclude Include="c\tree\ctree.h" />
     <ClInclude Include="include\alloc.h" />
     <ClInclude Include="include\err.h" />
@@ -64,7 +64,7 @@
     <ClCompile Include="c\parse\ctype.c" />
     <ClCompile Include="c\reader\creader.c" />
     <ClCompile Include="c\reader\ctoken.c" />
-    <ClCompile Include="c\tree\cprint.c" />
+    <ClCompile Include="c\tree\ctree_print.c" />
     <ClCompile Include="c\tree\ctree.c" />
     <ClCompile Include="include\alloc.c" />
     <ClCompile Include="include\err.c" />
