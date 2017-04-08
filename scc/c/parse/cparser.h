@@ -5,6 +5,7 @@
 #include "csymtab.h"
 #include "../reader/creader.h"
 #include "pool.h"
+#include "tree/tree_index.h"
 
 #define C_PARSER_MAX_STATES 256
 
@@ -21,9 +22,14 @@ struct c_parser
         size_t state_idx;
 
         struct list_node token_list;
-        struct c_reader* reader;
-        scc_err_t err;
 
+        struct c_reader* reader;
+
+        struct tree_index* globl;
+        struct tree_index scope[C_MAX_BLOCK_NESTING];
+        size_t scope_idx;
+
+        scc_err_t err;
         jmp_buf on_err_buf;
 
         struct pool* tree_pool;
@@ -32,10 +38,13 @@ struct c_parser
         struct allocator c_token_alloc;
 };
 
-#define c_parser_tree_alloc(parser)    (parser)->tree_alloc
-#define c_parser_c_token_alloc(parser) (parser)->c_token_alloc
-#define c_parser_reader(parser)        (parser)->reader
-#define c_parser_cur_state(parser)     (parser)->states[(parser)->state_idx]
+#define C_PARSER_GLOBL_SCOPE_IDX (-1)
+
+#define c_parser_tree_alloc(parser)      (parser)->tree_alloc
+#define c_parser_c_token_alloc(parser)   (parser)->c_token_alloc
+#define c_parser_reader(parser)          (parser)->reader
+#define c_parser_cur_state(parser)       (parser)->states[(parser)->state_idx]
+#define c_parser_cur_local_scope(parser) ((parser)->scope + (parser)->scope_idx)
 #define c_parser_err(parser)           (parser)->err
 #define c_parser_reader_eof(parser)    (parser)->reader_eof
 #define c_parser_token(parser)         c_parser_cur_state(parser).token
@@ -46,6 +55,9 @@ struct c_parser
 #define c_parser_token_ref(parser)     c_parser_token(parser)->ref
 #define c_parser_token_type(parser)    c_parser_token(parser)->type
 #define c_parser_eof(parser)           (c_parser_token_type(parser) == ctt_eof)
+
+#define c_parser_cur_scope(parser) \
+        ((parser)->scope_idx == C_PARSER_GLOBL_SCOPE_IDX ? (parser)->globl : c_parser_cur_local_scope(parser))
 
 #define c_parser_error_fence(parser) \
         if (c_parser_err(parser))    \
@@ -86,5 +98,11 @@ extern int c_parser_token_is(struct c_parser* parser, enum c_token_type type);
 extern int c_parser_advance_if_next_token_is(struct c_parser* parser, enum c_token_type type);
 extern int c_parser_advance_if_token_is(struct c_parser* parser, enum c_token_type type);
 extern int c_parser_has_tokens(struct c_parser* parser, size_t count);
+
+extern void c_parser_enter_scope(struct c_parser* parser);
+extern void c_parser_exit_scope(struct c_parser* parser);
+extern void c_parser_add_decl(struct c_parser* parser, tree decl, strref_t name);
+extern int  c_parser_decl_exists(struct c_parser* parser, strref_t name);
+extern tree c_parser_get_decl(struct c_parser* parser, strref_t name);
 
 #endif // !C_PARSER_INTERNAL

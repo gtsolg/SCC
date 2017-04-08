@@ -235,3 +235,32 @@ extern void c_parser_init_first_token(struct c_parser* parser)
         c_parser_lex_token(parser);
         c_parser_token(parser) = list_head(&parser->token_list);
 }
+
+extern void c_parser_enter_scope(struct c_parser* parser)
+{
+        parser->scope_idx++;
+        scc_assert(parser->scope_idx < C_MAX_BLOCK_NESTING);
+        tree_index_initf(c_parser_cur_local_scope(parser));
+}
+
+extern void c_parser_exit_scope(struct c_parser* parser)
+{
+        scc_assert(parser->scope_idx > C_PARSER_GLOBL_SCOPE_IDX);
+        tree_index_delete(c_parser_cur_local_scope(parser));
+        parser->scope_idx--;
+}
+
+extern void c_parser_add_decl(struct c_parser* parser, tree decl, strref_t name)
+{
+        tree_index_add(c_parser_cur_scope(parser), decl, name);
+}
+
+extern int c_parser_decl_exists(struct c_parser* parser, strref_t name)
+{
+        return (int)c_parser_get_decl(parser, name);
+}
+
+extern tree c_parser_get_decl(struct c_parser* parser, strref_t name)
+{
+        return tree_index_get(c_parser_cur_scope(parser), name);
+}
