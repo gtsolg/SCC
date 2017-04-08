@@ -7,6 +7,7 @@
 #include "tree/tree_index.h"
 
 #define C_PARSER_MAX_STATES 256
+#define C_PARSER_GLOBL_SCOPE_IDX (-1)
 
 struct c_parser_state
 {
@@ -17,7 +18,7 @@ struct c_parser_state
 
 struct c_parser
 {
-        struct c_parser_state states[C_PARSER_MAX_STATES];
+        struct c_parser_state state[C_PARSER_MAX_STATES];
         size_t state_idx;
 
         struct list_node token_list;
@@ -37,23 +38,21 @@ struct c_parser
         struct allocator c_token_alloc;
 };
 
-#define C_PARSER_GLOBL_SCOPE_IDX (-1)
-
-#define c_parser_tree_alloc(parser)      (parser)->tree_alloc
-#define c_parser_c_token_alloc(parser)   (parser)->c_token_alloc
-#define c_parser_reader(parser)          (parser)->reader
-#define c_parser_cur_state(parser)       (parser)->states[(parser)->state_idx]
+#define c_parser_tree_alloc(parser)      ((parser)->tree_alloc)
+#define c_parser_c_token_alloc(parser)   ((parser)->c_token_alloc)
+#define c_parser_reader(parser)          ((parser)->reader)
+#define c_parser_cur_state(parser)       ((parser)->state + (parser)->state_idx)
 #define c_parser_cur_local_scope(parser) ((parser)->scope + (parser)->scope_idx)
-#define c_parser_err(parser)           (parser)->err
-#define c_parser_reader_eof(parser)    (parser)->reader_eof
-#define c_parser_token(parser)         c_parser_cur_state(parser).token
-#define c_parser_counter(parser)       c_parser_cur_state(parser).counter
-#define c_parser_nesting(parser)       c_parser_cur_state(parser).nesting
-#define c_parser_next_token(parser)    ((struct c_token*)c_parser_token(parser)->node.next)
-#define c_parser_prev_token(parser)    ((struct c_token*)c_parser_token(parser)->node.prev)
-#define c_parser_token_ref(parser)     c_parser_token(parser)->ref
-#define c_parser_token_type(parser)    c_parser_token(parser)->type
-#define c_parser_eof(parser)           (c_parser_token_type(parser) == ctt_eof)
+#define c_parser_err(parser)             ((parser)->err)
+#define c_parser_reader_eof(parser)      ((parser)->reader_eof)
+#define c_parser_token(parser)           (c_parser_cur_state(parser).token)
+#define c_parser_counter(parser)         (c_parser_cur_state(parser).counter)
+#define c_parser_nesting(parser)         (c_parser_cur_state(parser).nesting)
+#define c_parser_next_token(parser)      ((struct c_token*)c_parser_token(parser)->node.next)
+#define c_parser_prev_token(parser)      ((struct c_token*)c_parser_token(parser)->node.prev)
+#define c_parser_token_ref(parser)       (c_parser_token(parser)->ref)
+#define c_parser_token_type(parser)      (c_parser_token(parser)->type)
+#define c_parser_eof(parser)             (c_parser_token_type(parser) == ctt_eof)
 
 #define c_parser_cur_scope(parser) \
         ((parser)->scope_idx == C_PARSER_GLOBL_SCOPE_IDX ? (parser)->globl : c_parser_cur_local_scope(parser))

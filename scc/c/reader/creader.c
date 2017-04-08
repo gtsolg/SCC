@@ -88,14 +88,14 @@ static void reader_init(struct c_reader* reader, struct allocator* token_alloc, 
         reader->token_alloc = token_alloc;
         reader->err = err;
         reader->defs = defs;
-        reader->files = files;
+        reader->file_states = files;
         *reader->err = SCC_SUCCESS;
 
-        reader->func = NULL;
+        reader->current_function = NULL;
         reader->buf_idx = 0;
         reader->src_idx = 0;
         reader->line_idx = 1;
-        reader->linec = 0;
+        reader->line_count = 0;
         reader->eof = 0;
         list_initf(&reader->token_buf);
         reader_reset_buf(reader);
@@ -125,9 +125,9 @@ extern void c_reader_init(struct c_reader* reader, struct allocator* token_alloc
 }
 
 
-extern void c_reader_set_func(struct c_reader* reader, const char* func)
+extern void c_reader_set_current_function(struct c_reader* reader, const char* func)
 {
-        reader->func = func;
+        reader->current_function = func;
 }
 
 extern void c_reader_include_dir(struct c_reader* reader, const char* dir)
@@ -206,7 +206,7 @@ static inline int skip_till(const char* string, int c)
 
 static inline struct location current_loc(struct c_reader* reader)
 {
-        struct location loc = init_location(NULL, reader->linec, reader->line_idx);
+        struct location loc = init_location(NULL, reader->line_count, reader->line_idx);
         return loc;
 }
 

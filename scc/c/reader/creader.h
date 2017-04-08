@@ -56,16 +56,14 @@ struct c_reader
         int src_idx;
         int eof;
 
-        unsigned linec;
+        unsigned line_count;
         scc_err_t* err;
 
         struct list_node token_buf;
         struct allocator* token_alloc;
-        const char*  func;
+        const char*  current_function;
         struct htab* defs;
-        struct htab* files;
-        const char** includes;
-        size_t incc;
+        struct htab* file_states;
 
         unsigned line_preprocessed : 1;
 };
@@ -77,7 +75,7 @@ extern void c_reader_init(struct c_reader* reader
         , struct htab* defs
         , struct htab* files);
 
-extern void c_reader_set_func(struct c_reader* reader, const char* func);
+extern void c_reader_set_current_function(struct c_reader* reader, const char* func);
 extern void c_reader_include_dir(struct c_reader* reader, const char* dir);
 extern void c_reader_define(struct c_reader* reader, const char* symb);
 extern struct token* c_read_token(struct c_reader* reader);

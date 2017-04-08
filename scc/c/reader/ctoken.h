@@ -5,8 +5,8 @@
 
 typedef struct token c_token;
 
-#define c_token_type(ptoken) (ptoken)->type
-#define c_token_ref(ptoken)  (ptoken)->ref
+#define c_token_type(ptoken) ((ptoken)->type)
+#define c_token_ref(ptoken)  ((ptoken)->ref)
 #define c_token_next(ptoken) list_node_next(&(ptoken)->node)
 #define c_token_prev(ptoken) list_node_prev(&(ptoken)->node)
 
