@@ -1,4 +1,4 @@
-#include "c/csymtab.h"
+#include "csymtab.h"
 #include "hash.h"
 
 extern void c_symtab_init(struct c_symtab* symtab, struct htab* globl)

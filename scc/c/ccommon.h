@@ -3,11 +3,11 @@
 
 #include "htab.h"
 #include "hash.h"
-#include "tree.h"
-#include "tree_print.h"
+#include "tree/tree.h"
+#include "tree/tree_print.h"
 
 #include "cprint.h"
-#include "ctoken.h"
+#include "reader/ctoken.h"
 #include "climits.h"
 
 enum c_family_lang_flags

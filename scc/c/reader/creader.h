@@ -2,7 +2,7 @@
 #define C_READER_H
 
 #include "list.h"
-#include "climits.h"
+#include "../climits.h"
 #include "stream.h"
 #include "token.h"
 #include "err.h"

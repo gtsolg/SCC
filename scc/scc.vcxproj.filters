@@ -10,24 +10,21 @@
     <Filter Include="scc\include">
       <UniqueIdentifier>{68738f73-a315-4d2e-9bcc-2a297f5610b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scc\core">
+      <UniqueIdentifier>{8690ac27-e423-4747-bd55-a906baf9e207}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\core\tree">
+      <UniqueIdentifier>{c32a729d-cb99-4bcc-97c3-46635d00c181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\c\parse">
+      <UniqueIdentifier>{34cabe49-0d28-46eb-a371-d893764ab5c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\c\reader">
+      <UniqueIdentifier>{f4db300a-9267-42d9-8e97-9ebc36dc67a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="args.h">
-      <Filter>scc</Filter>
-    </ClInclude>
-    <ClInclude Include="err.h">
-      <Filter>scc</Filter>
-    </ClInclude>
-    <ClInclude Include="scc.h">
-      <Filter>scc</Filter>
-    </ClInclude>
-    <ClInclude Include="tree.h">
-      <Filter>scc</Filter>
-    </ClInclude>
-    <ClInclude Include="tree_pass.h">
-      <Filter>scc</Filter>
-    </ClInclude>
-    <ClInclude Include="token.h">
       <Filter>scc</Filter>
     </ClInclude>
     <ClInclude Include="include\hash.h">
@@ -63,51 +60,54 @@
     <ClInclude Include="c\climits.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="c\cparser.h">
-      <Filter>scc\c</Filter>
-    </ClInclude>
-    <ClInclude Include="c\cparser_internal.h">
-      <Filter>scc\c</Filter>
-    </ClInclude>
     <ClInclude Include="c\cprint.h">
-      <Filter>scc\c</Filter>
-    </ClInclude>
-    <ClInclude Include="c\creader.h">
-      <Filter>scc\c</Filter>
-    </ClInclude>
-    <ClInclude Include="c\csymtab.h">
       <Filter>scc\c</Filter>
     </ClInclude>
     <ClInclude Include="c\ctest.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="c\ctoken.h">
-      <Filter>scc\c</Filter>
-    </ClInclude>
     <ClInclude Include="c\ctree.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="tree_print.h">
-      <Filter>scc</Filter>
+    <ClInclude Include="core\token.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\tree\tree_pass.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="core\tree\tree_print.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="core\tree\tree.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scc.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\err.h">
+      <Filter>scc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="c\parse\cparser.h">
+      <Filter>scc\c\parse</Filter>
+    </ClInclude>
+    <ClInclude Include="c\parse\cparser_internal.h">
+      <Filter>scc\c\parse</Filter>
+    </ClInclude>
+    <ClInclude Include="c\parse\csymtab.h">
+      <Filter>scc\c\parse</Filter>
+    </ClInclude>
+    <ClInclude Include="c\reader\creader.h">
+      <Filter>scc\c\reader</Filter>
+    </ClInclude>
+    <ClInclude Include="c\reader\ctoken.h">
+      <Filter>scc\c\reader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="err.c">
-      <Filter>scc</Filter>
-    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>scc</Filter>
     </ClCompile>
     <ClCompile Include="args.c">
-      <Filter>scc</Filter>
-    </ClCompile>
-    <ClCompile Include="tree.c">
-      <Filter>scc</Filter>
-    </ClCompile>
-    <ClCompile Include="tree_pass.c">
-      <Filter>scc</Filter>
-    </ClCompile>
-    <ClCompile Include="token.c">
       <Filter>scc</Filter>
     </ClCompile>
     <ClCompile Include="include\htab.c">
@@ -125,58 +125,70 @@
     <ClCompile Include="include\alloc.c">
       <Filter>scc\include</Filter>
     </ClCompile>
-    <ClCompile Include="c\cdecl.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
     <ClCompile Include="c\cenv.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
-    <ClCompile Include="c\cexpr.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
-    <ClCompile Include="c\clex.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
-    <ClCompile Include="c\cparser_internal.c">
       <Filter>scc\c</Filter>
     </ClCompile>
     <ClCompile Include="c\cprint.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="c\creader.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
-    <ClCompile Include="c\cstmt.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
-    <ClCompile Include="c\csymtab.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
     <ClCompile Include="c\ctest.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
-    <ClCompile Include="c\ctoken.c">
       <Filter>scc\c</Filter>
     </ClCompile>
     <ClCompile Include="c\ctree.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="c\ctype.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
     <ClCompile Include="c\ccommon.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="tree_print.c">
-      <Filter>scc</Filter>
+    <ClCompile Include="core\token.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\tree\tree_pass.c">
+      <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="core\tree\tree_print.c">
+      <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="core\tree\tree.c">
+      <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="include\err.c">
+      <Filter>scc\include</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\cdecl.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\cexpr.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\clex.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\cparser_internal.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\csymtab.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\ctype.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\parse\cstmt.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="c\reader\creader.c">
+      <Filter>scc\c\reader</Filter>
+    </ClCompile>
+    <ClCompile Include="c\reader\ctoken.c">
+      <Filter>scc\c\reader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="c\creswords.inc">
       <Filter>scc\c</Filter>
     </None>
-    <None Include="c\ctoken_type.inc">
-      <Filter>scc\c</Filter>
+    <None Include="c\reader\ctoken_type.inc">
+      <Filter>scc\c\reader</Filter>
     </None>
   </ItemGroup>
 </Project>

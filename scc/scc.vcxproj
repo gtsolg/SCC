@@ -20,63 +20,63 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="args.h" />
+    <ClInclude Include="core\token.h" />
+    <ClInclude Include="core\tree\tree.h" />
+    <ClInclude Include="core\tree\tree_pass.h" />
+    <ClInclude Include="core\tree\tree_print.h" />
     <ClInclude Include="c\ccommon.h" />
     <ClInclude Include="c\cenv.h" />
     <ClInclude Include="c\climits.h" />
-    <ClInclude Include="c\cparser.h" />
-    <ClInclude Include="c\cparser_internal.h" />
     <ClInclude Include="c\cprint.h" />
-    <ClInclude Include="c\creader.h" />
-    <ClInclude Include="c\csymtab.h" />
     <ClInclude Include="c\ctest.h" />
-    <ClInclude Include="c\ctoken.h" />
     <ClInclude Include="c\ctree.h" />
-    <ClInclude Include="err.h" />
+    <ClInclude Include="c\parse\cparser.h" />
+    <ClInclude Include="c\parse\cparser_internal.h" />
+    <ClInclude Include="c\parse\csymtab.h" />
+    <ClInclude Include="c\reader\creader.h" />
+    <ClInclude Include="c\reader\ctoken.h" />
     <ClInclude Include="include\alloc.h" />
+    <ClInclude Include="include\err.h" />
     <ClInclude Include="include\hash.h" />
     <ClInclude Include="include\htab.h" />
     <ClInclude Include="include\list.h" />
     <ClInclude Include="include\pool.h" />
+    <ClInclude Include="include\scc.h" />
     <ClInclude Include="include\str.h" />
     <ClInclude Include="include\stream.h" />
     <ClInclude Include="include\str_pool.h" />
-    <ClInclude Include="scc.h" />
-    <ClInclude Include="token.h" />
-    <ClInclude Include="tree.h" />
-    <ClInclude Include="tree_pass.h" />
-    <ClInclude Include="tree_print.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="args.c" />
+    <ClCompile Include="core\token.c" />
+    <ClCompile Include="core\tree\tree.c" />
+    <ClCompile Include="core\tree\tree_pass.c" />
+    <ClCompile Include="core\tree\tree_print.c" />
     <ClCompile Include="c\ccommon.c" />
-    <ClCompile Include="c\cdecl.c" />
     <ClCompile Include="c\cenv.c" />
-    <ClCompile Include="c\cexpr.c" />
-    <ClCompile Include="c\clex.c" />
-    <ClCompile Include="c\cparser_internal.c" />
     <ClCompile Include="c\cprint.c" />
-    <ClCompile Include="c\creader.c" />
-    <ClCompile Include="c\cstmt.c" />
-    <ClCompile Include="c\csymtab.c" />
     <ClCompile Include="c\ctest.c" />
-    <ClCompile Include="c\ctoken.c" />
     <ClCompile Include="c\ctree.c" />
-    <ClCompile Include="c\ctype.c" />
-    <ClCompile Include="err.c" />
+    <ClCompile Include="c\parse\cdecl.c" />
+    <ClCompile Include="c\parse\cexpr.c" />
+    <ClCompile Include="c\parse\clex.c" />
+    <ClCompile Include="c\parse\cparser_internal.c" />
+    <ClCompile Include="c\parse\cstmt.c" />
+    <ClCompile Include="c\parse\csymtab.c" />
+    <ClCompile Include="c\parse\ctype.c" />
+    <ClCompile Include="c\reader\creader.c" />
+    <ClCompile Include="c\reader\ctoken.c" />
     <ClCompile Include="include\alloc.c" />
+    <ClCompile Include="include\err.c" />
     <ClCompile Include="include\htab.c" />
     <ClCompile Include="include\str.c" />
     <ClCompile Include="include\stream.c" />
     <ClCompile Include="include\str_pool.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="token.c" />
-    <ClCompile Include="tree.c" />
-    <ClCompile Include="tree_pass.c" />
-    <ClCompile Include="tree_print.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="c\creswords.inc" />
-    <None Include="c\ctoken_type.inc" />
+    <None Include="c\reader\ctoken_type.inc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -150,7 +150,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -158,7 +158,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -168,7 +168,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -182,7 +182,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

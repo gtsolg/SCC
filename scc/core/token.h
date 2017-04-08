@@ -2,7 +2,7 @@
 #define TOKEN_H
 
 #include "list.h"
-#include "tree.h"
+#include "tree/tree.h"
 #include "str_pool.h"
 
 struct location

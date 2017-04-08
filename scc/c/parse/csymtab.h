@@ -2,7 +2,7 @@
 #define C_SYMTAB_H
 
 #include "htab.h"
-#include "tree.h"
+#include "tree/tree.h"
 #include "c/climits.h"
 
 struct c_symtab

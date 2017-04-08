@@ -1,9 +1,9 @@
 #ifndef C_PARSER_INTERNAL
 #define C_PARSER_INTERNAL
 
-#include "ccommon.h"
+#include "../ccommon.h"
 #include "csymtab.h"
-#include "creader.h"
+#include "../reader/creader.h"
 #include "pool.h"
 
 #define C_PARSER_MAX_STATES 256
