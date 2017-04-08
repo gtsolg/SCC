@@ -10,10 +10,10 @@ struct list_node
 };
 
 #define list_node_init() { NULL, NULL }
-#define list_node_next(nodeptr) const_ptr((nodeptr)->next)
-#define list_node_prev(nodeptr) const_ptr((nodeptr)->prev)
+#define list_node_next(nodeptr) ((nodeptr)->next)
+#define list_node_prev(nodeptr) ((nodeptr)->prev)
 
-#define list_end(listptr)   const_ptr(listptr)
+#define list_end(listptr)   (listptr)
 #define list_head(listptr)  list_node_next(listptr)
 #define list_tail(listptr)  list_node_prev(listptr)
 #define list_empty(listptr) (list_head(listptr) == listptr)

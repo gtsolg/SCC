@@ -27,9 +27,6 @@
     <ClInclude Include="tree_pass.h">
       <Filter>scc</Filter>
     </ClInclude>
-    <ClInclude Include="sccobj.h">
-      <Filter>scc</Filter>
-    </ClInclude>
     <ClInclude Include="token.h">
       <Filter>scc</Filter>
     </ClInclude>

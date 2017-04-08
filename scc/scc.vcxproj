@@ -41,7 +41,6 @@
     <ClInclude Include="include\stream.h" />
     <ClInclude Include="include\str_pool.h" />
     <ClInclude Include="scc.h" />
-    <ClInclude Include="sccobj.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="tree.h" />
     <ClInclude Include="tree_pass.h" />
