@@ -142,9 +142,9 @@ enum expr_node_kind
         ok_mod_assign,
         ok_shl_assign,
         ok_shr_assign,
-        ok_and_assing,
-        ok_xor_assing,
-        ok_or_assing,
+        ok_and_assign,
+        ok_xor_assign,
+        ok_or_assign,
         ok_coma,
 };
 

@@ -56,9 +56,9 @@ static inline enum expr_node_kind binary_operator_kind(enum c_token_type token, 
                 case ctt_mod_assign: return ok_mod_assign;
                 case ctt_shl_assign: return ok_shl_assign;
                 case ctt_shr_assign: return ok_shr_assign;
-                case ctt_and_assign: return ok_and_assing;
-                case ctt_xor_assign: return ok_xor_assing;
-                case ctt_or_assign:  return ok_or_assing;
+                case ctt_and_assign: return ok_and_assign;
+                case ctt_xor_assign: return ok_xor_assign;
+                case ctt_or_assign:  return ok_or_assign;
                 case ctt_coma:       return ok_coma;
         }
 
@@ -312,7 +312,7 @@ static inline void set_sibling(struct allocator* alloc, tree parent, int right, 
         // since we can have attribs after dereference (e.g: int * const * ...)
         // we need to skip them in order to set the member
         tree* member = skip_attribs(member_ptr, &parent);
-        parent = member - member_off;
+        parent = (tree)(member - member_off);
 
         if (*member)
                 return;

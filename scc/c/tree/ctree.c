@@ -13,7 +13,7 @@ extern enum type_qualifier ctt_to_qualifier(enum c_token_type type)
 
 extern enum func_call_type ctt_to_call_type(enum c_token_type type)
 {
-
+        return fct_auto;
 }
 
 extern enum decl_storage_class ctt_to_storage_class(enum c_token_type type)

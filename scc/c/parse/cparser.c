@@ -57,7 +57,7 @@ extern void c_parser_save_state(struct c_parser* parser)
 {
         if (parser->state_idx >= C_PARSER_MAX_STATES)
                 c_parser_handle_err(parser, SCC_ERR); // expression is too complex
-        parser->states[parser->state_idx + 1] = c_parser_cur_state(parser);
+        parser->state[parser->state_idx + 1] = *c_parser_cur_state(parser);
         parser->state_idx++;
 }
 
@@ -65,7 +65,7 @@ extern void c_parser_pop_state(struct c_parser* parser)
 {
         parser->state_idx--;
         scc_assert(parser->state_idx != -1);
-        c_parser_cur_state(parser) = parser->states[parser->state_idx + 1];
+        *c_parser_cur_state(parser) = parser->state[parser->state_idx + 1];
 }
 
 extern void c_parser_load_state(struct c_parser* parser)
@@ -96,7 +96,6 @@ extern int c_parser_rewind(struct c_parser* parser)
                 c_parser_nesting(parser)--;
         if (type == ctt_rbracket || type == ctt_rsbracket)
                 c_parser_nesting(parser)++;
-
 
         c_parser_counter(parser)--;
         c_parser_token(parser) = c_parser_prev_token(parser);

@@ -64,9 +64,9 @@ static const struct tree_exp_info c_opinfo[] =
         tree_exp_info_init(ok_mod_assign,  oak_right_to_left,  3),
         tree_exp_info_init(ok_shl_assign,  oak_right_to_left,  3),
         tree_exp_info_init(ok_shr_assign,  oak_right_to_left,  3),
-        tree_exp_info_init(ok_and_assing,  oak_right_to_left,  3),
-        tree_exp_info_init(ok_xor_assing,  oak_right_to_left,  3),
-        tree_exp_info_init(ok_or_assing,   oak_right_to_left,  3),
+        tree_exp_info_init(ok_and_assign,  oak_right_to_left,  3),
+        tree_exp_info_init(ok_xor_assign,  oak_right_to_left,  3),
+        tree_exp_info_init(ok_or_assign,   oak_right_to_left,  3),
         tree_exp_info_init(ok_coma,        oak_right_to_left,  2),
 };
 
