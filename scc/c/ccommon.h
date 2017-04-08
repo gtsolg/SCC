@@ -6,7 +6,7 @@
 #include "tree/tree.h"
 #include "tree/tree_print.h"
 
-#include "cprint.h"
+#include "tree/cprint.h"
 #include "reader/ctoken.h"
 #include "climits.h"
 

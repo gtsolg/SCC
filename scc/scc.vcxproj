@@ -27,14 +27,14 @@
     <ClInclude Include="c\ccommon.h" />
     <ClInclude Include="c\cenv.h" />
     <ClInclude Include="c\climits.h" />
-    <ClInclude Include="c\cprint.h" />
     <ClInclude Include="c\ctest.h" />
-    <ClInclude Include="c\ctree.h" />
     <ClInclude Include="c\parse\cparser.h" />
     <ClInclude Include="c\parse\cparser_internal.h" />
     <ClInclude Include="c\parse\csymtab.h" />
     <ClInclude Include="c\reader\creader.h" />
     <ClInclude Include="c\reader\ctoken.h" />
+    <ClInclude Include="c\tree\cprint.h" />
+    <ClInclude Include="c\tree\ctree.h" />
     <ClInclude Include="include\alloc.h" />
     <ClInclude Include="include\err.h" />
     <ClInclude Include="include\hash.h" />
@@ -54,9 +54,7 @@
     <ClCompile Include="core\tree\tree_print.c" />
     <ClCompile Include="c\ccommon.c" />
     <ClCompile Include="c\cenv.c" />
-    <ClCompile Include="c\cprint.c" />
     <ClCompile Include="c\ctest.c" />
-    <ClCompile Include="c\ctree.c" />
     <ClCompile Include="c\parse\cdecl.c" />
     <ClCompile Include="c\parse\cexpr.c" />
     <ClCompile Include="c\parse\clex.c" />
@@ -66,6 +64,8 @@
     <ClCompile Include="c\parse\ctype.c" />
     <ClCompile Include="c\reader\creader.c" />
     <ClCompile Include="c\reader\ctoken.c" />
+    <ClCompile Include="c\tree\cprint.c" />
+    <ClCompile Include="c\tree\ctree.c" />
     <ClCompile Include="include\alloc.c" />
     <ClCompile Include="include\err.c" />
     <ClCompile Include="include\htab.c" />

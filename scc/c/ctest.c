@@ -1,6 +1,6 @@
 #include "ctest.h"
 #include "parse/cparser.h"
-#include "cprint.h"
+#include "tree/cprint.h"
 #include "str.h"
 
 #define C_MAX_ANSWER_LEN 1000

@@ -22,6 +22,9 @@
     <Filter Include="scc\c\reader">
       <UniqueIdentifier>{f4db300a-9267-42d9-8e97-9ebc36dc67a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scc\c\tree">
+      <UniqueIdentifier>{dbad43c0-5a15-4f89-a2d4-917b773e4089}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="args.h">
@@ -60,13 +63,7 @@
     <ClInclude Include="c\climits.h">
       <Filter>scc\c</Filter>
     </ClInclude>
-    <ClInclude Include="c\cprint.h">
-      <Filter>scc\c</Filter>
-    </ClInclude>
     <ClInclude Include="c\ctest.h">
-      <Filter>scc\c</Filter>
-    </ClInclude>
-    <ClInclude Include="c\ctree.h">
       <Filter>scc\c</Filter>
     </ClInclude>
     <ClInclude Include="core\token.h">
@@ -102,6 +99,12 @@
     <ClInclude Include="c\reader\ctoken.h">
       <Filter>scc\c\reader</Filter>
     </ClInclude>
+    <ClInclude Include="c\tree\ctree.h">
+      <Filter>scc\c\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="c\tree\cprint.h">
+      <Filter>scc\c\tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -128,13 +131,7 @@
     <ClCompile Include="c\cenv.c">
       <Filter>scc\c</Filter>
     </ClCompile>
-    <ClCompile Include="c\cprint.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
     <ClCompile Include="c\ctest.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
-    <ClCompile Include="c\ctree.c">
       <Filter>scc\c</Filter>
     </ClCompile>
     <ClCompile Include="c\ccommon.c">
@@ -181,6 +178,12 @@
     </ClCompile>
     <ClCompile Include="c\reader\ctoken.c">
       <Filter>scc\c\reader</Filter>
+    </ClCompile>
+    <ClCompile Include="c\tree\ctree.c">
+      <Filter>scc\c\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="c\tree\cprint.c">
+      <Filter>scc\c\tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 #ifndef C_TREE_H
 #define C_TREE_H
 
-#include "ccommon.h"
+#include "../ccommon.h"
 
 extern enum type_qualifier ctt_to_qualifier(enum c_token_type type);
 extern enum func_call_type ctt_to_call_type(enum c_token_type type);

@@ -2,7 +2,7 @@
 #define C_PARSER_H
 
 #include "cparser_internal.h"
-#include "../ctree.h"
+#include "../tree/ctree.h"
 
 struct c_type_build_info
 {
