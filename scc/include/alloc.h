@@ -22,8 +22,9 @@ extern struct allocator __std_alloc;
 
 #define allocator_init(pool_ptr, alloc, dealloc) { pool_ptr, alloc, dealloc }
 
-#define allocate(alloc_ptr, size)  (alloc_ptr)->alloc((alloc_ptr)->pool, (size))
-#define deallocate(alloc_ptr, ptr) (alloc_ptr)->dealloc((alloc_ptr)->pool, (ptr))
+#define alloc_ptr(palloc) ((struct allocator*)palloc)
+#define allocate(palloc, size)  (alloc_ptr(palloc)->alloc(alloc_ptr(palloc)->pool, (size)))
+#define deallocate(palloc, ptr) (alloc_ptr(palloc)->dealloc(alloc_ptr(palloc)->pool, (ptr)))
 
 static inline void alloc_initf(struct allocator* alloc, void* pool, alloc_fn a, dealloc_fn d)
 {
