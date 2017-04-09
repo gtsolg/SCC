@@ -173,7 +173,7 @@ static tree token_to_operand(struct c_parser* parser, unsigned nesting, int* is_
         
         if (!op)
         {
-                tree_delete(alloc, pre_att_tail);
+                tree_delete_recursive(alloc, pre_att_tail);
                 return NULL;
         }
 
@@ -339,17 +339,14 @@ static void build_expr(struct allocator* alloc, tree enode, tree output)
         tree_list_push_back(output, enode);
 }
 
-static void replace_null_pointers(tree root)
+static void replace_null_pointers_pass(tree exp, void* p)
 {
-        // delete this ?
-        if (tree_kind(root) != tnk_exp)
+        if (!exp)
                 return;
-        if (!tree_exp_left(root))
-                tree_exp_left(root) = TREE_NULL;
-        if (!tree_exp_right(root))
-                tree_exp_right(root) = TREE_NULL;
-        replace_null_pointers(tree_exp_left(root));
-        replace_null_pointers(tree_exp_right(root));
+        if (!tree_exp_left(exp))
+                tree_exp_left(exp) = TREE_NULL;
+        if (!tree_exp_right(exp))
+                tree_exp_right(exp) = TREE_NULL;
 }
 
 extern tree c_parse_expr_raw(struct c_parser* parser, size_t size)
@@ -364,6 +361,7 @@ extern tree c_parse_expr_raw(struct c_parser* parser, size_t size)
 
         struct tree_node output = tree_list_initf(&output);
         struct tree_node opstack = tree_list_initf(&opstack);
+        struct allocator* tree_alloc = &c_parser_tree_alloc(parser);
 
         struct tree_iterator it = tree_list_iterator_init(&list);
         while (tree_list_iterator_valid(&it))
@@ -373,7 +371,7 @@ extern tree c_parse_expr_raw(struct c_parser* parser, size_t size)
                 tree_list_iterator_advance(&it);
 
                 if (c_node_is_operand(exp))    
-                        build_expr(&c_parser_tree_alloc(parser), enode, &output);
+                        build_expr(tree_alloc, enode, &output);
                 else
                 {
                         while (!tree_list_empty(&opstack))
@@ -385,7 +383,7 @@ extern tree c_parse_expr_raw(struct c_parser* parser, size_t size)
                                  || tree_exp_assoc(exp) == oak_right_to_left && ecp <  tcp)
                                 {
                                         tree_list_pop_back(&opstack);
-                                        build_expr(&c_parser_tree_alloc(parser), tail, &output);
+                                        build_expr(tree_alloc, tail, &output);
                                 }
                                 else
                                         break;
@@ -394,12 +392,13 @@ extern tree c_parse_expr_raw(struct c_parser* parser, size_t size)
                 }
         }
         while (!tree_list_empty(&opstack))
-                build_expr(&c_parser_tree_alloc(parser), tree_list_pop_back(&opstack), &output);
+                build_expr(tree_alloc, tree_list_pop_back(&opstack), &output);
 
         tree node = tree_list_pop_back(&output);
         tree exp = tree_list_node_base(node);
-        tree_delete(&c_parser_tree_alloc(parser), node);
-        replace_null_pointers(exp);
+        tree_delete(tree_alloc, node);
+        //replace_null_pointers(exp);
+        tree_foreach_alloc(tree_alloc, exp, replace_null_pointers_pass, NULL, TREE_PASS_NONE);
         return exp;
 }
 

@@ -3,6 +3,7 @@
 
 #include "cparser.h"
 #include "../tree/ctree.h"
+#include "tree/tree_pass.h"
 
 extern tree c_parse_base_type(struct c_parser* parser);
 extern tree c_parse_type(struct c_parser* parser, size_t size);
