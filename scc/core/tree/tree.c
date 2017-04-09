@@ -1,5 +1,6 @@
 #include "tree.h"
 #include "scc.h"
+#include "tree_pass.h"
 
 extern tree tree_create(struct allocator* alloc, enum tree_node_kind kind)
 {
@@ -10,101 +11,22 @@ extern tree tree_create(struct allocator* alloc, enum tree_node_kind kind)
         return node;
 }
 
-static void delete_null_node(struct allocator* alloc, tree node)
+static void tree_delete_pass(tree node, void* alloc)
 {
-        return;
+        tree_delete(alloc, node);
 }
-
-static void delete_stmt_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_id_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_decl_node(struct allocator* alloc, tree decl)
-{
-        return;
-}
-
-static void delete_func_decl_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_exp_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_list_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_list_node_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_const_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_vector_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_sign_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_type_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void delete_attrib_node(struct allocator* alloc, tree node)
-{
-        return;
-}
-
-static void(*tree_delete_fn[])(struct allocator*, tree) = 
-{
-        delete_null_node,      // tnk_null
-        delete_stmt_node,      // tnk_stmt
-        delete_id_node,        // tnk_id
-        delete_decl_node,      // tnk_type_decl
-        delete_decl_node,      // tnk_var_decl
-        delete_func_decl_node, // tnk_func_decl
-        delete_exp_node,       // tnk_exp
-        delete_list_node,      // tnk_list
-        delete_list_node_node, // tnk_list_node
-        delete_const_node,     // tnk_const_int
-        delete_const_node,     // tnk_const_float
-        delete_const_node,     // tnk_const_real
-        delete_const_node,     // tnk_const_string
-        delete_vector_node,    // tnk_vector_type
-        delete_sign_node,      // tnk_sign_type
-        delete_type_node,      // tnk_type
-        delete_attrib_node     // tnk_attrib,
-};
 
 extern void tree_delete(struct allocator* alloc, tree node)
 {
+        if (node && !tree_is(node, tnk_null))
+                deallocate(alloc, node);
+}
+
+extern void tree_delete_recursive(struct allocator* alloc, tree node)
+{
         if (!node)
                 return;
-
-        enum tree_node_kind kind = tree_kind(node);
-        scc_assert(kind >= tnk_null && kind <= tnk_attrib);
-        tree_delete_fn[kind](alloc, node);
-        deallocate(alloc, node);
+        tree_foreach_alloc(alloc, node, tree_delete_pass, alloc, TREE_PASS_NONE);
 }
 
 extern tree tree_copy(struct allocator* alloc, tree node)

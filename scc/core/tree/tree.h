@@ -294,6 +294,7 @@ struct tree_node
         {
                 struct tree_stmt stmt;
                 struct tree_identifier id;
+                struct tree_decl decl;
                 struct tree_decl type_decl;
                 struct tree_decl var_decl;
                 struct tree_func_decl func_decl;
@@ -317,6 +318,7 @@ static struct tree_node __null_node;
 extern tree tree_create(struct allocator* alloc, enum tree_node_kind kind);
 extern tree tree_copy(struct allocator* alloc, tree node);
 extern void tree_delete(struct allocator* alloc, tree node);
+extern void tree_delete_recursive(struct allocator* alloc, tree node);
 
 extern tree tree_type_create(struct allocator* alloc, enum type_kind kind, enum type_qualifier qual, tree type);
 extern tree tree_ident_create(struct allocator* alloc, strref_t ref);
@@ -339,6 +341,8 @@ extern tree tree_sign_type_create(struct allocator* alloc, tree res, tree args);
 #define tree_list(ptree)           (ptree)->list.list
 #define tree_list_node(ptree)      (ptree)->list_node.node
 #define tree_list_node_base(ptree) (ptree)->list_node.base
+#define tree_decl_id(ptree)        (ptree)->decl.id
+#define tree_decl_base(ptree)      (ptree)->decl.base
 #define tree_exp_info(ptree)       (ptree)->exp.info
 #define tree_exp_kind(ptree)       tree_exp_info(ptree).kind
 #define tree_exp_left(ptree)       (ptree)->exp.left
@@ -403,6 +407,10 @@ static inline struct tree_node tree_list_initf(tree list)
 
 #define tree_list_push_back(ptree, pnode)\
         list_push_back(&tree_list(ptree), &tree_list_node(pnode))
+
+// allocates tree_list_node
+#define tree_list_push_back_node(ptree, palloc, pnode) \
+        tree_list_push_back(ptree, tree_list_node_create(palloc, pnode))
 
 #define tree_list_push_front(ptree, pnode)\
         list_push_front(&tree_list(ptree), &tree_list_node(pnode))
