@@ -1,11 +1,15 @@
-#ifndef TREE_WALK_H
-#define TREE_WALK_H
+#ifndef TREE_PASS_H
+#define TREE_PASS_H
 
 #include "tree.h"
 
 typedef void(*tree_pass_fn)(tree node, void*);
-typedef int(*tree_match_fn)(tree node, void*);
 
-extern void tree_pass_list(tree list, tree_pass_fn pass, void* info);
+typedef uint64_t tree_pass_prefs;
 
-#endif // !TREE_WALK_H
+#define TREE_PASS_NONE 0
+
+// allocates its own stack of nodes
+extern void tree_foreach_alloc(struct allocator* tree_alloc, tree root, tree_pass_fn pass, void* data, tree_pass_prefs prefs);
+
+#endif // !TREE_PASS_H
