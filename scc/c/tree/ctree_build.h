@@ -2,6 +2,7 @@
 #define C_BUILD_H
 
 #include "ctree.h"
+#include "../parse/cparser.h"
 
 struct c_type_build_info
 {
@@ -19,6 +20,7 @@ struct c_type_build_info
 extern scc_err_t c_type_iterator_initf(tree it, tree exp, struct c_type_build_info* info);
 extern tree c_type_iterator_advance(tree it);
 
-extern tree c_build_type(struct allocator* tree_alloc, tree raw);
+extern tree c_build_type(struct c_parser* parser, tree raw);
+extern tree c_build_exp_stmt(struct c_parser* parser, tree raw);
 
 #endif // !C_BUILD_H

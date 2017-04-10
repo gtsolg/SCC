@@ -59,6 +59,7 @@ enum type_kind
         tk_sign,
         tk_pointer,
         tk_va_arg,
+        tk_declared, // this is used when we want to add type qualifiers to declared type
 };
 
 struct tree_type
@@ -66,7 +67,7 @@ struct tree_type
         enum type_kind kind;
         enum type_qualifier qual;
 
-        // tree_type, sign_type, vector_type or NULL
+        // tree_type, sign_type, type_decl, vector_type or NULL
         tree type;
 };
 

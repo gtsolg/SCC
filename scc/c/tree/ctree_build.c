@@ -65,108 +65,140 @@ static inline enum type_qualifier type_info_get_qual_and_reset(struct c_type_bui
         return qual;
 }
 
-static tree build_type(struct allocator*, tree);
+static tree build_type(struct c_parser*, tree);
 
-static inline tree build_type_list(struct allocator* alloc, tree exp)
+static inline tree build_type_list(struct c_parser* parser, tree exp)
 {
+        struct allocator* tree_alloc = &c_parser_tree_alloc(parser);
+
         if (tree_is(exp, tnk_null))
                 return TREE_NULL;
 
-        tree list = tree_list_create(alloc);
+        tree list = tree_list_create(tree_alloc);
         while (tree_exp_is(exp, ok_coma))
         {
-                tree type = c_build_type(alloc, tree_exp_left(exp));
+                tree type = c_build_type(parser, tree_exp_left(exp));
                 if (!type)
                         goto cleanup;
 
-                tree_list_push_back(list, tree_list_node_create(alloc, type));
+                tree_list_push_back_node(list, tree_alloc, type);
                 exp = tree_exp_right(exp);
         }
-        tree last = c_build_type(alloc, exp);
+        tree last = c_build_type(parser, exp);
         if (!last)
                 goto cleanup;
 
-        tree_list_push_back(list, tree_list_node_create(alloc, last));
+        tree_list_push_back(list, tree_list_node_create(tree_alloc, last));
         return list;
 
 cleanup:
-        // cleanup
+        tree_delete_recursive(tree_alloc, list);
         return NULL;
 }
 
-static inline tree build_function_type(struct allocator* alloc, tree it)
+static inline tree build_function_type(struct c_parser* parser, tree it)
 {
-        tree args = build_type_list(alloc, tree_exp_right(tree_iterator_pos(it)));
+        tree args = build_type_list(parser, tree_exp_right(tree_iterator_pos(it)));
         if (!args)
                 return NULL;
-        tree restype = build_type(alloc, c_type_iterator_advance(it));
+        tree restype = build_type(parser, c_type_iterator_advance(it));
         if (!restype)
                 return NULL;
 
-        tree sign = tree_sign_type_create(alloc, restype, args);
-        return tree_type_create(alloc, tk_sign, tq_unqualified, sign);
+        struct allocator* tree_alloc = &c_parser_tree_alloc(parser);
+        tree sign = tree_sign_type_create(tree_alloc, restype, args);
+        return tree_type_create(tree_alloc, tk_sign, tq_unqualified, sign);
 }
 
-static inline tree build_vector_type(struct allocator* alloc, tree it)
+static inline tree build_vector_type(struct c_parser* parser, tree it)
 {
         tree size = tree_exp_node(tree_exp_right(tree_iterator_pos(it)));
         if (!tree_is(size, tnk_const_int))
                 return NULL;
 
-        tree type = build_type(alloc, c_type_iterator_advance(it));
+        tree type = build_type(parser, c_type_iterator_advance(it));
         if (!type)
                 return NULL;
-        tree vec = tree_vector_type_create(alloc, type, tree_const_int(size));
-        return tree_type_create(alloc, tk_vector, tq_unqualified, vec);
+
+        struct allocator* tree_alloc = &c_parser_tree_alloc(parser);
+        tree vec = tree_vector_type_create(tree_alloc, type, tree_const_int(size));
+        return tree_type_create(tree_alloc, tk_vector, tq_unqualified, vec);
 }
 
-static inline tree build_pointer(struct allocator* alloc, tree it)
+static inline tree build_pointer(struct c_parser* parser, tree it)
 {
         enum type_qualifier qual = type_info_get_qual_and_reset(c_type_iterator_info(it));
-        tree next = build_type(alloc, c_type_iterator_advance(it));
+        tree next = build_type(parser, c_type_iterator_advance(it));
         if (!next)
                 return NULL;
-        return tree_type_create(alloc, tk_pointer, qual, next);
+
+        return tree_type_create(&c_parser_tree_alloc(parser), tk_pointer, qual, next);
 }
 
-static inline tree build_base_type(struct allocator* alloc, tree it)
+static inline tree build_base_type(struct c_parser* parser, tree it)
 {
         struct c_type_build_info* info = c_type_iterator_info(it);
-        tree base = tree_exp_node(tree_iterator_pos(it));
+        struct allocator* tree_alloc = &c_parser_tree_alloc(parser);
 
-        enum type_qualifier qual = type_info_get_qual_and_reset(c_type_iterator_info(it));
+        if (info->past_base)
+                return NULL;
+
+        tree base = NULL;
+        if (tree_iterator_node_kind(it) == tnk_id)
+        {
+                base = c_parser_get_decl(parser, tree_id_ref(tree_iterator_pos(it)));
+                if (!base) // undefined identifier
+                        return NULL;
+                base = tree_type_create(tree_alloc, tk_declared, tq_unqualified, base);
+        }
+        else
+                base = tree_copy(&c_parser_tree_alloc(parser), tree_exp_node(tree_iterator_pos(it)));
+
+        enum type_qualifier qual = type_info_get_qual_and_reset(info);
         c_type_iterator_advance(it);
-        qual |= type_info_get_qual_and_reset(c_type_iterator_info(it));
+        qual |= type_info_get_qual_and_reset(info);
 
-        if (tree_is(base, tnk_type) && !info->past_base)
-        {
-                info->past_base = 1;
-                tree_type_qual(base) = qual;
-                return base;
-        }
-        return NULL;
+        info->past_base = 1;
+        tree_type_qual(base) = qual;
+        return base;
 }
 
-static tree build_type(struct allocator* alloc, tree it)
+static tree build_type(struct c_parser* parser, tree it)
 {
-        if (!tree_iterator_node_kind(it))
+        tree pos = tree_iterator_pos(it);
+
+        if (tree_is(pos, tnk_null))
                 return TREE_NULL;
-        switch (tree_exp_kind(tree_iterator_pos(it)))
+
+        if (tree_is(pos, tnk_id))
+                return build_base_type(parser, it);
+
+        scc_assert(tree_is(pos, tnk_exp));
+
+        switch (tree_exp_kind(pos))
         {
-                case ok_dereference: return build_pointer(alloc, it);
-                case ok_call:        return build_function_type(alloc, it);
-                case ok_subscript:   return build_vector_type(alloc, it);
-                case ok_operand:     return build_base_type(alloc, it);
-                default:             return NULL;
+                case ok_dereference: return build_pointer(parser, it);
+                case ok_call:        return build_function_type(parser, it);
+                case ok_subscript:   return build_vector_type(parser, it);
+                case ok_operand:     return build_base_type(parser, it);
+
+                default:
+                        scc_assert(0);
+                        return NULL;
         }
 }
 
-extern tree c_build_type(struct allocator* tree_alloc, tree raw)
+extern tree c_build_type(struct c_parser* parser, tree raw)
 {
-        struct c_type_build_info info = c_type_build_info_init();
-        struct tree_iterator it;
-        tree res = NULL;
-        if (c_type_iterator_initf(&it, raw, &info) == SCC_SUCCESS)
-                res = build_type(tree_alloc, &it);
-        return res;
+                struct c_type_build_info info = c_type_build_info_init();
+                struct tree_iterator it;
+                tree res = NULL;
+                if (c_type_iterator_initf(&it, raw, &info) == SCC_SUCCESS)
+                        res = build_type(parser, &it);
+                return res;
+}
+
+extern tree c_build_exp_stmt(struct c_parser* parser, tree raw)
+{
+        return NULL;
 }
