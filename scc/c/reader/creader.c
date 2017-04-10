@@ -1,6 +1,7 @@
 #include "creader.h"
 #include "str.h"
 #include "str_pool.h"
+#include "char_info.h"
 
 #define c_reader_cur_stream(preader) ((preader)->src + (preader)->src_idx)
 #define c_reader_cur_lpos(preader)   ((preader)->line + (preader)->line_idx)
@@ -146,42 +147,14 @@ static void preprocess_line(struct c_reader* reader)
         // todo: del comments, merge lines ...
 }
 
-static inline int alpha(int c)
+static inline int char_is_c_identifier(int c)
 {
-        return c >= 'a' && c <= 'z'
-                || c >= 'A' && c <= 'Z'
-                || c == '_';
+        return char_is_alpha(c) || char_is_digit(c);
 }
 
-static inline int digit(int c)
+static inline int char_is_symbol_except_quotes(int c)
 {
-        return c >= '0' && c <= '9';
-}
-
-static inline int ident(int c)
-{
-        return alpha(c) || digit(c);
-}
-
-static inline int symbol(int c)
-{
-        if (c == '\"' || c == '\'')
-                return 0;
-        return c >= 33 && c <= 47
-                || c >= 58 && c <= 64
-                || c >= 91 && c <= 94
-                || c == 96
-                || c >= 123 && c <= 126;
-}
-
-static inline int newline(int c)
-{
-        return c == '\r' || c == '\n';
-}
-
-static inline int whitespace(int c)
-{
-        return c == ' ' || c == '\t';
+        return c == '\'' || c == '\"' ? 0 : char_is_symbol(c);
 }
 
 static inline int sequence_len(const char* string, int(*match)(int))
@@ -285,20 +258,20 @@ extern struct token* c_read_token(struct c_reader* reader)
 
         if (c == '#')
                 read_directive(reader);
-        else if (newline(c))
+        else if (char_is_newline(c))
                 return read_newline(reader);
-        else if (whitespace(c))
-                return read_sequence(reader, crtt_whitespace, whitespace);
+        else if (char_is_wspace(c))
+                return read_sequence(reader, crtt_whitespace, char_is_wspace);
         else if (c == '\"')
                 return read_cst_string(reader);
         else if (c == '\'')
                 return read_cst_char(reader);
-        else if (alpha(c))
-                return read_sequence(reader, crtt_word, ident);
-        else if (digit(c))
-                return read_sequence(reader, crtt_numbers, digit);
-        else if (symbol(c))
-                return read_sequence(reader, crtt_symbols, symbol);
+        else if (char_is_alpha(c))
+                return read_sequence(reader, crtt_word, char_is_c_identifier);
+        else if (char_is_digit(c))
+                return read_sequence(reader, crtt_numbers, char_is_digit);
+        else if (char_is_symbol_except_quotes(c))
+                return read_sequence(reader, crtt_symbols, char_is_symbol_except_quotes);
 
         *reader->err = cr_unknown_symbol_err;
         return NULL;
