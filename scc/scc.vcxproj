@@ -20,6 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="args.h" />
+    <ClInclude Include="core\alloc.h" />
+    <ClInclude Include="core\char_info.h" />
+    <ClInclude Include="core\err.h" />
+    <ClInclude Include="core\hash.h" />
+    <ClInclude Include="core\htab.h" />
+    <ClInclude Include="core\list.h" />
+    <ClInclude Include="core\pool.h" />
+    <ClInclude Include="core\scc.h" />
+    <ClInclude Include="core\str.h" />
+    <ClInclude Include="core\stream.h" />
+    <ClInclude Include="core\str_pool.h" />
     <ClInclude Include="core\token.h" />
     <ClInclude Include="core\tree\tree.h" />
     <ClInclude Include="core\tree\tree_index.h" />
@@ -36,19 +47,16 @@
     <ClInclude Include="c\tree\ctree_build.h" />
     <ClInclude Include="c\tree\ctree_print.h" />
     <ClInclude Include="c\tree\ctree.h" />
-    <ClInclude Include="include\alloc.h" />
-    <ClInclude Include="include\err.h" />
-    <ClInclude Include="include\hash.h" />
-    <ClInclude Include="include\htab.h" />
-    <ClInclude Include="include\list.h" />
-    <ClInclude Include="include\pool.h" />
-    <ClInclude Include="include\scc.h" />
-    <ClInclude Include="include\str.h" />
-    <ClInclude Include="include\stream.h" />
-    <ClInclude Include="include\str_pool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="args.c" />
+    <ClCompile Include="core\alloc.c" />
+    <ClCompile Include="core\char_info.c" />
+    <ClCompile Include="core\err.c" />
+    <ClCompile Include="core\htab.c" />
+    <ClCompile Include="core\str.c" />
+    <ClCompile Include="core\stream.c" />
+    <ClCompile Include="core\str_pool.c" />
     <ClCompile Include="core\token.c" />
     <ClCompile Include="core\tree\tree.c" />
     <ClCompile Include="core\tree\tree_index.c" />
@@ -68,12 +76,6 @@
     <ClCompile Include="c\tree\ctree_build.c" />
     <ClCompile Include="c\tree\ctree_print.c" />
     <ClCompile Include="c\tree\ctree.c" />
-    <ClCompile Include="include\alloc.c" />
-    <ClCompile Include="include\err.c" />
-    <ClCompile Include="include\htab.c" />
-    <ClCompile Include="include\str.c" />
-    <ClCompile Include="include\stream.c" />
-    <ClCompile Include="include\str_pool.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
@@ -152,7 +154,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -160,7 +162,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -170,7 +172,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -184,7 +186,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\include;$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
