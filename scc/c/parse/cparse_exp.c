@@ -339,14 +339,14 @@ static void build_expr(struct allocator* alloc, tree enode, tree output)
         tree_list_push_back(output, enode);
 }
 
-static void replace_null_pointers_pass(tree exp, void* p)
+static int replace_null_pointers_pass(tree exp, void* p)
 {
-        if (!exp)
-                return;
         if (!tree_exp_left(exp))
                 tree_exp_left(exp) = TREE_NULL;
         if (!tree_exp_right(exp))
                 tree_exp_right(exp) = TREE_NULL;
+
+        return PASS_SHOULD_CONTINUE;
 }
 
 extern tree c_parse_expr_raw(struct c_parser* parser, size_t size)
@@ -397,7 +397,11 @@ extern tree c_parse_expr_raw(struct c_parser* parser, size_t size)
         tree node = tree_list_pop_back(&output);
         tree exp = tree_list_node_base(node);
         tree_delete(tree_alloc, node);
-        tree_foreach_alloc(tree_alloc, exp, replace_null_pointers_pass, NULL, TREE_PASS_NONE);
+
+        tree_foreach(tree_alloc, exp,
+                tree_pass_initf(replace_null_pointers_pass, NULL, PASS_PREFS_NONE),
+                tree_match_nonnull);
+
         return exp;
 }
 
