@@ -184,7 +184,9 @@ struct tree_exp
 struct tree_expr_stmt
 {
         tree exp;
-        tree type;
+
+        // list of tree_decl if expression contains decls, TREE_NULL in the other case
+        tree decls;
 };
 
 struct tree_for_stmt
@@ -203,7 +205,7 @@ struct tree_conditional_stmt
 
 enum statement_kind
 {
-        sk_expr,
+        sk_exp,
         sk_if,
         sk_while,
         sk_do_while,
@@ -221,6 +223,7 @@ struct tree_stmt
         union
         {
                 struct tree_expr_stmt exp_stmt;
+                struct tree_for_stmt for_stmt;
                 struct tree_conditional_stmt while_stmt;
                 struct tree_conditional_stmt do_while_stmt;
                 struct tree_conditional_stmt if_stmt;
