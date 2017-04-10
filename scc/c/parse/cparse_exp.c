@@ -397,7 +397,6 @@ extern tree c_parse_expr_raw(struct c_parser* parser, size_t size)
         tree node = tree_list_pop_back(&output);
         tree exp = tree_list_node_base(node);
         tree_delete(tree_alloc, node);
-        //replace_null_pointers(exp);
         tree_foreach_alloc(tree_alloc, exp, replace_null_pointers_pass, NULL, TREE_PASS_NONE);
         return exp;
 }

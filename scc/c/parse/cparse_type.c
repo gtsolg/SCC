@@ -60,7 +60,7 @@ extern tree c_parse_type(struct c_parser* parser, size_t size)
         tree raw = c_parse_expr_raw(parser, size);
         if (!raw)
                 return NULL;
-        tree res = c_build_type(&c_parser_tree_alloc(parser), raw);
+        tree res = c_build_type(parser, raw);
         // cleanup
         return res;
 }
