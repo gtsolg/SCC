@@ -27,7 +27,11 @@
 #include <mm_malloc.h>
 #endif
 
-#define DEBUG _DEBUG
+#if _DEBUG
+#define DEBUG 1
+#else
+#define DEBUG 0
+#endif
 
 #define scc_assert(e) if (DEBUG) assert(e)
 
