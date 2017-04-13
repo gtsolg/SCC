@@ -40,6 +40,15 @@ extern struct tree_match tree_match_exp_initf(enum expr_node_kind* kind)
 
 static inline int has_conflicts(tree_pass_prefs prefs)
 {
+        if (!prefs)
+                return 1;
+
+        if (prefs & PASS_PREFS_CLIPPING_MATCH && prefs & PASS_PREFS_NCLIPPING_MATCH)
+                return 1;
+
+        if (prefs & PASS_PREFS_EXP_RIGHT_TO_LEFT && prefs & PASS_PREFS_EXP_LEFT_TO_RIGHT)
+                return 1;
+
         return 0;
 }
 
@@ -51,10 +60,15 @@ static inline void init_pass(tree_pass_prefs prefs
 {
         scc_assert(!has_conflicts(prefs));
 
-        *init = tree_foreach_clip_init_impl;
+        *init = tree_foreach_noclip_init_impl;
         *dispose = tree_foreach_dispose_impl;
         *pass = tree_foreach_forward_pass_impl;
         memcpy(insert_table, &std_tree_insert_table, sizeof(tree_insert_dispatch_table_impl));
+
+        if (prefs & PASS_PREFS_CLIPPING_MATCH)
+                *init = tree_foreach_clip_init_impl;
+        if (prefs & PASS_PREFS_EXP_RIGHT_TO_LEFT)
+                *insert_table[tnk_exp] = tree_insert_exp_rl_impl;
 }
 
 extern void tree_foreach(struct allocator* tree_alloc, tree root
@@ -70,9 +84,9 @@ extern void tree_foreach(struct allocator* tree_alloc, tree root
         int state = PASS_SHOULD_RESTART;
         while (state == PASS_SHOULD_RESTART)
         {
-                union tree_node queue;
-                init(tree_alloc, insert_table, match.fn, match.data, &queue, root);
-                state = passf(&queue, pass.fn, pass.data);
-                dispose(tree_alloc, &queue);
+                union tree_node list;
+                init(tree_alloc, insert_table, match.fn, match.data, &list, root);
+                state = passf(&list, pass.fn, pass.data);
+                dispose(tree_alloc, &list);
         }
 }

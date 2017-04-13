@@ -11,10 +11,14 @@ typedef int(*tree_pass_fn)(tree node, void*);
 
 typedef uint64_t tree_pass_prefs;
 
-#define PASS_PREFS_NONE              (0)
 #define PASS_PREFS_EXP_RIGHT_TO_LEFT (1 << 0)
+#define PASS_PREFS_EXP_LEFT_TO_RIGHT (1 << 1)
+
 // if node doesnt match its siblings will not be added
-#define PASS_PREFS_CLIPPING_MATCH    (1 << 1)
+#define PASS_PREFS_CLIPPING_MATCH    (1 << 2)
+#define PASS_PREFS_NCLIPPING_MATCH   (1 << 3)
+
+#define PASS_PREFS_NONE (PASS_PREFS_EXP_LEFT_TO_RIGHT | PASS_PREFS_NCLIPPING_MATCH)
 
 struct tree_pass
 {
