@@ -61,7 +61,11 @@ scc_static_assert(sizeof(struct tree_queue_node_impl) <= sizeof(union tree_node)
 #define tree_queue_node_list_entry(ptree) ((struct tree_queue_node_impl*)ptree)->list_entry
 
 extern tree tree_queue_node_create_impl(struct allocator* tree_alloc, tree node, tree entry);
-extern void tree_queue_add(struct allocator* tree_alloc, tree queue, tree node, tree entry);
+
+#define INSERT_AFTER_ENTRY  1
+#define INSERT_BEFORE_ENTRY 0
+
+extern void tree_queue_add(struct allocator* tree_alloc, tree queue, tree entry, tree node, const int place);
 
 extern void tree_foreach_noclip_init_impl(struct allocator* tree_alloc,
         tree_insert_dispatch_table_impl insert,
