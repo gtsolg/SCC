@@ -4,30 +4,64 @@
 #include "list.h"
 #include "str_pool.h"
 
-typedef struct tree_node* tree;
+typedef union tree_node* tree;
+
+enum tree_node_kind
+{
+        tnk_null,
+        tnk_stmt,
+        tnk_id,
+        tnk_type_decl,
+        tnk_var_decl,
+        tnk_func_decl,
+        tnk_exp,
+        tnk_list,
+        tnk_list_node,
+        tnk_const_int,
+        tnk_const_float,
+        tnk_const_real,
+        tnk_const_string,
+        tnk_vector_type,
+        tnk_sign_type,
+        tnk_type,
+        tnk_attrib,
+
+        tnk_size,
+};
+
+// this structure must be the first member of any struct related to tree
+struct tree_base
+{
+        enum tree_node_kind kind;
+};
 
 struct tree_const_int
 {
+        struct tree_base base;
         uint64_t val;
 };
 
 struct tree_const_float
 {
+        struct tree_base base;
         float val;
 };
 
 struct tree_const_real
 {
+        struct tree_base base;
         long double val;
 };
 
 struct tree_const_string
 {
+        struct tree_base base;
         strref_t ref;
 };
 
 struct tree_vector_type
 {
+        struct tree_base base;
         tree type;
         uint64_t size;
 };
@@ -64,15 +98,19 @@ enum type_kind
 
 struct tree_type
 {
+        struct tree_base base;
+
         enum type_kind kind;
         enum type_qualifier qual;
 
         // tree_type, sign_type, type_decl, vector_type or NULL
-        tree type;
+        tree next;
 };
 
 struct tree_identifier
 {
+        struct tree_base base;
+
         strref_t ref;
 };
 
@@ -86,6 +124,8 @@ enum decl_storage_class
 
 struct tree_decl
 {
+        struct tree_base tbase;
+
         enum decl_storage_class storage_class;
         tree id;
         // tree_type if type_decl or var_decl
@@ -167,26 +207,18 @@ struct tree_exp_info
 
 struct tree_exp
 {
+        struct tree_base base;
         struct tree_exp_info info;
         tree prev;
-
-        union
-        {
-                tree right;
-                tree next;
-        };
-        union
-        {
-                tree left;
-                tree node;
-        };
+        tree right;
+        tree left;
 };
 
 struct tree_expr_stmt
 {
-        tree exp;
+        // an expression, may contain decls
+        tree base;
 
-        // list of tree_decl if expression contains decls, TREE_NULL in the other case
         tree decls;
 };
 
@@ -220,6 +252,7 @@ enum statement_kind
 
 struct tree_stmt
 {
+        struct tree_base base;
         enum statement_kind kind;
         union
         {
@@ -237,17 +270,20 @@ struct tree_stmt
 
 struct tree_list_node
 {
+        struct tree_base tbase;
         struct list_node node;
         tree base;
 };
 
 struct tree_list
 {
+        struct tree_base base;
         struct list_node list;
 };
 
 struct tree_func_sign_type
 {
+        struct tree_base base;
         tree restype;
         // expr statement list
         tree args;
@@ -263,6 +299,7 @@ enum func_call_type
 
 struct tree_func_decl
 {
+        struct tree_base base;
         tree decl;
         tree body;
 
@@ -270,62 +307,41 @@ struct tree_func_decl
         unsigned should_inline : 1;
 };
 
-enum tree_node_kind
+union tree_node
 {
-        tnk_null,
-        tnk_stmt,
-        tnk_id,
-        tnk_type_decl,
-        tnk_var_decl,
-        tnk_func_decl,
-        tnk_exp,
-        tnk_list,
-        tnk_list_node,
-        tnk_const_int,
-        tnk_const_float,
-        tnk_const_real,
-        tnk_const_string,
-        tnk_vector_type,
-        tnk_sign_type,
-        tnk_type,
-        tnk_attrib,
+        struct tree_stmt stmt;
+        struct tree_identifier id;
+        struct tree_decl decl;
+        struct tree_decl type_decl;
+        struct tree_decl var_decl;
+        struct tree_func_decl func_decl;
+        struct tree_exp exp;
+        struct tree_list list;
+        struct tree_list_node list_node;
+        struct tree_const_int const_int;
+        struct tree_const_float const_float;
+        struct tree_const_real const_real;
+        struct tree_const_string const_string;
+        struct tree_vector_type vector_type;
+        struct tree_func_sign_type sign_type;
+        struct tree_type type;
+        struct tree_const_int attrib;
 };
 
-struct tree_node
-{
-        enum tree_node_kind kind;
-        union
-        {
-                struct tree_stmt stmt;
-                struct tree_identifier id;
-                struct tree_decl decl;
-                struct tree_decl type_decl;
-                struct tree_decl var_decl;
-                struct tree_func_decl func_decl;
-                struct tree_exp exp;
-                struct tree_list list;
-                struct tree_list_node list_node;
-                struct tree_const_int const_int;
-                struct tree_const_float const_float;
-                struct tree_const_real const_real;
-                struct tree_const_string const_string;
-                struct tree_vector_type vector_type;
-                struct tree_func_sign_type sign_type;
-                struct tree_type type;
-                struct tree_const_int attrib;
-        };
-};
-
-static struct tree_node __null_node;
+static union tree_node __null_node;
 #define TREE_NULL &__null_node
 
 extern tree tree_create(struct allocator* alloc, enum tree_node_kind kind);
 extern tree tree_copy(struct allocator* alloc, tree node);
 extern void tree_delete(struct allocator* alloc, tree node);
 extern void tree_delete_recursive(struct allocator* alloc, tree node);
+extern void tree_delete_list_nodes(struct allocator* alloc, tree list);
+extern void tree_delete_list(struct allocator* alloc, tree list);
 
+extern tree tree_exp_stmt_create(struct allocator* alloc, tree decls, tree base);
 extern tree tree_type_create(struct allocator* alloc, enum type_kind kind, enum type_qualifier qual, tree type);
 extern tree tree_ident_create(struct allocator* alloc, strref_t ref);
+extern tree tree_var_decl_create(struct allocator* alloc, tree var_name, tree base);
 extern tree tree_list_node_create(struct allocator* alloc, tree base);
 extern tree tree_exp_create(struct allocator* alloc, enum operator_kind kind, unsigned nesting, const struct tree_exp_info* opinfo);
 extern tree tree_list_create(struct allocator* alloc);
@@ -337,21 +353,35 @@ extern tree tree_attrib_create(struct allocator* alloc, uint64_t att);
 extern tree tree_vector_type_create(struct allocator* alloc, tree type, uint64_t size);
 extern tree tree_sign_type_create(struct allocator* alloc, tree res, tree args);
 
-#define tree_kind(ptree)           (ptree)->kind
+static inline void tree_swap(tree* a, tree* b)
+{
+        tree t = *a;
+        *a = *b;
+        *b = t;
+}
+
+#define tree_base(ptree)           ((struct tree_base*)(ptree))
+#define tree_kind(ptree)           (tree_base(ptree)->kind)
 #define tree_is(ptree, kind)       (tree_kind(ptree) == kind)
-#define tree_type(ptree)           (ptree)->type.type
-#define tree_type_kind(ptree)      (ptree)->type.kind
-#define tree_type_qual(ptree)      (ptree)->type.qual
-#define tree_list(ptree)           (ptree)->list.list
-#define tree_list_node(ptree)      (ptree)->list_node.node
-#define tree_list_node_base(ptree) (ptree)->list_node.base
-#define tree_decl_id(ptree)        (ptree)->decl.id
-#define tree_decl_base(ptree)      (ptree)->decl.base
-#define tree_exp_info(ptree)       (ptree)->exp.info
+
+#define __tree(ptree)              ((tree)(ptree))
+#define __tree_stmt(ptree)         __tree(ptree)->stmt
+#define tree_stmt_kind(ptree)      __tree_stmt(ptree).kind
+#define tree_exp_stmt_decls(ptree) __tree_stmt(ptree).exp_stmt.decls
+#define tree_exp_stmt_base(ptree)  __tree_stmt(ptree).exp_stmt.base
+#define tree_type_next(ptree)      __tree(ptree)->type.next
+#define tree_type_kind(ptree)      __tree(ptree)->type.kind
+#define tree_type_qual(ptree)      __tree(ptree)->type.qual
+#define __tree_list(ptree)         __tree(ptree)->list.list
+#define __tree_list_node(ptree)    __tree(ptree)->list_node.node
+#define tree_list_node_base(ptree) __tree(ptree)->list_node.base
+#define tree_decl_id(ptree)        __tree(ptree)->decl.id
+#define tree_decl_base(ptree)      __tree(ptree)->decl.base
+#define tree_exp_info(ptree)       __tree(ptree)->exp.info
 #define tree_exp_kind(ptree)       tree_exp_info(ptree).kind
-#define tree_exp_left(ptree)       (ptree)->exp.left
-#define tree_exp_right(ptree)      (ptree)->exp.right
-#define tree_exp_prev(ptree)       (ptree)->exp.prev
+#define tree_exp_left(ptree)       __tree(ptree)->exp.left
+#define tree_exp_right(ptree)      __tree(ptree)->exp.right
+#define tree_exp_prev(ptree)       __tree(ptree)->exp.prev
 #define tree_exp_next(ptree)       tree_exp_right(ptree)
 #define tree_exp_node(ptree)       tree_exp_left(ptree)
 #define tree_exp_assoc(ptree)      tree_exp_info(ptree).assoc
@@ -359,65 +389,65 @@ extern tree tree_sign_type_create(struct allocator* alloc, tree res, tree args);
 #define tree_exp_nesting(ptree)    tree_exp_info(ptree).nesting
 #define tree_exp_is(ptree, kind)   (tree_exp_kind(ptree) == (kind))
 #define tree_exp_computed_precedence(ptree) (tree_exp_precedence(ptree) + tree_exp_nesting(ptree) * 100)
-#define tree_id_ref(ptree)         (ptree)->id.ref
-#define tree_const_strref(ptree)   (ptree)->const_string.ref
-#define tree_const_float(ptree)    (ptree)->const_float.val
-#define tree_const_real(ptree)     (ptree)->const_real.val
-#define tree_const_int(ptree)      (ptree)->const_int.val
+#define tree_id_ref(ptree)         __tree(ptree)->id.ref
+#define tree_const_strref(ptree)   __tree(ptree)->const_string.ref
+#define tree_const_float(ptree)    __tree(ptree)->const_float.val
+#define tree_const_real(ptree)     __tree(ptree)->const_real.val
+#define tree_const_int(ptree)      __tree(ptree)->const_int.val
 #define tree_attrib(ptree)         tree_const_int(ptree)
-#define tree_vector(ptree)         (ptree)->vector_type
+#define tree_vector(ptree)         __tree(ptree)->vector_type
 #define tree_vector_size(ptree)    tree_vector(ptree).size
 #define tree_vector_type(ptree)    tree_vector(ptree).type
-#define tree_sign(ptree)           (ptree)->sign_type
+#define tree_sign(ptree)           __tree(ptree)->sign_type
 #define tree_sign_restype(ptree)   tree_sign(ptree).restype
 #define tree_sign_args(ptree)      tree_sign(ptree).args
 
-#define tree_list_empty(ptree) list_empty(&tree_list(ptree))
+#define tree_list_empty(ptree) list_empty(&__tree_list(ptree))
 
 #define tree_list_node_next(ptree)\
-        list_next_off(&tree_list_node(ptree), struct tree_node, list_node)
+        list_next_off(&__tree_list_node(ptree), struct tree_list_node, node)
 
 #define tree_list_node_prev(ptree)\
-        list_prev_off(&tree_list_node(ptree), struct tree_node, list_node)
+        list_prev_off(&__tree_list_node(ptree), struct tree_list_node, node)
 
-#define tree_list_node_remove(ptree) list_remove(&tree_list_node(ptree))
+#define tree_list_node_remove(ptree) list_remove(&__tree_list_node(ptree))
 
 #define tree_list_node_insert_before(ptree, pnode)\
-        list_add_before(&tree_list_node(ptree), &tree_list_node(pnode))
+        list_add_before(&__tree_list_node(ptree), &__tree_list_node(pnode))
 
 #define tree_list_node_insert_after(ptree, pnode)\
-        list_add_after(&tree_list_node(ptree), &tree_list_node(pnode))
+        list_add_after(&__tree_list_node(ptree), &__tree_list_node(pnode))
 
-static inline struct tree_node tree_list_initf(tree list)
+static inline union tree_node tree_list_initf(tree list)
 {
         tree_kind(list) = tnk_list;
-        list_initf(&tree_list(list));
+        list_initf(&__tree_list(list));
         return *list;
 }
 
 #define tree_list_tail(ptree)\
-        (tree)list_tail_off(&tree_list(ptree), struct tree_node, list_node)
+        (tree)list_tail_off(&__tree_list(ptree), struct tree_list_node, node)
 
 #define tree_list_head(ptree)\
-        (tree)list_head_off(&tree_list(ptree), struct tree_node, list_node)
+        (tree)list_head_off(&__tree_list(ptree), struct tree_list_node, node)
 
-#define tree_list_end(ptree) (ptree)
+#define tree_list_end(ptree) __tree(ptree)
 
 #define tree_list_pop_back(ptree)\
-        (tree)list_pop_back_off(&tree_list(ptree), struct tree_node, list_node)
+        (tree)list_pop_back_off(&__tree_list(ptree), struct tree_list_node, node)
 
 #define tree_list_pop_front(ptree)\
-        (tree)list_pop_front_off(&tree_list(ptree), struct tree_node, list_node)
+        (tree)list_pop_front_off(&__tree_list(ptree), struct tree_list_node, node)
 
 #define tree_list_push_back(ptree, pnode)\
-        list_push_back(&tree_list(ptree), &tree_list_node(pnode))
+        list_push_back(&__tree_list(ptree), &__tree_list_node(pnode))
 
 // allocates tree_list_node
 #define tree_list_push_back_node(ptree, palloc, pnode) \
         tree_list_push_back(ptree, tree_list_node_create(palloc, pnode))
 
 #define tree_list_push_front(ptree, pnode)\
-        list_push_front(&tree_list(ptree), &tree_list_node(pnode))
+        list_push_front(&__tree_list(ptree), &__tree_list_node(pnode))
 
 struct tree_iterator
 {
@@ -433,16 +463,17 @@ struct tree_iterator
 #define tree_iterator_kind(ptree)      tree_it(ptree)->kind
 #define tree_iterator_data(ptree)      tree_it(ptree)->data
 
-#define tree_exp_iterator_is(ptree, kind) tree_exp_is(tree_iterator_pos(ptree), kind)
+#define tree_exp_iterator_is(ptree, kind)  tree_exp_is(tree_iterator_pos(ptree), kind)
 #define tree_exp_iterator_go_left(ptree)  (tree_iterator_pos(ptree) = tree_exp_left(tree_iterator_pos(ptree)))
 #define tree_exp_iterator_go_right(ptree) (tree_iterator_pos(ptree) = tree_exp_right(tree_iterator_pos(ptree)))
 #define tree_exp_iterator_go_prev(ptree)  (tree_iterator_pos(ptree) = tree_exp_prev(tree_iterator_pos(ptree)))
 #define tree_exp_iterator_valid(ptree)    (tree_is(tree_iterator_pos(ptree), tnk_exp))
 
-#define tree_list_iterator_init(plist)     tree_iterator_init(tree_list_head(plist), -1, NULL)
-#define tree_list_iterator_advance(ptree) (tree_iterator_pos(ptree) = tree_list_node_next(tree_iterator_pos(ptree)))
-#define tree_list_iterator_rewind(ptree)  (tree_iterator_pos(ptree) = tree_list_node_prev(tree_iterator_pos(ptree)))
-#define tree_list_iterator_valid(ptree)   (tree_iterator_node_kind(ptree) == tnk_list_node)
-#define tree_list_iterator_node(ptree)     tree_list_node_base(tree_iterator_pos(ptree))
+#define tree_list_forward_iterator_init(plist) tree_iterator_init(tree_list_head(plist), -1, NULL)
+#define tree_list_reverse_iterator_init(plist) tree_iterator_init(tree_list_tail(plist), -1, NULL)
+#define tree_list_iterator_advance(ptree)     (tree_iterator_pos(ptree) = tree_list_node_next(tree_iterator_pos(ptree)))
+#define tree_list_iterator_rewind(ptree)      (tree_iterator_pos(ptree) = tree_list_node_prev(tree_iterator_pos(ptree)))
+#define tree_list_iterator_valid(ptree)       (tree_iterator_node_kind(ptree) == tnk_list_node)
+#define tree_list_iterator_node_base(ptree)    tree_list_node_base(tree_iterator_pos(ptree))
 
 #endif // !_TREE_H
