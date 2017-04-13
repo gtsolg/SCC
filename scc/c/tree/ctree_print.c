@@ -147,29 +147,29 @@ extern void c_exp_to_str(char* buf, tree exp, tree prev)
 static void pointer_to_str(char* buf, const char* quals, tree ptr)
 {
         strprecatn(buf, 2, quals, "*");
-        enum type_kind kind = tree_type_kind(tree_type(ptr));
+        enum type_kind kind = tree_type_kind(tree_type_next(ptr));
         if (kind == tk_vector || kind == tk_sign)
                 strwrap("(", buf, ")");
-        c_type_to_str(buf, tree_type(ptr));
+        c_type_to_str(buf, tree_type_next(ptr));
 }
 
 static vector_to_str(char* buf, const char* quals, tree vec)
 {
-        vec = tree_type(vec);
+        vec = tree_type_next(vec);
         sprintf(buf, "%s[%llu]", buf, tree_vector_size(vec));
         c_type_to_str(buf, tree_vector_type(vec));
 }
 
 static sign_to_str(char* buf, const char* quals, tree sign)
 {
-        sign = tree_type(sign);
+        sign = tree_type_next(sign);
         strcat(buf, "(");
         if (!tree_is(tree_sign_args(sign), tnk_null))
         {
-                struct tree_iterator it = tree_list_iterator_init(tree_sign_args(sign));
+                struct tree_iterator it = tree_list_forward_iterator_init(tree_sign_args(sign));
                 while (tree_list_iterator_valid(&it))
                 {
-                        c_type_to_str(strend(buf), tree_list_iterator_node(&it));
+                        c_type_to_str(strend(buf), tree_list_iterator_node_base(&it));
                         tree_list_iterator_advance(&it);
                         if (tree_list_iterator_valid(&it))
                                 strcat(buf, ", ");

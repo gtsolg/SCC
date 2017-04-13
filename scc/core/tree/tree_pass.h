@@ -13,6 +13,8 @@ typedef uint64_t tree_pass_prefs;
 
 #define PASS_PREFS_NONE              (0)
 #define PASS_PREFS_EXP_RIGHT_TO_LEFT (1 << 0)
+// if node doesnt match its siblings will not be added
+#define PASS_PREFS_CLIPPING_MATCH    (1 << 1)
 
 struct tree_pass
 {
@@ -43,7 +45,12 @@ extern struct tree_match tree_match_initf(tree_match_fn fn, void* data);
 extern struct tree_match tree_match_exp_initf(enum expr_node_kind* kind);
 
 // allocates its own stack of nodes
-// passes expressions left-to-right by default
+// passes expressions left-to-right by default e.g:
+//       4      
+//     /   \    
+//    3     6   
+//   / \   / \  
+//  1   2 5   7 
 extern void tree_foreach(struct allocator* tree_alloc, tree root, struct tree_pass pass, struct tree_match match);
 
 #endif // !TREE_PASS_H
