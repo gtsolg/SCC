@@ -28,11 +28,25 @@
 #endif
 
 #if _DEBUG
-#define DEBUG 1
+#define SCC_IS_DEBUG 1
 #else
-#define DEBUG 0
+#define SCC_IS_DEBUG 0
 #endif
 
-#define scc_assert(e) if (DEBUG) assert(e)
+#if SCC_IS_DEBUG
+#define scc_assert(e) assert(e)
+#else
+#define scc_assert(e) 1
+#endif
+
+#define scc_unreachable()                     \
+        do {                                  \
+                volatile int unreachable = 0; \
+                assert(unreachable);          \
+        } while (0)
+
+#define scc_static_assert(e, msg) \
+        static_assert(e, msg)
+
 
 #endif // !SCC_H

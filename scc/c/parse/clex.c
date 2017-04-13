@@ -35,7 +35,7 @@ static void c_parser_lex_optoken(struct c_parser* parser, struct token* token
 
                 type = token_type(string + i, 1);
                 if (!type)
-                        c_parser_handle_err(parser, SCC_ERR); // unknown token1
+                        c_parser_handle_err(parser, SCC_ERR); // unknown token
                 add_token(parser, token_create_loc(&c_parser_c_token_alloc(parser), type, loc), lf_c);
         }
         token_delete(&c_parser_c_token_alloc(parser), token);
@@ -96,11 +96,19 @@ static void c_parser_lex_cst_char_token(struct c_parser* parser, struct token* t
         add_token(parser, token, lf_c);
 }
 
+static void c_parser_lex_unreachable(struct c_parser* parser, struct token* token
+        , const char* string, int len)
+{
+        scc_unreachable();
+}
+
+scc_static_assert(crtt_size == 8, "clex: should update lex_dispatch_table");
+
 const static void(*lex_dispatch_table[crtt_size])(struct c_parser*, struct token*, char*, int) =
 {
-        NULL, // crtt_eof
-        NULL, // crtt_new_line
-        NULL, // crtt_whitespace
+        c_parser_lex_unreachable,    // crtt_eof
+        c_parser_lex_unreachable,    // crtt_new_line
+        c_parser_lex_unreachable,    // crtt_whitespace
         c_parser_lex_ident_token,    // crtt_word
         c_parser_lex_cst_str_token,  // crtt_cst_str
         c_parser_lex_cst_char_token, // crtt_cst_char
