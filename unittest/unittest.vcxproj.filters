@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="unittest">
+      <UniqueIdentifier>{5e5b37b6-d64c-49b8-871b-fd079f94790e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="unittest\c">
+      <UniqueIdentifier>{51bd14b0-5474-4cc5-becf-c372af681e09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="unittest\core">
+      <UniqueIdentifier>{a8bffdc6-ac65-4f5d-9fa4-074fe0bf48e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="unittest\core\tree">
+      <UniqueIdentifier>{2a42a82b-3f07-41b3-82c3-62326bdedd84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="unittest\c\parse">
+      <UniqueIdentifier>{45630353-5407-48e2-9c2d-e60865c1d787}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>unittest</Filter>
+    </ClCompile>
+    <ClCompile Include="core\tree\tree_test.c">
+      <Filter>unittest\core\tree</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\tree\tree_test.h">
+      <Filter>unittest\core\tree</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

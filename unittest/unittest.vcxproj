@@ -18,76 +18,10 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="args.h" />
-    <ClInclude Include="core\alloc.h" />
-    <ClInclude Include="core\char_info.h" />
-    <ClInclude Include="core\err.h" />
-    <ClInclude Include="core\hash.h" />
-    <ClInclude Include="core\htab.h" />
-    <ClInclude Include="core\list.h" />
-    <ClInclude Include="core\pool.h" />
-    <ClInclude Include="core\scc.h" />
-    <ClInclude Include="core\str.h" />
-    <ClInclude Include="core\stream.h" />
-    <ClInclude Include="core\str_pool.h" />
-    <ClInclude Include="core\token.h" />
-    <ClInclude Include="core\tree\tree.h" />
-    <ClInclude Include="core\tree\tree_index.h" />
-    <ClInclude Include="core\tree\tree_pass.h" />
-    <ClInclude Include="core\tree\tree_pass_impl.h" />
-    <ClInclude Include="core\tree\tree_print.h" />
-    <ClInclude Include="c\ccommon.h" />
-    <ClInclude Include="c\cenv.h" />
-    <ClInclude Include="c\climits.h" />
-    <ClInclude Include="c\ctest.h" />
-    <ClInclude Include="c\parse\cparse.h" />
-    <ClInclude Include="c\parse\cparser.h" />
-    <ClInclude Include="c\reader\creader.h" />
-    <ClInclude Include="c\reader\ctoken.h" />
-    <ClInclude Include="c\tree\ctree_build.h" />
-    <ClInclude Include="c\tree\ctree_print.h" />
-    <ClInclude Include="c\tree\ctree.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="args.c" />
-    <ClCompile Include="core\alloc.c" />
-    <ClCompile Include="core\char_info.c" />
-    <ClCompile Include="core\err.c" />
-    <ClCompile Include="core\htab.c" />
-    <ClCompile Include="core\str.c" />
-    <ClCompile Include="core\stream.c" />
-    <ClCompile Include="core\str_pool.c" />
-    <ClCompile Include="core\token.c" />
-    <ClCompile Include="core\tree\tree.c" />
-    <ClCompile Include="core\tree\tree_index.c" />
-    <ClCompile Include="core\tree\tree_pass.c" />
-    <ClCompile Include="core\tree\tree_pass_impl.c" />
-    <ClCompile Include="core\tree\tree_print.c" />
-    <ClCompile Include="c\ccommon.c" />
-    <ClCompile Include="c\cenv.c" />
-    <ClCompile Include="c\ctest.c" />
-    <ClCompile Include="c\parse\cparse_decl.c" />
-    <ClCompile Include="c\parse\cparse_exp.c" />
-    <ClCompile Include="c\parse\clex.c" />
-    <ClCompile Include="c\parse\cparser.c" />
-    <ClCompile Include="c\parse\cparse_stmt.c" />
-    <ClCompile Include="c\parse\cparse_type.c" />
-    <ClCompile Include="c\reader\creader.c" />
-    <ClCompile Include="c\reader\ctoken.c" />
-    <ClCompile Include="c\tree\ctree_build.c" />
-    <ClCompile Include="c\tree\ctree_print.c" />
-    <ClCompile Include="c\tree\ctree.c" />
-    <ClCompile Include="main.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="c\creswords.inc" />
-    <None Include="c\reader\ctoken_type.inc" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{6D9AE59B-87E2-47EC-9118-EEA8E7635D76}</ProjectGuid>
-    <RootNamespace>scc</RootNamespace>
+    <ProjectGuid>{610801BD-F986-4457-BD8C-12A002A212A1}</ProjectGuid>
+    <RootNamespace>unittest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -151,20 +85,20 @@
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\core</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\core</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -174,7 +108,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -188,13 +122,20 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\;$(SolutionDir)scc\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="core\tree\tree_test.c" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\tree\tree_test.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

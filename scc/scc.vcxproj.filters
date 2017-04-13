@@ -42,9 +42,6 @@
     <ClInclude Include="core\token.h">
       <Filter>scc\core</Filter>
     </ClInclude>
-    <ClInclude Include="core\tree\tree_pass.h">
-      <Filter>scc\core\tree</Filter>
-    </ClInclude>
     <ClInclude Include="core\tree\tree_print.h">
       <Filter>scc\core\tree</Filter>
     </ClInclude>
@@ -108,6 +105,12 @@
     <ClInclude Include="core\stream.h">
       <Filter>scc\core</Filter>
     </ClInclude>
+    <ClInclude Include="core\tree\tree_pass_impl.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="core\tree\tree_pass.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -127,9 +130,6 @@
     </ClCompile>
     <ClCompile Include="core\token.c">
       <Filter>scc\core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\tree\tree_pass.c">
-      <Filter>scc\core\tree</Filter>
     </ClCompile>
     <ClCompile Include="core\tree\tree_print.c">
       <Filter>scc\core\tree</Filter>
@@ -193,6 +193,12 @@
     </ClCompile>
     <ClCompile Include="core\stream.c">
       <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\tree\tree_pass_impl.c">
+      <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="core\tree\tree_pass.c">
+      <Filter>scc\core\tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
