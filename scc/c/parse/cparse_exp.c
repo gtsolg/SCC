@@ -354,20 +354,20 @@ extern tree c_parse_expr_raw(struct c_parser* parser, size_t size)
         if (!size)
                 return NULL;
 
-        struct tree_node list = tree_list_initf(&list);
+        union tree_node list = tree_list_initf(&list);
         preprocess_expr(parser, size, &list);
         if (tree_list_empty(&list))
                 return NULL;
 
-        struct tree_node output = tree_list_initf(&output);
-        struct tree_node opstack = tree_list_initf(&opstack);
+        union tree_node output = tree_list_initf(&output);
+        union tree_node opstack = tree_list_initf(&opstack);
         struct allocator* tree_alloc = &c_parser_tree_alloc(parser);
 
-        struct tree_iterator it = tree_list_iterator_init(&list);
+        struct tree_iterator it = tree_list_forward_iterator_init(&list);
         while (tree_list_iterator_valid(&it))
         {
                 tree enode = tree_iterator_pos(&it);
-                tree exp = tree_list_iterator_node(&it);
+                tree exp = tree_list_iterator_node_base(&it);
                 tree_list_iterator_advance(&it);
 
                 if (c_node_is_operand(exp))    

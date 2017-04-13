@@ -109,7 +109,7 @@ static void tree_print_type(tree type)
         printf("%s", type_kind_string[kind]);
 
         if (kind == tk_vector)
-                printf("[%llu]", tree_vector_size(tree_type(type)));
+                printf("[%llu]", tree_vector_size(tree_type_next(type)));
 }
 
 static void tree_print_sign_type(tree sign, char* indent);
@@ -123,22 +123,22 @@ static void tree_print_type_pretty(tree type, char* indent, int last)
         {
                 char sign[TREE_PRINT_INDENT_BUF_SIZE] = { 0 };
                 strcpy(sign, indent);
-                tree_print_sign_type(tree_type(type), sign);
+                tree_print_sign_type(tree_type_next(type), sign);
         }
         else
-                tree_print_pretty(tree_type(type), indent, 1);
+                tree_print_pretty(tree_type_next(type), indent, 1);
 }
 
 static void tree_print_list(tree list, char* indent)
 {
         printf("list:\n");
-        struct tree_iterator it = tree_list_iterator_init(list);
+        struct tree_iterator it = tree_list_forward_iterator_init(list);
 
         char tmp[TREE_PRINT_INDENT_BUF_SIZE] = { 0 };
         while (tree_list_iterator_valid(&it))
         {
                 strcpy(tmp, indent);
-                tree node = tree_list_iterator_node(&it);
+                tree node = tree_list_iterator_node_base(&it);
                 tree_list_iterator_advance(&it);
                 tree_print_pretty(node, tmp, tree_list_iterator_valid(&it) ? 0 : 1);
         }
@@ -154,6 +154,8 @@ static void tree_print_sign_type(tree sign, char* indent)
         tree_print_pretty(tree_sign_restype(sign), res, 0);
         tree_print_pretty(tree_sign_args(sign), arg, 1);
 }
+
+scc_static_assert(tnk_size == 17, "tree_print: should update tree_print");
 
 static void tree_print_pretty(tree node, char* indent, int last)
 {

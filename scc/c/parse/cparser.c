@@ -15,6 +15,9 @@ static tree parser_alloc_tree(struct c_parser* parser, size_t size)
 
 static void parser_ret_tree(struct c_parser* parser, tree node)
 {
+#if SCC_IS_DEBUG
+        memset(node, 0, sizeof(union tree_node));
+#endif
         pool_return(parser->tree_pool, node);
 }
 

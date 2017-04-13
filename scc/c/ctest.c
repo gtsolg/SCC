@@ -31,7 +31,7 @@ static scc_err_t c_test_envieronment_initf(struct c_test_env* env, const char* f
 
         htab_initf(&env->globl, 0, STD_ALLOC);
         tree_index_initf(&env->globl);
-        pool_initf(&env->tree_pool, sizeof(struct tree_node), 10, STD_ALLOC);
+        pool_initf(&env->tree_pool, sizeof(union tree_node), 10, STD_ALLOC);
         c_reader_init(&env->reader, &env->parser.c_token_alloc, &env->parser.err, fin, NULL, NULL);
 
         if (c_parser_err(&env->parser))
