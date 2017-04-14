@@ -1,11 +1,6 @@
-#include "scc.h"
-#include "c/ccommon.h"
-#include "args.h"
+#include "runtime.h"
 
 int main(int argc, char** argv)
 {
-        if (c_setup())
-                return SCC_ERR;
-        parse_args(argc, argv);
-        return 0;
+        return scc_setup(argc, argv) == SCC_ERR ? -1 : scc_run();
 }
