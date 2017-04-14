@@ -3,7 +3,7 @@
 
 #include "htab.h"
 #include "hash.h"
-#include "tree/tree.h"
+#include "tree/tree_node.h"
 #include "tree/tree_print.h"
 
 #include "tree/ctree_print.h"

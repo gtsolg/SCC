@@ -1,7 +1,7 @@
 #ifndef TREE_PRINT_H
 #define TREE_PRINT_H
 
-#include "tree.h"
+#include "tree_node.h"
 
 #define TREE_PRINT_INDENT_BUF_SIZE 256
 

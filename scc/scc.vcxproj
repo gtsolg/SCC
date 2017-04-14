@@ -32,7 +32,7 @@
     <ClInclude Include="core\stream.h" />
     <ClInclude Include="core\str_pool.h" />
     <ClInclude Include="core\token.h" />
-    <ClInclude Include="core\tree\tree.h" />
+    <ClInclude Include="core\tree\tree_node.h" />
     <ClInclude Include="core\tree\tree_index.h" />
     <ClInclude Include="core\tree\tree_pass.h" />
     <ClInclude Include="core\tree\tree_pass_impl.h" />
@@ -59,7 +59,7 @@
     <ClCompile Include="core\stream.c" />
     <ClCompile Include="core\str_pool.c" />
     <ClCompile Include="core\token.c" />
-    <ClCompile Include="core\tree\tree.c" />
+    <ClCompile Include="core\tree\tree_node.c" />
     <ClCompile Include="core\tree\tree_index.c" />
     <ClCompile Include="core\tree\tree_pass.c" />
     <ClCompile Include="core\tree\tree_pass_impl.c" />
