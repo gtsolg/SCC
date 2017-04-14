@@ -13,21 +13,227 @@
     <Filter Include="unittest\core\tree">
       <UniqueIdentifier>{2a42a82b-3f07-41b3-82c3-62326bdedd84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="unittest\c\parse">
-      <UniqueIdentifier>{45630353-5407-48e2-9c2d-e60865c1d787}</UniqueIdentifier>
+    <Filter Include="scc">
+      <UniqueIdentifier>{3c00b0eb-6fdc-46cd-85da-eef73282960c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\c">
+      <UniqueIdentifier>{ffb3d18b-91c9-4577-8eb1-519f1b263302}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\c\parse">
+      <UniqueIdentifier>{09c383d5-115c-4771-8216-e7917cc180d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\c\reader">
+      <UniqueIdentifier>{1643015a-4b2a-478a-82f7-e51244b80762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\c\tree">
+      <UniqueIdentifier>{a89c7092-4c7a-444e-bb68-bc73bf196f2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\core">
+      <UniqueIdentifier>{44e18b08-51f3-4899-8f46-10950e586ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scc\core\tree">
+      <UniqueIdentifier>{593afeda-4605-4e98-9346-dcc5e0c06eb2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>unittest</Filter>
-    </ClCompile>
     <ClCompile Include="core\tree\tree_test.c">
       <Filter>unittest\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="c\ctest.c">
+      <Filter>unittest\c</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>unittest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\runtime.c">
+      <Filter>scc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\ccommon.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\cenv.c">
+      <Filter>scc\c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\parse\cparse_decl.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\parse\cparse_exp.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\parse\clex.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\parse\cparser.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\parse\cparse_stmt.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\parse\cparse_type.c">
+      <Filter>scc\c\parse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\reader\creader.c">
+      <Filter>scc\c\reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\reader\ctoken.c">
+      <Filter>scc\c\reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\tree\ctree_build.c">
+      <Filter>scc\c\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\tree\ctree_print.c">
+      <Filter>scc\c\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\c\tree\ctree.c">
+      <Filter>scc\c\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\alloc.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\char_info.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\error.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\htab.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\str.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\stream.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\str_pool.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\token.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\parse_args.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\tree\tree_node.c">
+      <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\tree\tree_index.c">
+      <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\tree\tree_pass.c">
+      <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\tree\tree_pass_impl.c">
+      <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scc\core\tree\tree_print.c">
+      <Filter>scc\core\tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\tree\tree_test.h">
       <Filter>unittest\core\tree</Filter>
     </ClInclude>
+    <ClInclude Include="c\ctest.h">
+      <Filter>unittest\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\runtime.h">
+      <Filter>scc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\ccommon.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\cenv.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\climits.h">
+      <Filter>scc\c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\parse\cparse.h">
+      <Filter>scc\c\parse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\parse\cparser.h">
+      <Filter>scc\c\parse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\reader\creader.h">
+      <Filter>scc\c\reader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\reader\ctoken.h">
+      <Filter>scc\c\reader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\tree\ctree_build.h">
+      <Filter>scc\c\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\tree\ctree_print.h">
+      <Filter>scc\c\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\c\tree\ctree.h">
+      <Filter>scc\c\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\alloc.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\char_info.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\error.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\hash.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\htab.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\list.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\pool.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\scc.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\str.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\stream.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\str_pool.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\token.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\parse_args.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\tree\tree.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\tree\tree_node.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\tree\tree_index.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\tree\tree_pass.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\tree\tree_pass_impl.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scc\core\tree\tree_print.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\scc\c\creswords.inc">
+      <Filter>scc\c</Filter>
+    </None>
+    <None Include="..\scc\c\reader\ctoken_type.inc">
+      <Filter>scc\c\reader</Filter>
+    </None>
   </ItemGroup>
 </Project>

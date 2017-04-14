@@ -90,7 +90,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\core;$(SolutionDir)scc\core\tree;$(SolutionDir)scc\c;$(SolutionDir)scc</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -98,7 +98,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\core;$(SolutionDir)scc\core\tree;$(SolutionDir)scc\c;$(SolutionDir)scc</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -108,7 +108,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\core;$(SolutionDir)scc\core\tree;$(SolutionDir)scc\c;$(SolutionDir)scc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -122,7 +122,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)scc\core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)scc\core;$(SolutionDir)scc\core\tree;$(SolutionDir)scc\c;$(SolutionDir)scc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -130,11 +130,75 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\scc\core\alloc.c" />
+    <ClCompile Include="..\scc\core\char_info.c" />
+    <ClCompile Include="..\scc\core\error.c" />
+    <ClCompile Include="..\scc\core\htab.c" />
+    <ClCompile Include="..\scc\core\parse_args.c" />
+    <ClCompile Include="..\scc\core\str.c" />
+    <ClCompile Include="..\scc\core\stream.c" />
+    <ClCompile Include="..\scc\core\str_pool.c" />
+    <ClCompile Include="..\scc\core\token.c" />
+    <ClCompile Include="..\scc\core\tree\tree_index.c" />
+    <ClCompile Include="..\scc\core\tree\tree_node.c" />
+    <ClCompile Include="..\scc\core\tree\tree_pass.c" />
+    <ClCompile Include="..\scc\core\tree\tree_pass_impl.c" />
+    <ClCompile Include="..\scc\core\tree\tree_print.c" />
+    <ClCompile Include="..\scc\c\ccommon.c" />
+    <ClCompile Include="..\scc\c\cenv.c" />
+    <ClCompile Include="..\scc\c\parse\clex.c" />
+    <ClCompile Include="..\scc\c\parse\cparser.c" />
+    <ClCompile Include="..\scc\c\parse\cparse_decl.c" />
+    <ClCompile Include="..\scc\c\parse\cparse_exp.c" />
+    <ClCompile Include="..\scc\c\parse\cparse_stmt.c" />
+    <ClCompile Include="..\scc\c\parse\cparse_type.c" />
+    <ClCompile Include="..\scc\c\reader\creader.c" />
+    <ClCompile Include="..\scc\c\reader\ctoken.c" />
+    <ClCompile Include="..\scc\c\tree\ctree.c" />
+    <ClCompile Include="..\scc\c\tree\ctree_build.c" />
+    <ClCompile Include="..\scc\c\tree\ctree_print.c" />
+    <ClCompile Include="..\scc\runtime.c" />
     <ClCompile Include="core\tree\tree_test.c" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="c\ctest.c" />
+    <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\scc\core\alloc.h" />
+    <ClInclude Include="..\scc\core\char_info.h" />
+    <ClInclude Include="..\scc\core\error.h" />
+    <ClInclude Include="..\scc\core\hash.h" />
+    <ClInclude Include="..\scc\core\htab.h" />
+    <ClInclude Include="..\scc\core\list.h" />
+    <ClInclude Include="..\scc\core\parse_args.h" />
+    <ClInclude Include="..\scc\core\pool.h" />
+    <ClInclude Include="..\scc\core\scc.h" />
+    <ClInclude Include="..\scc\core\str.h" />
+    <ClInclude Include="..\scc\core\stream.h" />
+    <ClInclude Include="..\scc\core\str_pool.h" />
+    <ClInclude Include="..\scc\core\token.h" />
+    <ClInclude Include="..\scc\core\tree\tree.h" />
+    <ClInclude Include="..\scc\core\tree\tree_index.h" />
+    <ClInclude Include="..\scc\core\tree\tree_node.h" />
+    <ClInclude Include="..\scc\core\tree\tree_pass.h" />
+    <ClInclude Include="..\scc\core\tree\tree_pass_impl.h" />
+    <ClInclude Include="..\scc\core\tree\tree_print.h" />
+    <ClInclude Include="..\scc\c\ccommon.h" />
+    <ClInclude Include="..\scc\c\cenv.h" />
+    <ClInclude Include="..\scc\c\climits.h" />
+    <ClInclude Include="..\scc\c\parse\cparse.h" />
+    <ClInclude Include="..\scc\c\parse\cparser.h" />
+    <ClInclude Include="..\scc\c\reader\creader.h" />
+    <ClInclude Include="..\scc\c\reader\ctoken.h" />
+    <ClInclude Include="..\scc\c\tree\ctree.h" />
+    <ClInclude Include="..\scc\c\tree\ctree_build.h" />
+    <ClInclude Include="..\scc\c\tree\ctree_print.h" />
+    <ClInclude Include="..\scc\runtime.h" />
     <ClInclude Include="core\tree\tree_test.h" />
+    <ClInclude Include="c\ctest.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\scc\c\creswords.inc" />
+    <None Include="..\scc\c\reader\ctoken_type.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

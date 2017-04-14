@@ -1,6 +1,6 @@
 import os, subprocess
 
-scc = os.path.join(os.getcwd(), '..', 'bin', 'scc.exe')
+scc = os.path.join(os.getcwd(), '..', 'bin', 'unittest.exe')
 
 
 def run_tests(dir, cmd):
