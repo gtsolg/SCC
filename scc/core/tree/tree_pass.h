@@ -1,7 +1,7 @@
 #ifndef TREE_PASS_H
 #define TREE_PASS_H
 
-#include "tree_node.h"
+#include "tree.h"
 
 typedef int(*tree_pass_fn)(tree node, void*);
 

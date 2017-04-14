@@ -1,5 +1,4 @@
 #include "ctree_build.h"
-#include "tree/tree_pass.h"
 
 static inline void type_iterator_advance(tree it)
 {
@@ -191,99 +190,15 @@ static tree build_type(struct c_parser* parser, tree it)
 
 extern tree c_build_type(struct c_parser* parser, tree raw)
 {
-        struct c_type_build_info info = c_type_build_info_init();
-        struct tree_iterator it;
-        tree res = NULL;
-        if (c_type_iterator_initf(&it, raw, &info) == SCC_SUCCESS)
-                res = build_type(parser, &it);
-        return res;
+                struct c_type_build_info info = c_type_build_info_init();
+                struct tree_iterator it;
+                tree res = NULL;
+                if (c_type_iterator_initf(&it, raw, &info) == SCC_SUCCESS)
+                        res = build_type(parser, &it);
+                return res;
 }
 
-extern tree c_build_var_decl(struct c_parser* parser, tree raw)
+extern tree c_build_exp_stmt(struct c_parser* parser, tree raw)
 {
-        struct c_type_build_info info = c_type_build_info_init();
-        struct tree_iterator it;
-        struct allocator* tree_alloc = &c_parser_tree_alloc(parser);
-
-        if (c_type_iterator_initf(&it, raw, &info) == SCC_ERR)
-                return NULL;
-
-        tree id = TREE_NULL;
-        tree type = NULL;
-        
-        if (tree_iterator_node_kind(&it) == tnk_id)
-        {
-                id = tree_copy(tree_alloc, tree_iterator_pos(&it));
-                c_type_iterator_advance(&it);
-        }
-        type = build_type(parser, &it);
-        if (!type)
-        {
-                tree_delete(tree_alloc, id);
-                return NULL;
-        }
-
-        return tree_var_decl_create(tree_alloc, id, type);
-}
-
-struct exp_stmt_build_info
-{
-        tree decls;
-        tree base_type;
-        scc_err_t status;
-};
-
-#define exp_stmt_build_info_init(decls, base_type) { decls, base_type, SCC_SUCCESS }
-
-static int rebuild_raw_as_exp_stmt_pass(tree node, void* data)
-{
-        struct exp_stmt_build_info* info = data;
-
-        if (info->status == SCC_ERR)
-                return PASS_SHOULD_EXIT;
-}
-
-static int rebuild_raw_as_exp_stmt_match(tree node, void* data)
-{
-        if (!tree_is(node, tnk_exp))
-                return 0;
-
-        switch (tree_exp_kind(node))
-        {
-                case ok_assign:
-                case ok_add_assign:
-                case ok_sub_assign:
-                case ok_mul_assign:
-                case ok_div_assign:
-                case ok_mod_assign:
-                case ok_shl_assign:
-                case ok_shr_assign:
-                case ok_and_assign:
-                case ok_xor_assign:
-                case ok_or_assign:
-                case ok_coma:
-                        return 1;
-
-                default:
-                        return 0;
-        }
-}
-
-extern tree c_rebuild_raw_as_exp_stmt(struct c_parser* parser, tree raw)
-{
-        struct allocator* tree_alloc = &c_parser_tree_alloc(parser);
-        struct exp_stmt_build_info info = exp_stmt_build_info_init(tree_list_create(tree_alloc), TREE_NULL);
-
-        tree_foreach(tree_alloc, raw,
-                tree_pass_initf(rebuild_raw_as_exp_stmt_pass, &info, PASS_PREFS_NONE),
-                tree_match_initf(rebuild_raw_as_exp_stmt_match, NULL));
-
-        if (info.status == SCC_ERR)
-        {
-                tree_delete_list_nodes(tree_alloc, info.decls);
-                tree_delete_recursive(tree_alloc, raw);
-                return NULL;
-        }
-
-        return tree_exp_stmt_create(tree_alloc, info.decls, raw);
+        return NULL;
 }

@@ -20,11 +20,7 @@ struct c_type_build_info
 extern scc_err_t c_type_iterator_initf(tree it, tree exp, struct c_type_build_info* info);
 extern tree c_type_iterator_advance(tree it);
 
-// builds ctree from raw expression not changing it
 extern tree c_build_type(struct c_parser* parser, tree raw);
-extern tree c_build_var_decl(struct c_parser* parser, tree raw);
-
-// rebuilds raw expression to expression statement
-extern tree c_rebuild_raw_as_exp_stmt(struct c_parser* parser, tree raw);
+extern tree c_build_exp_stmt(struct c_parser* parser, tree raw);
 
 #endif // !C_BUILD_H

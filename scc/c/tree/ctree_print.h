@@ -1,7 +1,7 @@
 #ifndef C_PRINT_H
 #define C_PRINT_H
 
-#include "tree/tree_node.h"
+#include "tree/tree.h"
 
 #define C_PRINT_EXP_BUF_SIZE 128
 

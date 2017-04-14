@@ -1,4 +1,4 @@
-#include "tree_node.h"
+#include "tree.h"
 #include "scc.h"
 #include "tree_pass.h"
 

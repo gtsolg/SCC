@@ -45,6 +45,9 @@
     <ClInclude Include="core\tree\tree_print.h">
       <Filter>scc\core\tree</Filter>
     </ClInclude>
+    <ClInclude Include="core\tree\tree.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
     <ClInclude Include="c\reader\creader.h">
       <Filter>scc\c\reader</Filter>
     </ClInclude>
@@ -108,9 +111,6 @@
     <ClInclude Include="core\tree\tree_pass.h">
       <Filter>scc\core\tree</Filter>
     </ClInclude>
-    <ClInclude Include="core\tree\tree_node.h">
-      <Filter>scc\core\tree</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -132,6 +132,9 @@
       <Filter>scc\core</Filter>
     </ClCompile>
     <ClCompile Include="core\tree\tree_print.c">
+      <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="core\tree\tree.c">
       <Filter>scc\core\tree</Filter>
     </ClCompile>
     <ClCompile Include="c\parse\clex.c">
@@ -195,9 +198,6 @@
       <Filter>scc\core\tree</Filter>
     </ClCompile>
     <ClCompile Include="core\tree\tree_pass.c">
-      <Filter>scc\core\tree</Filter>
-    </ClCompile>
-    <ClCompile Include="core\tree\tree_node.c">
       <Filter>scc\core\tree</Filter>
     </ClCompile>
   </ItemGroup>

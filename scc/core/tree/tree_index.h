@@ -1,7 +1,7 @@
 #ifndef TREE_INDEX_H
 #define TREE_INDEX_H
 
-#include "tree_node.h"
+#include "tree.h"
 
 struct tree_index
 {
