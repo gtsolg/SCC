@@ -14,7 +14,7 @@ static void test_type(const char** argv, void* p)
 
 static void test_all(const char** argv, void* p)
 {
-        // all tests goes here
+        // all tests go here
 }
 
 static struct scc_arg args[] = 
