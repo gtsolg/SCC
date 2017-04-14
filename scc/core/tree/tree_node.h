@@ -1,5 +1,5 @@
-#ifndef _TREE_H
-#define _TREE_H
+#ifndef TREE_NODE_H
+#define TREE_NODE_H
 
 #include "list.h"
 #include "str_pool.h"
@@ -476,4 +476,4 @@ struct tree_iterator
 #define tree_list_iterator_valid(ptree)       (tree_iterator_node_kind(ptree) == tnk_list_node)
 #define tree_list_iterator_node_base(ptree)    tree_list_node_base(tree_iterator_pos(ptree))
 
-#endif // !_TREE_H
+#endif // !TREE_NODE_H
