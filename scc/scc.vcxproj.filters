@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="args.h">
-      <Filter>scc</Filter>
-    </ClInclude>
     <ClInclude Include="c\ccommon.h">
       <Filter>scc\c</Filter>
     </ClInclude>
@@ -34,9 +31,6 @@
       <Filter>scc\c</Filter>
     </ClInclude>
     <ClInclude Include="c\climits.h">
-      <Filter>scc\c</Filter>
-    </ClInclude>
-    <ClInclude Include="c\ctest.h">
       <Filter>scc\c</Filter>
     </ClInclude>
     <ClInclude Include="core\token.h">
@@ -75,9 +69,6 @@
     <ClInclude Include="core\char_info.h">
       <Filter>scc\core</Filter>
     </ClInclude>
-    <ClInclude Include="core\err.h">
-      <Filter>scc\core</Filter>
-    </ClInclude>
     <ClInclude Include="core\hash.h">
       <Filter>scc\core</Filter>
     </ClInclude>
@@ -111,18 +102,24 @@
     <ClInclude Include="core\tree\tree_node.h">
       <Filter>scc\core\tree</Filter>
     </ClInclude>
+    <ClInclude Include="core\tree\tree.h">
+      <Filter>scc\core\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="core\error.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\parse_args.h">
+      <Filter>scc\core</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime.h">
+      <Filter>scc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>scc</Filter>
     </ClCompile>
-    <ClCompile Include="args.c">
-      <Filter>scc</Filter>
-    </ClCompile>
     <ClCompile Include="c\cenv.c">
-      <Filter>scc\c</Filter>
-    </ClCompile>
-    <ClCompile Include="c\ctest.c">
       <Filter>scc\c</Filter>
     </ClCompile>
     <ClCompile Include="c\ccommon.c">
@@ -176,9 +173,6 @@
     <ClCompile Include="core\char_info.c">
       <Filter>scc\core</Filter>
     </ClCompile>
-    <ClCompile Include="core\err.c">
-      <Filter>scc\core</Filter>
-    </ClCompile>
     <ClCompile Include="core\htab.c">
       <Filter>scc\core</Filter>
     </ClCompile>
@@ -199,6 +193,15 @@
     </ClCompile>
     <ClCompile Include="core\tree\tree_node.c">
       <Filter>scc\core\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="core\error.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\parse_args.c">
+      <Filter>scc\core</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime.c">
+      <Filter>scc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

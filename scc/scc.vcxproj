@@ -19,19 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="args.h" />
     <ClInclude Include="core\alloc.h" />
     <ClInclude Include="core\char_info.h" />
-    <ClInclude Include="core\err.h" />
+    <ClInclude Include="core\error.h" />
     <ClInclude Include="core\hash.h" />
     <ClInclude Include="core\htab.h" />
     <ClInclude Include="core\list.h" />
+    <ClInclude Include="core\parse_args.h" />
     <ClInclude Include="core\pool.h" />
     <ClInclude Include="core\scc.h" />
     <ClInclude Include="core\str.h" />
     <ClInclude Include="core\stream.h" />
     <ClInclude Include="core\str_pool.h" />
     <ClInclude Include="core\token.h" />
+    <ClInclude Include="core\tree\tree.h" />
     <ClInclude Include="core\tree\tree_node.h" />
     <ClInclude Include="core\tree\tree_index.h" />
     <ClInclude Include="core\tree\tree_pass.h" />
@@ -40,7 +41,6 @@
     <ClInclude Include="c\ccommon.h" />
     <ClInclude Include="c\cenv.h" />
     <ClInclude Include="c\climits.h" />
-    <ClInclude Include="c\ctest.h" />
     <ClInclude Include="c\parse\cparse.h" />
     <ClInclude Include="c\parse\cparser.h" />
     <ClInclude Include="c\reader\creader.h" />
@@ -48,13 +48,14 @@
     <ClInclude Include="c\tree\ctree_build.h" />
     <ClInclude Include="c\tree\ctree_print.h" />
     <ClInclude Include="c\tree\ctree.h" />
+    <ClInclude Include="runtime.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="args.c" />
     <ClCompile Include="core\alloc.c" />
     <ClCompile Include="core\char_info.c" />
-    <ClCompile Include="core\err.c" />
+    <ClCompile Include="core\error.c" />
     <ClCompile Include="core\htab.c" />
+    <ClCompile Include="core\parse_args.c" />
     <ClCompile Include="core\str.c" />
     <ClCompile Include="core\stream.c" />
     <ClCompile Include="core\str_pool.c" />
@@ -66,7 +67,6 @@
     <ClCompile Include="core\tree\tree_print.c" />
     <ClCompile Include="c\ccommon.c" />
     <ClCompile Include="c\cenv.c" />
-    <ClCompile Include="c\ctest.c" />
     <ClCompile Include="c\parse\cparse_decl.c" />
     <ClCompile Include="c\parse\cparse_exp.c" />
     <ClCompile Include="c\parse\clex.c" />
@@ -79,6 +79,7 @@
     <ClCompile Include="c\tree\ctree_print.c" />
     <ClCompile Include="c\tree\ctree.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="runtime.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="c\creswords.inc" />
