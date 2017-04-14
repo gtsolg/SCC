@@ -5,7 +5,7 @@
 #include "../climits.h"
 #include "stream.h"
 #include "token.h"
-#include "err.h"
+#include "error.h"
 
 enum c_reader_err_type
 {

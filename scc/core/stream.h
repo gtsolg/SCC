@@ -2,6 +2,7 @@
 #define STREAM_H
 
 #include "scc.h"
+#include "error.h"
 
 #define SEOF -1
 

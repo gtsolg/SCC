@@ -19,7 +19,6 @@
 #include <stdarg.h>
 #include <assert.h>
 #include <setjmp.h>
-#include "err.h"
 
 #if _WIN32
 #include <malloc.h>

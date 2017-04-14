@@ -3,6 +3,7 @@
 
 #include "list.h"
 #include "alloc.h"
+#include "error.h"
 
 struct htab
 {
