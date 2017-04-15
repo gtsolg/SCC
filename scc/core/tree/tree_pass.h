@@ -44,6 +44,7 @@ extern struct tree_pass tree_pass_initf(tree_pass_fn fn, void* data, tree_pass_p
 
 extern const struct tree_match tree_match_everything;
 extern const struct tree_match tree_match_nonnull;
+extern const struct tree_match tree_match_exp;
 
 extern struct tree_match tree_match_initf(tree_match_fn fn, void* data);
 extern struct tree_match tree_match_exp_initf(enum expr_node_kind* kind);

@@ -1,4 +1,4 @@
-#include "tree_pass.h"
+#include "tree.h"
 #include "tree_pass_impl.h"
 
 static int tree_match_everything_fn(tree node, void* p)
@@ -11,8 +11,14 @@ static int tree_match_nonnull_fn(tree node, void* p)
         return (int)node;
 }
 
+static int tree_match_any_exp_fn(tree node, void* p)
+{
+        return node && tree_is(node, tnk_exp);
+}
+
 const struct tree_match tree_match_everything = tree_match_init(tree_match_everything_fn, NULL);
-const struct tree_match tree_match_nonnull = tree_match_init(tree_match_nonnull_fn, NULL);
+const struct tree_match tree_match_nonnull    = tree_match_init(tree_match_nonnull_fn, NULL);
+const struct tree_match tree_match_exp        = tree_match_init(tree_match_any_exp_fn, NULL);
 
 extern struct tree_pass tree_pass_initf(tree_pass_fn fn, void* data, tree_pass_prefs prefs)
 {
