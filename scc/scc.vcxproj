@@ -33,8 +33,12 @@
     <ClInclude Include="core\str_pool.h" />
     <ClInclude Include="core\token.h" />
     <ClInclude Include="core\tree\tree.h" />
-    <ClInclude Include="core\tree\tree_node.h" />
+    <ClInclude Include="core\tree\tree_access.h" />
     <ClInclude Include="core\tree\tree_index.h" />
+    <ClInclude Include="core\tree\tree_info.h" />
+    <ClInclude Include="core\tree\tree_iterator.h" />
+    <ClInclude Include="core\tree\tree_misc.h" />
+    <ClInclude Include="core\tree\tree_node.h" />
     <ClInclude Include="core\tree\tree_pass.h" />
     <ClInclude Include="core\tree\tree_pass_impl.h" />
     <ClInclude Include="core\tree\tree_print.h" />
@@ -45,9 +49,9 @@
     <ClInclude Include="c\parse\cparser.h" />
     <ClInclude Include="c\reader\creader.h" />
     <ClInclude Include="c\reader\ctoken.h" />
+    <ClInclude Include="c\tree\ctree.h" />
     <ClInclude Include="c\tree\ctree_build.h" />
     <ClInclude Include="c\tree\ctree_print.h" />
-    <ClInclude Include="c\tree\ctree.h" />
     <ClInclude Include="runtime.h" />
   </ItemGroup>
   <ItemGroup>
@@ -60,24 +64,25 @@
     <ClCompile Include="core\stream.c" />
     <ClCompile Include="core\str_pool.c" />
     <ClCompile Include="core\token.c" />
-    <ClCompile Include="core\tree\tree_node.c" />
     <ClCompile Include="core\tree\tree_index.c" />
+    <ClCompile Include="core\tree\tree_info.c" />
+    <ClCompile Include="core\tree\tree_misc.c" />
     <ClCompile Include="core\tree\tree_pass.c" />
     <ClCompile Include="core\tree\tree_pass_impl.c" />
     <ClCompile Include="core\tree\tree_print.c" />
     <ClCompile Include="c\ccommon.c" />
     <ClCompile Include="c\cenv.c" />
-    <ClCompile Include="c\parse\cparse_decl.c" />
-    <ClCompile Include="c\parse\cparse_exp.c" />
     <ClCompile Include="c\parse\clex.c" />
     <ClCompile Include="c\parse\cparser.c" />
+    <ClCompile Include="c\parse\cparse_decl.c" />
+    <ClCompile Include="c\parse\cparse_exp.c" />
     <ClCompile Include="c\parse\cparse_stmt.c" />
     <ClCompile Include="c\parse\cparse_type.c" />
     <ClCompile Include="c\reader\creader.c" />
     <ClCompile Include="c\reader\ctoken.c" />
+    <ClCompile Include="c\tree\ctree.c" />
     <ClCompile Include="c\tree\ctree_build.c" />
     <ClCompile Include="c\tree\ctree_print.c" />
-    <ClCompile Include="c\tree\ctree.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="runtime.c" />
   </ItemGroup>

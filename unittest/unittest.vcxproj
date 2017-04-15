@@ -139,8 +139,9 @@
     <ClCompile Include="..\scc\core\stream.c" />
     <ClCompile Include="..\scc\core\str_pool.c" />
     <ClCompile Include="..\scc\core\token.c" />
+    <ClCompile Include="..\scc\core\tree\tree_info.c" />
+    <ClCompile Include="..\scc\core\tree\tree_misc.c" />
     <ClCompile Include="..\scc\core\tree\tree_index.c" />
-    <ClCompile Include="..\scc\core\tree\tree_node.c" />
     <ClCompile Include="..\scc\core\tree\tree_pass.c" />
     <ClCompile Include="..\scc\core\tree\tree_pass_impl.c" />
     <ClCompile Include="..\scc\core\tree\tree_print.c" />
@@ -177,7 +178,11 @@
     <ClInclude Include="..\scc\core\str_pool.h" />
     <ClInclude Include="..\scc\core\token.h" />
     <ClInclude Include="..\scc\core\tree\tree.h" />
+    <ClInclude Include="..\scc\core\tree\tree_access.h" />
+    <ClInclude Include="..\scc\core\tree\tree_info.h" />
+    <ClInclude Include="..\scc\core\tree\tree_misc.h" />
     <ClInclude Include="..\scc\core\tree\tree_index.h" />
+    <ClInclude Include="..\scc\core\tree\tree_iterator.h" />
     <ClInclude Include="..\scc\core\tree\tree_node.h" />
     <ClInclude Include="..\scc\core\tree\tree_pass.h" />
     <ClInclude Include="..\scc\core\tree\tree_pass_impl.h" />
