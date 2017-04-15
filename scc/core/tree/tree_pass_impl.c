@@ -1,5 +1,5 @@
 #include "tree_pass_impl.h"
-#include "tree_pass.h"
+#include "tree.h"
 
 const tree_insert_dispatch_table_impl std_tree_insert_table =
 {
@@ -179,7 +179,7 @@ extern void tree_foreach_noclip_init_impl(struct allocator* tree_alloc
 
 void tree_foreach_dispose_impl(struct allocator* tree_alloc, tree queue)
 {
-        tree_delete_list_nodes(tree_alloc, queue);
+        tree_list_nodes_delete(tree_alloc, queue);
 }
 
 void tree_foreach_forward_pass_impl(tree list, tree_pass_fn pass, void* pass_data)
