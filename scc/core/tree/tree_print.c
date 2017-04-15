@@ -1,4 +1,4 @@
-#include "tree_print.h"
+#include "tree.h"
 #include "str.h"
 
 static void tree_print_pretty(tree, char*, int);
